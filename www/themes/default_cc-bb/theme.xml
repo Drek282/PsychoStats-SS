@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<theme>
+	<name>default_cc-bb</name>
+	<parent>default</parent>
+	<version>0.0</version>
+	<title>Casually Crackers Scoresheet Baseball Theme</title>
+	<author>Stormtrooper (modded by Drek)</author>
+	<website></website>
+	<source>themes/default_cc-bb/theme.xml</source>
+	<image></image>
+	<file></file>
+	<description>Default PsychoStats for Scoresheet theme modded for Scoresheet Baseball with the colour scheme of a Casual Cracker</description>
+</theme>

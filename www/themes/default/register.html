@@ -1,0 +1,96 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-register">
+
+
+<div class="ps-form-container" id="ps-register-form">
+<div class="ps-form">
+<form method="post" action="{url}">
+<input name="key" value="{$form_key}" type="hidden" />
+<fieldset>
+<legend><#User Registration#></legend>
+{if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
+
+<div class="inline-notes">
+	<h4><#Why and How to Register?#></h4>
+	<p>
+		<strong><#Registering a user will allow you to edit your team's profile information.#></strong>
+	</p>
+	<ul>
+		<li><#Users with "admin" privileges will be able to access the Admin Control Panel (ACP).#></li>
+	</ul>
+	<ul>
+		<li><#The team # given for your team must exist or registration will fail.#></li>
+		<li><#A user can only be associated with a single team.#></li>
+{if $conf.main.registration == 'open'}
+		<li><b><#Registration is OPEN. New users will have instant access to their team profiles.#></b></li>
+{elseif $conf.main.registration == 'confirm'}
+		<li><b><#Registration requires confirmation from the admin. You won't be able to login until confirmed.#></b></li>
+{else}
+		<li><b style="color: red"><#Registration is closed! No teams may be registered at this time.#></b></li>
+{/if}
+	</ul>
+</div>
+
+
+<div{if $errors.team_id} class="err"{/if}>
+	<p class="err" id="err-team_id">{$errors.team_id|escape}</p>
+	<label>{$team_id_label}:</label>
+	<input name="team_id" value="{$form.team_id|escape}" type="text" class="field" />
+	<p class="small">
+		<#The team # entered above should match the team you play as.#>
+	</p>
+</div>
+
+<div{if $errors.username} class="err"{/if}>
+	<p class="err" id="err-username">{$errors.username|escape}</p>
+	<label><#Username#>:</label>
+	<input name="username" value="{$form.username|escape}" type="text" class="field" />
+</div>
+
+<div{if $errors.password} class="err"{/if}>
+	<p class="err" id="err-password">{$errors.password|escape}</p>
+	<label><#Password#>:</label>
+	<input name="password" type="password" class="field" autocomplete="off" />
+</div>
+
+<div{if $errors.password2} class="err"{/if}>
+	<p class="err" id="err-password2">{$errors.password2|escape}</p>
+	<label><#Retype Password#>:</label>
+	<input name="password2" type="password" class="field" autocomplete="off" />
+</div>
+
+<div class="spacer"></div>
+
+<div{if $errors.email} class="err"{/if}>
+	<p class="err" id="err-email">{$errors.email|escape}</p>
+	<label><#Email#>:</label>
+	<input name="email" value="{$form.email|escape}" type="text" class="field" />
+	<small><#Required#></small>
+</div>
+
+
+</fieldset>
+<fieldset>
+<div class="submit">
+	<input name="submit" value="1" type="hidden" />
+	<input name="key" value="{$form_key}" type="hidden" />
+	<input class="btn register" type="submit" value="<#Register#>" />
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+</div>
+</fieldset>
+</form>
+</div>
+</div>
+
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

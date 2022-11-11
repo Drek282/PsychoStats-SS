@@ -1,0 +1,107 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+	<div id="ps-page-title">
+		<div class="inner">
+		<h1><#Hall of Fame#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>
+		<h2>&nbsp;</h2>
+		</div>
+	</div>
+
+<!--left column block -->
+<div id="ps-main-column">
+
+<div class="ps-column-frame">
+<div id="ps-hof-img"></div>
+</div>
+
+<div class="ps-column-frame{if $shades.s_modactions} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Most League Championships#></span></a></div>
+<div id="s-modactions" class="ps-column-content">
+<p class="hl firstrow">
+	<label>{$lc_count.0.team_name}</label>
+	<span>{$lc_count.0.count}</span>
+</p>
+<p class="hl">
+	<label><#runners up#></label>
+</p>
+{foreach from=$lc_count item='lc' key='k'}
+{if $k != 0}
+<p class="substat">
+	<label>{$lc.team_name}</label>
+	<span>{$lc.count}</span>
+</p>
+{/if}
+{/foreach}
+</div>
+</div>
+
+<div class="ps-column-frame{if $shades.s_modactions} s-closed{/if}">
+{if $dt_count.0.divisionname == 'na'}
+	<div class="ps-column-header"><a href="" onclick="return false"><span><#Most League Titles#></span></a></div>
+{else}
+	<div class="ps-column-header"><a href="" onclick="return false"><span><#Most Division Titles#></span></a></div>
+{/if}
+<div id="s-modactions" class="ps-column-content">
+<p class="hl firstrow">
+	<label>{$dt_count.0.team_name}</label>
+	<span>{$dt_count.0.count}</span>
+</p>
+<p class="hl">
+	<label><#runners up#></label>
+</p>
+{foreach from=$dt_count item='dt' key='k'}
+{if $k != 0}
+<p class="substat">
+	<label>{$dt.team_name}</label>
+	<span>{$dt.count}</span>
+</p>
+{/if}
+{/foreach}
+</div>
+</div>
+
+</div>
+<!--end of left column -->
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-{$page}">
+
+
+<div id="ps-award-frame">
+
+	<div class="award-hdr">
+		<p><#Team Awards#></p>
+	</div>
+{foreach from=$awards item='a'}
+	<div class="award{if $a.negative}-neg{/if}{if $team_id and $a.topteamid == $team_id} selected-team{/if}">
+		<h1>{$a.name}</h1>
+		<h2>{award_phrase award=$a}</h2>
+		<p>{award_phrase award=$a desc=1}</p>
+		{if $a.1.team_id}
+		<div class="runnersup">
+		<h3><#Runners Up#>:</h3>
+		{foreach from=$a item='tm' key='k'}
+			{if is_array($tm) and $k != 0}
+				<p>{runnerup_phrase award=$tm}</p>
+			{/if}
+		{/foreach}
+		</div>
+		{/if}
+	</div>
+{foreachelse}
+	<div class="award-none">
+		<p><#No teams qualify for this award#></p>
+	</div>
+{/foreach}
+
+</div> {* end ps-award-frame *}
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

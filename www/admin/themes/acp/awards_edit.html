@@ -1,0 +1,188 @@
+<script>
+delete_message = "<#Are you sure you want to delete the award?#>";
+</script>
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+{include file="crumbs.html"}
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-{$page}">
+
+{$message}
+
+<div class="ps-form-container" id="ps-{$page}-form">
+<div class="ps-form">
+<form method="post" action="{url}">
+<fieldset>
+<legend>{if $id}<#Edit#>{else}<#New#>{/if} <#Award#></legend>
+{if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
+
+<div class="notes">
+	<h4>Hint</h4>
+	<p>If you want a list of the tokens you can use in the <em><strong>Expression</strong></em> browse your database with something like PHPMyAdmin and look for the names of the columns in the following tables:
+		<ul>
+			<li><em><strong>psss_team_adv</strong></em></li>
+			<li><em><strong>psss_team_def</strong></em></li>
+			<li><em><strong>psss_team_off</strong></em></li>
+		</ul>
+	<strong>Note:</strong> You cannot use the <em><strong>season</strong></em> and <em><strong>team_id</strong></em> column names as tokens.</p>
+</div>
+
+<div{if $errors.enabled} class="err"{/if}>
+	<p class="err">{$errors.enabled|escape}</p>
+	<label><#Enabled?#></label>
+	<label class="for" for="enabled1"><input id="enabled1" name="enabled" value="1" {if  $form.enabled}checked="" {/if}type="radio" class="radio" /> Yes</label>
+	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio" /> No</label>
+</div>
+
+<div{if $errors.negative} class="err"{/if}>
+	<p class="err">{$errors.negative|escape}</p>
+	<label><#Negative Award?#></label>
+	<label class="for" for="negative1"><input id="negative1" name="negative" value="1" {if  $form.negative}checked="" {/if}type="radio" class="radio" /> Yes</label>
+	<label class="for" for="negative2"><input id="negative2" name="negative" value="0" {if !$form.negative}checked="" {/if}type="radio" class="radio" /> No</label>
+	<p class="small">
+		Negative awards are achievements that reflect poor team results
+	</p>
+</div>
+
+<div{if $errors.name} class="err"{/if}>
+	<p class="err">{$errors.name|escape}</p>
+	<label><#Award Name#>:</label>
+	<input name="name" value="{$form.name|escape}" type="text" class="field medium" />
+	<p class="small">
+		The award name is a short, generic description of what the overall award is. It should not include
+		any specific team information.
+	</p>
+</div>
+
+<div{if $errors.phrase} class="err"{/if}>
+	<p class="err">{$errors.phrase|escape}</p>
+	<label><#Award Phrase#>:</label>
+	<textarea name="phrase" rows="4" class="field short">{$form.phrase|escape}</textarea>
+	<p class="small">
+		The award phrase is what is displayed in the awards listing for the team that won the award and should 
+		contain <b>{ldelim}$tokens{rdelim}</b> which are specific Smarty variables. 
+		For example: "<em><strong>{ldelim}$team.link{rdelim} has the most season wins ({ldelim}$award.value{rdelim} total) in {ldelim}$award.awardseason{rdelim}</strong></em>".
+	</p>
+	<p class="small">
+		Every award phrase should contain the following tokens.  Note that these are not the same tokens as the tokens used in the <em><strong>Expression</strong></em>.  Those are described in the upper right hint box:
+		<ul>
+			<li><em><strong>{ldelim}$team.link{rdelim}</strong></em></li>
+			<li><em><strong>{ldelim}$award.topteamvalue{rdelim}</strong></em></li>
+			<li><em><strong>{ldelim}$award.awardseason{rdelim}</strong></em></li>
+		</ul>
+	</p>
+</div>
+
+<div{if $errors.expr} class="err"{/if}>
+	<p class="err">{$errors.expr|escape}</p>
+	<label><#Expression#>:</label>
+	<input name="expr" value="{$form.expr|escape}" type="text" class="field long" />
+	<p class="small">
+		The expression defines what MySQL columns the award is calculated with and how.  The column is defined as a token.  If the column name is "<em><strong>wins</strong></em>" then the token would be "<em><strong>{ldelim}$wins{rdelim}</strong></em>".
+	</p>
+	<p class="small">
+		You can do calculations with the tokens.  So, for example, if you wanted to add the wins and losses, then
+		divide the wins by that number to find win %, you would enter "<em><strong>{ldelim}$wins{rdelim} / ({ldelim}$wins{rdelim} + {ldelim}$losses{rdelim})</strong></em>" into the expression field.  Of course, you don't need to do that, because the "<em><strong>{ldelim}$win_percent{rdelim}</strong></em>" token already exists.  That's just an example of what you can do with this.
+	</p>
+</div>
+
+<div{if $errors.where} class="err"{/if}>
+	<p class="err">{$errors.where|escape}</p>
+	<label><#Where Clause#>:</label>
+	<input name="where" value="{$form.where|escape}" type="text" class="field long" />
+	<p class="small">
+		The where clause allows your award calculations to limit who or what will be counted in the calculations.
+		For example you could generate an award for the highest number of season wins but limit the results so that only
+		teams with more than a certain amount will count. This should use tokens for as does the Expression field, and it must be in MySQL format for the "WHERE" clause.
+	</p>
+	<p class="small">
+		For example:  "<em><strong>{ldelim}$wins{rdelim} > 20</strong></em>".
+	</p>
+	<p class="small">
+		If you want to exclude the 2020 season from your Hall of Fame, use the following code in the Where Clause:
+	</p>
+	<p class="small">
+		"<em><strong>{ldelim}$season_n{rdelim} != 2020</strong></em>".
+	</p>
+</div>
+
+<div{if $errors.limit} class="err"{/if}>
+	<p class="err">{$errors.limit|escape}</p>
+	<label><#Maximum Results#>:</label>
+	<input name="limit" value="{$form.limit|escape}" type="text" class="field short" />
+	<p class="small">Maximum teams included in the award results. 5 is default for all awards.</p>
+</div>
+
+<div{if $errors.order} class="err"{/if}>
+	<p class="err">{$errors.order|escape}</p>
+	<label><#Order#>:</label>
+	<select id="order" name="order" class="field">
+		<option value="desc" {if $form.order == 'desc'}selected=""{/if}><#Descending#></option>
+		<option value="asc" {if $form.order == 'asc'}selected=""{/if}><#Ascending#></option>
+	</select>
+	<p class="small">
+		Most awards will be ordered in DESCending order, but a few will require ASCending order instead.
+	</p>
+</div>
+
+<div class="notes">
+	<h4>Hint</h4>
+	<p>Some useful sprintf "formats" include:
+		<ul>
+			<li><em><strong>%s</strong></em>&nbsp;&nbsp;for standard text or numbers</li>
+			<li><em><strong>%.1f</strong></em>&nbsp;&nbsp;for a single place decimal format</li>
+			<li><em><strong>%.2f</strong></em>&nbsp;&nbsp;for a decimal to two places</li>
+			<li><em><strong>\%</strong></em>&nbsp;&nbsp;to print a percent sign</li>
+			<li><em><strong>commify</strong></em>&nbsp;&nbsp;to add commas to a large number</li>
+		</ul>
+	</p>
+</div>
+
+<div{if $errors.format} class="err"{/if}>
+	<p class="err">{$errors.format|escape}</p>
+	<label><#Format#>:</label>
+	<input name="format" value="{$form.format|escape}" type="text" class="field small" />
+	<p class="small">
+		The format is either a <a href="http://php.net/sprintf">sprintf</a> string or the name of a Smarty function that takes a single argument and returns the modified result (such as 'commify' to put comma's in numbers).
+	</p>
+</div>
+
+<div{if $errors.description} class="err"{/if}>
+	<p class="err">{$errors.description|escape}</p>
+	<label><#Description#>: <small style="text-align: right"><#Plain text only#>&nbsp;</small></label>
+	<textarea name="description" rows="5" class="field short">{$form.description|escape}</textarea>
+	<p class="small">
+		<strong>Optional:</strong> Explain what the award is. This is displayed in the awards listing and should be kept short and simple. The special tokens can be used in this text.
+	</p>
+</div>
+
+
+</fieldset>
+<fieldset>
+<div class="submit">
+	<input name="submit" value="1" type="hidden" />
+	<input name="ref" value="{$ref}" type="hidden" />
+	<input name="key" value="{$form_key}" type="hidden" />
+	<input name="id" value="{$id}" type="hidden" />
+	<input class="btn save" type="submit" value="<#Save#>" />
+{if $id}
+	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del" />
+{/if}
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+</div>
+</fieldset>
+</form>
+</div>
+</div>
+
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

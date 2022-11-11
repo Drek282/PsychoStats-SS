@@ -1,0 +1,195 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+	<div id="ps-page-title">
+		<div class="inner">
+            {if psss_user_can_edit_team($team)}
+			<span>[ <a href="{url _base='editteam.php' _ref=1  id=$team.team_id}"><#Edit Team#></a> ]</span>
+            {/if}
+			<h1><#Team Statistics#> :: Team # {$team.team_id} :: {$team.team_name|escape}</h1>
+			{if $division}
+			<span><#Division#> [ 
+                <a href="{url _base='division.php' id=$team.divisionname}">{$team.divisionname|escape}</a> 
+			]</span>
+			{/if}
+
+			{if $team.rank}
+			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if} {iconimg icon=$team.icon} {$team.name|escape} <#is ranked#> <strong>#{$team.rank}</strong> <#out of#> <strong>{$totalranked|commify}</strong></h2>
+			{else}
+			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if} {iconimg icon=$team.icon} {$team.name|escape} <#is not ranked#></h2>
+			{/if}
+		</div>
+		{if $conf.theme.permissions.show_team_profile and psss_user_logged_in()}
+			{include file="/team_profile.html"}
+		{/if}
+	</div>
+
+{if $team.logo}<div class="ps-team-logo">{$team.logo}</div>{/if}
+
+<!--left column block -->
+<div id="ps-main-column">
+
+<div class="ps-column-frame">
+	<img id='teamwp' src="{url _base='imgquick.php' id=$team.team_id}" alt="[img]" />
+<div class="ps-column-sep"><p><#* this graph only includes data from the past <strong>10</strong> seasons#></p></div>
+</div>
+
+<div class="ps-column-frame{if $shades.s_team_rundown} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span>{$team.season} <#Season Rundown#></span></a></div>
+<div id="s-team-rundown" class="ps-column-content">
+<p class="hl firstrow">
+	<label><#Rank#></label>
+	<em>{rankchange team=$team}</em>
+	<span>{if $team.rank}{$team.rank|commify}{else}-{/if}</span>
+</p>
+<p class="substat">
+	<label><#Previous Rank#></label>
+	<span>{if $team.prevrank}{$team.prevrank|commify}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Total Games#></label>
+	<span>{$team.games_played}</span>
+</p>
+<p>
+	<label><#Wins#></label>
+	<span>{$team.wins}</span>
+</p>
+<p>
+	<label><#Losses#></label>
+	<span>{$team.losses}</span>
+</p>
+<p>
+	<label><#Win %#></label>
+	<span>{$team.win_percent}</span>
+</p>
+<p class="hl">
+	<label><#Games Back#></label>
+	{if $team.games_back=='-'}<span>Playoff Position</span>
+	{else}<span>{$team.games_back}</span>
+	{/if}
+</p>
+{if $team.games_back_wc}
+<p class="substat">
+	<label><#Wild Card Race#></label>
+	{if $team.games_back_wc=='-'}<span>Playoff Position</span>
+	{else}<span>{$team.games_back_wc}</span>
+	{/if}
+</p>
+{/if}
+<p>
+	<label><#Run Differential#></label>
+	<span>{$team.team_rdiff}</span>
+</p>
+<p>
+	<label><#Pythag#></label>
+	<span>{$team.pythag}</span>
+</p>
+</div>
+</div>
+
+{$team_left_column_mod} {* include this where you want the mod block of stats to appear (left side) *}
+
+<div class="ps-column-frame{if $shades.s_team_rundown} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Historical Records#></span></a></div>
+<div id="s-team-rundown" class="ps-column-content">
+<p class="hl firstrow">
+	<label><#Championships#></label>
+	<span>{if $team.league_cs}{$team.league_cs}{else}-{/if}</span>
+</p>
+{if $division}
+<p class="hl">
+	<label><#Division Titles#></label>
+	<span>{if $team.div_ts}{$team.div_ts}{else}-{/if}</span>
+</p>
+{/if}
+<p>
+	<label><#Win Percentage#></label>
+	<span>{if $team.hist_wp}{$team.hist_wp}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Runs Against#></label>
+	<span>{if $team.hist_ra}{$team.hist_ra}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Run Support#></label>
+	<span>{if $team.hist_rs}{$team.hist_rs}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Run Differential#></label>
+	<span>{if $team.hist_rdiff}{$team.hist_rdiff}{else}-{/if}</span>
+</p>
+{*
+{if $team.totalawards}
+<p>
+	<label><a href="{url _base='awards.php' p=$team.team_id}"><#Total Awards#></a></label>
+	<span><a href="{url _base='awards.php' p=$team.team_id}">{$team.totalawards|commify}</a></span>
+</p>
+{/if}
+*}
+</div>
+<div class="ps-column-sep"><p><#* this table only includes data from displayed seasons#></p></div>
+</div>
+
+<div id="ps-id-teamname" class="ps-column-frame{if $shades.s_teamname} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Team Names History#></span></a></div>
+<div id="s-teamname" class="ps-column-content">
+<p class="hl firstrow">
+	<label><#Name#></label>
+	<span><b><#Used#></b></span>
+</p>
+{foreach from=$team.ids_team_name item='i'}
+<p{cycle values=", class='even'"}>
+	<label class="name">{$i.team_name|escape}</label>
+	<span>{$i.totaluses|commify}</span>
+</p>
+{/foreach}
+</div>
+<div class="ps-column-sep"><p><#* this list may not include every historical team name#></p></div>
+</div>
+</div>
+<!--end of left column -->
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-player">
+
+	<!--#ADVANCED#-->
+	<a href="advanced"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Overall Team Records#></span></a></div>
+	<div id="s-teamadvanced" class="ps-table-inner{if $shades.s_teamadvanced} s-closed{/if}">
+	{$advanced_table}
+	{if $advancedpager}<div class="ps-table-footer">{$advancedpager}</div>{/if}
+	</div>
+	</div>
+	<!---->
+
+	<!--#DEFENCE#-->
+	<a href="defence"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Team Defensive Stats#></span></a></div>
+	<div id="s-teamdefence" class="ps-table-inner{if $shades.s_teamdefence} s-closed{/if}">
+	{$defence_table}
+	{if $defencepager}<div class="ps-table-footer">{$defencepager}</div>{/if}
+	</div>
+	</div>
+	<!---->
+
+	<!--#OFFENCE#-->
+	<a href="offence"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Team Offensive Stats#></span></a></div>
+	<div id="s-teamoffence" class="ps-table-inner{if $shades.s_teamoffence} s-closed{/if}">
+	{$offence_table}
+	{if $offencepager}<div class="ps-table-footer">{$offencepager}</div>{/if}
+	</div>
+	</div>
+	<!---->
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

@@ -1,0 +1,8 @@
+--- DREK ---
+
+
+Version 0.0.0b (in progress)
+* [Updated] Minimum MySQL version updated to 5.5.0
+* [Updated] Minimum PHP version updated to 7.1.0
+* [Initial] Conversion from Psychostats for Scoresheet to Psychostats for Scoresheet Baseball
+* [Initial] Publish to GitHub

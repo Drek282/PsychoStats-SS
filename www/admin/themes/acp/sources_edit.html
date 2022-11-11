@@ -1,0 +1,73 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+{include file="crumbs.html"}
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-{$page}">
+
+{$message}
+
+<div class="ps-form-container" id="ps-{$page}-form">
+<div class="ps-form">
+<form method="post" action="{url}">
+<fieldset>
+<legend>{if $id}<#Edit#>{else}<#New#>{/if} <#League Page URL#></legend>
+{if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
+
+<div{if $errors.enabled} class="err"{/if}>
+	<p class="err" id="err-enabled">{$errors.enabled|escape}</p>
+	<label><#Enabled?#></label>
+	<label class="for" for="enabled1"><input id="enabled1" name="enabled" value="1" {if  $form.enabled}checked="" {/if}type="radio" class="radio" /> Yes</label>
+	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio" /> No</label>
+</div>
+
+<div id="ls-source"{if $errors.source} class="err"{/if}>
+	<p class="err" id="err-source">{$errors.source|escape}</p>
+	<label><#League Page URL#>:</label>
+	<input name="source" value="{$form.source|escape}" type="text" class="field long" />
+</div>
+
+<div{if $errors.league_name} class="err"{/if}>
+	<p class="err" id="err-league_name">{$errors.league_name|escape}</p>
+	<label><#Short League Name#>:</label>
+	<input name="league_name" value="{$form.league_name|escape}" type="text" class="field" />
+</div>
+
+<div id="ln-notes" class="inline-notes">
+	<h4><#A Note on League Names#></h3>
+	<p>
+		This should be a short single word name for the league, without any spaces or special characters.<br>
+		It should be a distinct part of the league page url that is also contained in the heading for the league page.<br>
+		Example: If the league url is "https://www.scoresheet.com/FOR_WWW/BL_Fussy_Nuggets.htm"<br>
+		The league name should be "Fussy" or "Nuggets"
+	</p>
+</div>
+</fieldset>
+<fieldset>
+<div class="submit">
+	<input name="submit" value="1" type="hidden" />
+	<input name="ref" value="{$ref}" type="hidden" />
+	<input name="key" value="{$form_key}" type="hidden" />
+	<input name="id" value="{$id}" type="hidden" />
+	<input class="btn save" type="submit" value="<#Save#>" />
+{if $id}
+	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del" />
+{/if}
+	<input name="test" class="btn test" type="submit" value="<#Test#>" />
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+</div>
+</fieldset>
+</form>
+</div>
+</div>
+
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

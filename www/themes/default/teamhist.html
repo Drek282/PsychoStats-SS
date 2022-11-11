@@ -1,0 +1,88 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+	<div id="ps-page-title">
+		<div class="inner">
+			<span>[ 
+			<a href="{url _base='team.php' id=$team.team_id}"><#View Statistics#></a> 
+				{if psss_user_can_edit_team($team)}
+				| <a href="{url _base='editteam.php' _ref=1  id=$team.team_id}"><#Edit Team#></a>
+				{/if}
+			]</span>
+			<h1><#Team History#> :: {$team.name|escape}</h1>
+			{if $team.divisionid}
+			<span><#Division member#> [ 
+				<a href="{url _base='division.php' id=$team.divisionid}">{$team.division.divisionname|escape}</a> 
+				{if psss_user_can_edit_division($team.divisionid, $team)}
+				| <a href="{url _base='editdivision.php' _ref=1 id=$team.divisionid}"><#Edit Division#></a>
+				{/if}
+			]</span>
+			{/if}
+
+			{if $team.rank}
+			<h2>{flagimg cc=$team.cc} {iconimg icon=$team.icon} {$team.name|escape} <#is ranked#> <strong>#{$team.rank}</strong> <#out of#> <strong>{$totalranked|commify}</strong>{if $top1percentile} (top 1 percentile){/if}</h2>
+			{else}
+			<h2>{flagimg cc=$team.cc} {iconimg icon=$team.icon} {$team.name|escape} <#is not ranked#></h2>
+			{/if}
+		</div>
+		{if $conf.theme.permissions.show_team_profile}
+			{include file="../default/team_profile.html"}
+		{/if}
+	</div>
+
+{if $team.logo}<div class="ps-team-logo">{$team.logo}</div>{/if}
+
+<!--left column block -->
+<div id="ps-main-column">
+
+<div class="ps-column-frame">
+{*
+	<img id='teamwin_percent' src="{url _base='imgquick.php' id=$team.team_id}" />
+*}
+	{ofc url="team.php?ofc=win_percent&id=`$id`" width=287 height=180}
+</div>
+
+<div id="ps-id-teamsess" class="ps-column-frame{if $shades.s_teamsess} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Team Session Chart#></span></a></div>
+<div class="ps-column-content" style="text-align: center">
+	<img src="{url _base='imgsess.php' id=$team.team_id}" alt="[img]" />
+</div>
+</div>
+
+<div class="ps-column-frame">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Team Rundown#></span></a></div>
+<div id="s-team-rundown" class="ps-column-content">
+<p class="hl firstrow">
+	<label><#Rank#></label>
+	<span>{if $team.rank}{$team.rank|commify}{else}-{/if}</span>
+</p>
+<p class="substat">
+	<label><#Previous Rank#></label>
+	<span>{if $team.prevrank}{$team.prevrank|commify}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Total Games#></label>
+	<span>{$team.games|commify}</span>
+</p>
+<p>
+	<label><#Total Awards#></label>
+	<span>{$team.totalawards|commify}</span>
+</p>
+</div>
+</div>
+
+{$team_left_column_mod} {* include this where you want the mod block of stats to appear (left side) *}
+
+
+</div>
+<!--end of left column -->
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-team">
+
+</div> {* end ps-main-content *}
+</div> {* end ps-main *}
+</div> {* end ps-page-container *}

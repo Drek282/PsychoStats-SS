@@ -10,7 +10,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 *The plan for the following issues is to either fix them, or improve them, in future versions:*
 
 * The CSRF protection is currently not working as intended.  This should not be a serious security issue but the hope is to revisit the code and get this working at some point in the future.
-* The coded language support is incomplete.  The goal is to updated and finish it, as well as add support, at a minimum, for Spanish.
+* The coded language support is incomplete.  The goal is to update and finish it, as well as add support, at a minimum, for Spanish.
 
 
 ## **Stuff that Remains Untested**

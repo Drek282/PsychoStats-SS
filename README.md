@@ -25,7 +25,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 ## **Credits**
 
-Thank you to Jason Morriss, a.k.a. Stormtrooper, for all his oringinal work. This software deserves to be used. The period between 2000 and 2005 and all the old Scoresheet and Source mods represent a golden age in PC game modding. Those games deserve to be played. With a little massaging most of them still run very well on new hardware and new operating systems.
+Thank you to Jason Morriss, a.k.a. Stormtrooper, for all his original work. This software deserves to be used. The period between 2000 and 2005 and all the old Half-Life and Source mods represent a golden age in PC game modding. Those games deserve to be played. With a little massaging most of them still run very well on new hardware and new operating systems.
 
 Credit to wakachamo, Rosenstein, Solomenka and janzagata for their contributions.  Thanks also to RoboCop from APG for his support and encouragement.
 

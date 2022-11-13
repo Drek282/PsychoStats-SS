@@ -29,6 +29,12 @@ $cms->theme->page_title('PsychoStats - Team Registration');
 
 $validfields = array('submit','cancel','ref');
 $cms->theme->assign_request_vars($validfields, true);
+		
+switch ($ps->conf['main']['team_id']) {
+	case 'team_id': $team_id_label = $cms->trans("Team #"); break;
+};
+
+$form = $cms->new_form();
 
 //if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 if ($cancel) previouspage('index.php');
@@ -37,15 +43,6 @@ if ($cancel) previouspage('index.php');
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
 
-// save a new form key in the users session cookie
-// this will also be put into a 'hidden' field in the form
-if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
-		
-switch ($ps->conf['main']['team_id']) {
-	case 'team_id': $team_id_label = $cms->trans("Team #"); break;
-};
-
-$form = $cms->new_form();
 $form->default_modifier('trim');
 $form->field('team_id', 'blank');
 $form->field('username', 'blank');
@@ -140,6 +137,8 @@ if ($submit) {
 
 }
 
+// save a new form key in the users session cookie
+// this will also be put into a 'hidden' field in the form
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
 # Are there divisions or wilcards in this league?
@@ -152,7 +151,6 @@ $cms->theme->assign(array(
 	'errors'	=> $form->errors(),
 	'form'		=> $form->values(),
 	'team_id_label' => $team_id_label,
-	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
 	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',

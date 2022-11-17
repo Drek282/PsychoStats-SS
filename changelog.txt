@@ -2,6 +2,7 @@
 
 
 Version 0.0.1b (in progress)
+* [Fixed] Corrected an error in the SRAT formula.
 
 Version 0.0.0b
 * [Updated] Minimum MySQL version updated to 5.5.0

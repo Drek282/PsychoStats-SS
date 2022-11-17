@@ -776,7 +776,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Calculate LOB%.
     working_stats_off_dfo['LOB%'] = round(((working_stats_off_dfo['RBI'] - working_stats_off_dfo['HR']) / (working_stats_off_dfo['H'] + working_stats_off_dfo['BB'] - working_stats_off_dfo['HR']) * 100 - 100) * -0.01, 2)
     # Calculate SRAT.
-    working_stats_off_dfo['SRAT'] = round((((working_stats_off_dfo['SB'] - working_stats_off_dfo['CS']) * 3 + working_stats_off_dfo['T'] * 6 + working_stats_off_dfo['RS'] / 9  - working_stats_off_dfo['GDP'] / 1.5 - working_stats_off_dfo['HR'] * 1.5) / (working_stats_off_dfo['H'] + working_stats_off_dfo['BB'] - working_stats_off_dfo['HR']) * 10 + 10) * 0.05, 2)
+    working_stats_off_dfo['SRAT'] = round((((working_stats_off_dfo['SB'] - working_stats_off_dfo['CS']) * 3 + working_stats_off_dfo['T'] * 6 + working_stats_off_dfo['RS']  - working_stats_off_dfo['GDP'] / 1.5 - working_stats_off_dfo['HR'] * 1.5) / (working_stats_off_dfo['H'] + working_stats_off_dfo['BB'] - working_stats_off_dfo['HR']) * 10 + 10) * 0.05, 2)
     #Calculate wOBA.
     working_stats_off_dfo['wOBA'] = round((0.69 * working_stats_off_dfo['BB'] + 0.89 * (working_stats_off_dfo['H'] - working_stats_off_dfo['D'] - working_stats_off_dfo['T'] - working_stats_off_dfo['HR']) + 1.27 * working_stats_off_dfo['D'] + 1.62 * working_stats_off_dfo['T'] + 2.10 * working_stats_off_dfo['HR']) / (working_stats_off_dfo['AB'] + working_stats_off_dfo['BB'] + working_stats_off_dfo['SF']), 3)
     # Reorder the columns.

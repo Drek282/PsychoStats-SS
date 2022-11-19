@@ -12,7 +12,6 @@ This also open source software.  The code can be modified by anyone who wishes t
 * The CSRF protection is currently not working as intended.  This should not be a serious security issue but the hope is to revisit the code and get this working at some point in the future.
 * The coded language support is incomplete.  The goal is to update and finish it, as well as add support, at a minimum, for Spanish.
 * User registration and the entire admin functionality having to do with users and teams is currently broken.  This is a priority and is being worked on.
-* PsychoStats for Scoresheet Baseball does not currently support private leagues that are both continuing and single season.  Leagues where the number of teams and team owners and team numbers change from season to season, but which keep a record of historical seasons, will break the code.  A fix is being worked on but at first it will involve disabling the processing of historical seasons where the numbers of teams change in the league.
 
 
 ## **Stuff that Remains Untested**

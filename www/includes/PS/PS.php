@@ -458,18 +458,19 @@ function token_to_sql($str, $mode) {
 // @param $key is 'team_id'
 function get_team_profile($team_id, $key = 'team_id') {
 	$team = array();
-	$cmd = "SELECT adv.*,prof.*,names.* FROM ";
+	$cmd = "SELECT adv.*,prof.* FROM ";
 	if ($key == 'team_id') {
-		$cmd .= "$this->t_team_ids_team_name names, $this->t_team_adv adv LEFT JOIN $this->t_team_profile prof USING(team_id) WHERE adv.team_id=";
+		$cmd .= "$this->t_team_adv adv LEFT JOIN $this->t_team_profile prof USING(team_id) WHERE adv.team_id=";
 	} else {
 		$_key = $this->db->quote_identifier($key);
-		$cmd .= "$this->t_team_ids_team_name names, $this->t_team_profile prof LEFT JOIN $this->t_team_adv adv USING(team_id) WHERE prof.$_key=";
+		$cmd .= "$this->t_team_profile prof LEFT JOIN $this->t_team_adv adv USING(team_id) WHERE prof.$_key=";
 	}
-	$cmd .= $this->db->escape($team_id, true);
-	$cmd .= " AND names.team_id=";
 	$cmd .= $this->db->escape($team_id, true);
 
 	$team = $this->db->fetch_row(1, $cmd);
+
+	$team['team_name'] = implode($this->db->fetch_list("SELECT team_name FROM $this->t_team_ids_team_name WHERE team_id=$team_id ORDER BY lastseen DESC LIMIT 1"));
+
 	return $team ? $team : false;
 }
 

@@ -228,7 +228,7 @@ def generate_psss_team_ids_name (season, league_name, working_stats_com_dfo):
     if (season == season_c):
         tdtd = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now_utc_ts))
     else:
-        tdtd = str(season) + "-00-00 00:00:00"
+        tdtd = str(season) + "-01-01 00:00:00"
     
     # Generate the team ids names table.
     team_ids_name_dfo = working_stats_com_dfo.loc[:, ['Team','Team_Name']]
@@ -1119,14 +1119,53 @@ else:
 if check_loop != 0:
     grp_check(check_loop, league_url)
 
+# Check for single season mode
+cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='single_season'")
+data = cursor.fetchone()
+if data:
+    single_season = int(data['value'])
+else:
+    single_season = 0
+
+# If single_season is 1, set it to season_c.
+if (single_season == 1):
+    single_season = int(season_c)
+else:
+    single_season = 2011
+
 # Get the list of available seasons from the league page.
 my_regex = r"^\[(2[0-9][0-9][0-9])\]\(.+$"
 seasons_h = re.findall(my_regex, raw_lp_dump, re.MULTILINE)
 
-# Remove all members of list dating 2010 or earlier.
+# Remove all members of list dating earlier than single_season.
 for i in range(len(seasons_h)):
-    if (int(seasons_h[i]) < 2011):
+    if (int(seasons_h[i]) < single_season):
         seasons_h.pop(i)
+
+# If there are seasons in the database earlier than single_season delete that season data,
+# truncate the team_ids_name and team_profile tables, and remove non-admin users.
+cursor.execute("SELECT season FROM psss_team_adv WHERE season<'" + str(single_season) + "' LIMIT 1")
+data = cursor.fetchone()
+if data:
+    cursor.execute("DELETE FROM psss_user WHERE accesslevel<'99';")
+    cursor.execute("DELETE FROM psss_team_adv WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_team_ids_name WHERE lastseen<'" + str(single_season) + "-01-01 00:00:00';")
+    cursor.execute("DELETE FROM psss_team_def WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_team_off WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_seasons_h WHERE season_h<'" + str(single_season) + "';")
+    cursor.execute("TRUNCATE psss_team_wc")
+    psss_db.commit()
+
+    # Set the team_profile table to defaults.
+    cursor.execute("SELECT team_id FROM psss_team_profile")
+    data_prof = cursor.fetchall()
+    for row in data_prof:
+        for key,value in row.items():
+            cursor.execute("UPDATE psss_team_profile SET userid=DEFAULT, name=DEFAULT, email=DEFAULT, discord=DEFAULT, twitch=DEFAULT, youtube=DEFAULT, website=DEFAULT, icon=DEFAULT, cc=DEFAULT, logo=DEFAULT WHERE team_id='" + str(value) +"'")
+
+    # Log entry.
+    error_no += 1
+    error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Single Season Mode: Team data and users for previous seasons have been deleted and team profiles reset to defaults.\n"
 
 # Get the date on the league page.
 my_regex = r"^.+ ((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))$"

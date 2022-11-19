@@ -44,6 +44,12 @@ The install process will automatically delete your install folder when it is com
 
 6. The 'root' folder contains the heart of your PsychoStats.  You can put that anywhere as long as your user has executable permissions and you can access your PsychoStats database from that machine.  The contents of the 'root' folder should not be exposed to the web.  Edit the 'Config/psss.conf' in that folder with your PsychoStats database name, user and password.
 
+### A NOTE ON SINGLE SEASON STANDARD OR PRIVATE LEAGUES
+
+You can use PschoStats for Scoresheet Baseball for leagues that are not continuing leagues.  However, if you do so you should check the option for "Single Season Mode" in the main configuration of the Admin CP.  In single season mode historical seasons will not be parsed.  Seasons where the team numbers do not match the same owners, and the number of teams per season change, will break the parsing of historical seasons, as well as the user account functionality.
+
+In single season mode non-admin user accounts will be deleted at the start of every season and users will need to re-register if they wish to have an account linked to their team.
+
 ### RUNNING PSSS.PY ON A SCHEDULE
 
 The sats script, psss.py, is intended to be run on a schedule.  The weekly game results are typically released shortly after 12:00pm on Mondays, Eastern time.  You can use cron to run the script on Linux, or use the Windows scheduler.  The cron.d script should contain the following on Linux:

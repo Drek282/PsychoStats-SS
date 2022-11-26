@@ -4,8 +4,16 @@
 Version 0.0.1b (in progress)
 * [Fixed] Corrected an error in the SRAT formula.
 * [Added] Single season mode that only processes the current season and deletes or defaults all data from previous seasons.
+* [Changed] The team number on the main team listing is no longer a clickable link.
+* [Changed] Added and deleted a number of team icons.
+* [Tweaked] The Hall of Fame Plaque icon.
+* [Removed] default-blue theme team template.
+* [Added] Support for email notifications.
+* [Fixed] User account subsystems.
+* [Added] Login/Logout link to the overall headers.
+* [Fixed] Readme incorrectly listed Perl as a requirement.
 
-Version 0.0.0b
+Version 0.0.0b (11/11/2022)
 * [Updated] Minimum MySQL version updated to 5.5.0
 * [Updated] Minimum PHP version updated to 7.1.0
 * [Initial] Conversion from Psychostats for Scoresheet to Psychostats for Scoresheet Baseball

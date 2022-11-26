@@ -1,4 +1,4 @@
-This is an unofficial version of PsychoStats by Stormtrooper. Updated to work with PHP 7.1.0+ and MySQL 5.5.0+.  The minimum required version of Perl is 5.08.  This version of Psychostats has been modified to display Scoresheet Baseball team statistics.
+This is an unofficial version of PsychoStats by Stormtrooper. Updated to work with PHP 7.1.0+ and MySQL 5.5.0+.  The minimum required version of Python is 3.x.  This version of Psychostats has been modified to display Scoresheet Baseball team statistics.
 
 All of the versions in this repository should be considered beta software.  Prior to 2010 PsychoStats was tested on thousands of websites with logs from thousands of game servers.  The base PsychoStats code should be robust and stable, the changes that have been made to adapt this to Scoresheet Baseball are significant but the base code should still be robust and stable, but there are no guarantees.
 

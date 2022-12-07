@@ -195,7 +195,7 @@ $table->attr('class', 'ps-table ps-team-table');
 $table->sort_baseurl($search ? array( 'search' => $search ) : array( 'q' => $q ));
 $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
-	'team_n'			=> array( 'label' => $cms->trans("Team #"), 'callback' => 'psss_table_team_link' ),
+	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 	'run_support'			=> array( 'label' => $cms->trans("Run Support"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game") ),
 	'at_bats'			=> array( 'label' => $cms->trans("AB"), 'tooltip' => $cms->trans("Team Total At Bats") ),

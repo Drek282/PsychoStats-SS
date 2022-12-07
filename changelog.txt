@@ -19,6 +19,7 @@ Version 0.0.1b (12/07/2022)
 * [Added] The user management page will automatically delete stale, unconfirmed user accounts.
 * [Fixed] Incorrect data displayed in Division Rundown.
 * [Added] Divisions page can now display historical season data.
+* [Added] Some more default allowed HTML tags.
 
 Version 0.0.0b (11/11/2022)
 * [Updated] Minimum MySQL version updated to 5.5.0

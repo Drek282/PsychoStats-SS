@@ -469,7 +469,7 @@ function get_team_profile($team_id, $key = 'team_id') {
 
 	$team = $this->db->fetch_row(1, $cmd);
 
-	$team['team_name'] = implode($this->db->fetch_list("SELECT team_name FROM $this->t_team_ids_team_name WHERE team_id=$team_id ORDER BY lastseen DESC LIMIT 1"));
+	$team['team_name'] = implode($this->db->fetch_list("SELECT team_name FROM $this->t_team_ids_team_name WHERE team_id=" . $team['team_id'] . " ORDER BY lastseen DESC LIMIT 1"));
 
 	return $team ? $team : false;
 }
@@ -516,9 +516,9 @@ function get_team($args = array(), $minimal = false) {
 	if ($minimal) $args['minimal'] = true;
 
 	// Load overall team information
-	$cmd  = "SELECT wc.*,names.*,adv.*,def.*,off.*,team.*,prof.* FROM ($this->t_team_ids_team_name names, $this->t_team team, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off, $this->t_team_profile prof) ";
+	$cmd  = "SELECT wc.*,names.*,team.*,adv.*,def.*,off.*,prof.* FROM ($this->t_team_ids_team_name names, $this->t_team team, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off, $this->t_team_profile prof) ";
 	$cmd .= "LEFT JOIN $this->t_team_wc wc ON wc.team_id=team.team_id ";
-	$cmd .= "WHERE team.team_id='$id' AND team.team_id=adv.team_id AND team.team_id=def.team_id AND team.team_id=off.team_id ";
+	$cmd .= "WHERE team.team_id='$id' AND team.team_id=adv.team_id AND team.team_id=def.team_id AND team.team_id=off.team_id AND team.team_id=prof.team_id ";
 	$cmd .= "LIMIT 1 ";
 	$team = $this->db->fetch_row(1, $cmd);
 
@@ -720,29 +720,29 @@ function get_division($args = array(), $minimal = false) {
 	$division['members'][0]['games_played'] ??= 0;
 	$division['members'][0]['games_remaining'] = 162 - $division['members'][0]['games_played'];
 
-	// Get playoff status and stat totals if there are games remaining.
-	if ($division['members'][0]['games_remaining'] != 0) {
-		$clinch_count = 0;
-		$division['games_played'] = 0;
-		$division['wins'] = 0;
-		$division['losses'] = 0;
-		$division['win_percent'] = 0;
-		$division['team_rdiff'] = 0;
-		foreach ($division['members'] as $tm => $val) {
-			// Playoff status.
+	// Get playoff status and stat totals.
+	$clinch_count = ($division['members'][0]['games_remaining'] != 0) ? 0 : null;
+	$division['games_played'] = 0;
+	$division['wins'] = 0;
+	$division['losses'] = 0;
+	$division['win_percent'] = 0;
+	$division['team_rdiff'] = 0;
+	foreach ($division['members'] as $tm => $val) {
+		// Playoff status.
+		if (!is_null($clinch_count)) {
 			$division['members'][$tm]['games_back'] = $this->get_playoff_status($division['members'][$tm]['games_played'], $division['members'][$tm]['games_back']);
 			if ($division['members'][$tm]['games_back'] == 'elim') $clinch_count++;
-			// Stat totals.
-			$division['games_played'] = $division['games_played'] + $division['members'][$tm]['games_played'];
-			$division['wins'] = $division['wins'] + $division['members'][$tm]['wins'];
-			$division['losses'] = $division['losses'] + $division['members'][$tm]['losses'];
-			$division['win_percent'] = $division['win_percent'] + $division['members'][$tm]['win_percent'];
-			$division['team_rdiff'] = $division['team_rdiff'] + $division['members'][$tm]['team_rdiff'];
 		}
-
-		// Set clinched status.
-		if (($division['totalmembers'] - $clinch_count) == 1) $division['members'][0]['games_back'] = 'clinch';
+		// Stat totals.
+		$division['games_played'] = $division['games_played'] + $division['members'][$tm]['games_played'];
+		$division['wins'] = $division['wins'] + $division['members'][$tm]['wins'];
+		$division['losses'] = $division['losses'] + $division['members'][$tm]['losses'];
+		$division['win_percent'] = $division['win_percent'] + $division['members'][$tm]['win_percent'];
+		$division['team_rdiff'] = $division['team_rdiff'] + $division['members'][$tm]['team_rdiff'];
 	}
+
+	// Set clinched status.
+	if (!is_null($clinch_count) and ($division['totalmembers'] - $clinch_count) == 1) $division['members'][0]['games_back'] = 'clinch';
 
 	$division['win_percent'] = round($division['win_percent'] / $division['totalmembers'], 3);
 	$division['team_rdiff'] = round($division['team_rdiff'] / $division['totalmembers'], 2);
@@ -925,7 +925,7 @@ function get_team_list($args = array()) {
 	);
 	$values = "";
 	if (trim($args['fields']) == '') {
-		$values .= "name.*,adv.team_id team_n,adv.*,team.*,def.*,off.* ";
+		$values .= "name.*,adv.team_id team_n,adv.*,team.*,def.*,off.*,prof.icon,prof.cc ";
 //		if ($args['joinccinfo']) $values .= ",c.* ";
 	} else {
 		$values = $args['fields'];
@@ -935,6 +935,7 @@ function get_team_list($args = array()) {
 	$cmd .= "LEFT JOIN $this->t_team team ON adv.team_id = team.team_id ";
 	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND def.season=" . $args['season'] . " ";
 	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND off.season=" . $args['season'] . " ";
+	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
 	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
@@ -1011,55 +1012,57 @@ function get_team_list($args = array()) {
 
 // Loads a list of team information (no stats) including their profile and assoicated user information
 function get_basic_team_list($args = array()) {
+	global $cms;
 	$args += array(
-		'start'			=> 0,
-		'limit'			=> 100,
-		'sort'			=> 'name',
-		'order'			=> 'asc',
-		'fields'		=> '',
-		'filter'		=> '',
-		'where'			=> '',
-		'joinccinfo'		=> 0,
-		'joinuserinfo'		=> 1,
-		'results'		=> null,
-		'search'		=> null
+		'allowall'	=> false,
+		'season'	=> null,
+		'start'		=> 0,
+		'limit'		=> 100,
+		'sort'		=> 'win_percent',
+		'order'		=> 'desc',
+		'fields'	=> '',
+		'where'		=> '',
+		'filter'	=> '',
+//		'joinccinfo'	=> true,
+		'results'	=> null,
+		'search'	=> null
 	);
 	$values = "";
 	if (trim($args['fields']) == '') {
-		$values .= "adv.*,adv.team_id t_id,name.*,prof.*,team.* ";
-		if ($args['joinuserinfo']) $values .= ",user.* ";
+		$values .= "name.*,adv.team_id team_n,adv.*,prof.userid,user.username ";
+//		if ($args['joinccinfo']) $values .= ",c.* ";
 	} else {
 		$values = $args['fields'];
 	}
 
-	$cmd  = "SELECT $values ";
-	$cmd .= "FROM ($this->t_team_adv adv, $this->t_team_profile prof, $this->t_team team, $this->t_team_ids_team_name name) ";
-	if ($args['joinuserinfo']) {
-		$cmd .= "LEFT JOIN $this->t_user user ON user.userid=prof.userid ";
-	}
-	$cmd .= "WHERE prof.team_id=adv.team_id AND team.team_id=adv.team_id AND name.team_id=adv.team_id ";
-	if (!$args['allowall']) $cmd .= "AND team.allowrank=1 ";
-	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
+	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
+	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
+	$cmd .= "LEFT JOIN $this->t_user user ON prof.userid = user.userid ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+
+	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
+
 	// basic filter
 	if (trim($args['filter']) != '') {
-		$cmd .= " AND (prof.name LIKE '%" . $this->db->escape(trim($args['filter'])) . "%') ";		
+		$cmd .= " AND (name.team_name LIKE '%" . $this->db->escape(trim($args['filter'])) . "%') ";		
 	}
 
-	$list = array();	
+	$list = array();
 	// limit list to search results
 	$results = $args['results'];
 	if ($args['search']) {
 		$results = $this->get_search($args['search']);
 	}
 	if ($results) {
-//		$args['start'] = 0;	// override start since we sliced the array
-//		$team_ids = array_slice(explode(',',$results['results']), $args['start'], $args['limit']);
 		$team_ids = explode(',',$results['results']);
 		if (count($team_ids)) {
-			$cmd .= "AND team.team_id IN (" . join(',', $team_ids) . ") ";
+			$cmd .= "AND adv.team_id IN (" . join(',', $team_ids) . ") ";
 		}
 	}
-
+    
+    // to get rid of duplicate team listings
+	$cmd  .= "GROUP BY name.team_id ";
+	
 	// only do a query if we are not searching or if our current search
 	// actually has some data to return.
 	if (!$results or $results['results']) {
@@ -1067,11 +1070,15 @@ function get_basic_team_list($args = array()) {
 		$list = $this->db->fetch_rows(1, $cmd);
 	}
 
+	// Set divisionname if it has not been set.
+	$list[0]['divisionname'] ??= 'na';
+
 	return $list;
 }
 
 function get_division_list($args = array()) {
 	$args += array(
+		'season'	=> null,
 		'start'		=> 0,
 		'limit'		=> 20,
 		'sort'		=> 'win_percent',
@@ -1088,6 +1095,7 @@ function get_division_list($args = array()) {
 
 	$cmd  = "SELECT $values ";
 	$cmd .= "FROM $this->t_team_adv adv ";
+	$cmd .= "WHERE adv.season=" . $args['season'] . " ";
 	$cmd .= "GROUP BY adv.divisionname ";
 	$cmd .= $this->getsortorder($args);
 	$list = array();
@@ -1224,14 +1232,27 @@ function get_total_teams($args = array()) {
 	if ($filter == '') {
 		$cmd = "SELECT count(*) FROM $this->t_team team WHERE 1 ";
 	} else {
-		$cmd = "SELECT count(*) FROM $this->t_team team, $this->t_team_profile pp WHERE pp.team_id=team.team_id ";
+
+	///////////
+
+
+		$cmd  = "SELECT count(*) FROM $this->t_team_adv adv ";
+		$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
+		$cmd .= "LEFT JOIN $this->t_user user ON prof.userid = user.userid ";
+		$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+    
+    	// to get rid of duplicate team listings
+		$cmd  .= "GROUP BY name.team_id ";
+
+
+
+
+	//////////
 	}
-	if (!$args['allowall']) $cmd .= "AND team.allowrank=1 ";
 	// basic filter
 	if ($filter != '') {
 		$f = '%' . $this->db->escape($filter) . '%';
-		$cmd .= " AND (pp.team_name LIKE '$f')";	// I don't like using OR logic, queries run much slower.
-//		$cmd .= " AND (pp.name LIKE '$f' OR pp.uniqueid LIKE '$f')";
+		$cmd .= " AND (name.team_name LIKE '$f')";	// I don't like using OR logic, queries run much slower.
 	}
 	$this->db->query($cmd);
 	list($total) = $this->db->fetch_row(0);
@@ -1941,6 +1962,7 @@ function flagimg($cc, $args = array()) {
 		'id'		=> '',		// ID for the image
 		'extra'		=> '',		// extra paramaters
 	);
+
 	if (empty($cc)) return '';
 	$cc = strtolower($cc);
 	$path = !empty($args['path']) ? $args['path'] : '';

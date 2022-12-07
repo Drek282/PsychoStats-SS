@@ -70,11 +70,21 @@ function PsychoUser(&$session, &$db) {
 // loads the user information from the database.
 // $key is 'userid' by default but can be changed to load a user based off another column (like 'username')
 function load($userid, $key='userid') {
-	$u = $this->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE %s='%s'",
-		$this->db->table('user'),
-		$this->db->qi($key),
-		$this->db->escape($userid)
-	));
+
+	// Load the user with associated profile
+	$cmd = "SELECT u.*,p.team_id,p.name FROM " . $this->db->table('user') . " u, " . $this->db->table('team_profile') . " p WHERE u.$key=$userid AND p.$key=$userid";
+
+	$u = $this->db->fetch_row(1, $cmd);
+
+	// If $u is empty there is no associated team profile, just load the user and assign 0 as team_id.
+	if (empty($u)) {
+		$cmd = "SELECT * FROM " . $this->db->table('user') . " WHERE $key=$userid";
+		$u = $this->db->fetch_row(1, $cmd);
+		$u['team_id'] = '';
+		$u['name'] = '';
+	}
+
+
 	if (is_array($u)) {
 		$this->info = $u;
 		$this->loaded = true;
@@ -183,11 +193,13 @@ function password($new = null) {
 // the users confirmation flag
 function confirmed($new = null) {
 	$this->info['confirmed'] ??= null;
+	$this->info['email_confirmed'] ??= null;
 	if ($new === null) {
-		return $this->info['confirmed'];
+		return ($this->info['confirmed'] && $this->info['email_confirmed']);
 	} else {
-		$old = $this->info['confirmed'];
+		$old = ($this->info['confirmed'] && $this->info['email_confirmed']);
 		$this->info['confirmed'] = $new;
+		$this->info['email_confirmed'] = $new;
 		return $old;
 	}
 }
@@ -202,6 +214,7 @@ function accesslevel($new = null) {
 		$this->info['accesslevel'] = $new;
 		return $old;
 	}
+
 }
 
 // the last time the user started a new session.
@@ -341,6 +354,8 @@ function get_user_list($join_team = false, $filter = array()) {
 		'order'       => 'asc',
 		'sort'        => 'username',
 		'username'    => '',		// search filter "LIKE"
+		'team_id'    => '',
+		'email_confirmed'   => null,
 		'confirmed'   => null,
 		'accesslevel' => null
 	);
@@ -351,19 +366,28 @@ function get_user_list($join_team = false, $filter = array()) {
 	if (!in_array($filter['sort'], array('username'))) $filter['sort'] = 'username'; // only allow 'username' for now
 
 	$fields = '';
-	if ($join_team) $fields = 'pp.*,p.team_id,';
+	if ($join_team) $fields = 'prof.*,';
 	$fields .= 'u.*';
 
 	$cmd  = "SELECT $fields FROM " . $this->db->table('user') . " u ";
 	if ($join_team) {
-		$cmd .= "LEFT JOIN " . $this->db->table('team_profile') . " pp ON pp.userid=u.userid ";
-		$cmd .= "LEFT JOIN " . $this->db->table('team') . " p ON p.team_id=pp.team_id ";
+		$cmd .= "LEFT JOIN " . $this->db->table('team_profile') . " prof ON prof.userid=u.userid ";
 	}
 
 	$where = "";
 	if ($filter['username']) {
 		if (!$where) $where .= "WHERE ";
 		$where .= "username LIKE '%" . $this->db->escape($filter['username']) . "%' ";
+	}
+	
+	if ($filter['team_id']) {
+		if (!$where) $where .= "WHERE ";
+		$where .= "team_id LIKE '%" . $this->db->escape($filter['team_id']) . "%' ";
+	}
+
+	if ($filter['email_confirmed'] != null and $filter['email_confirmed'] > -1) {
+		$where .= $where ? "AND " : "WHERE ";
+		$where .= "email_confirmed = " . $this->db->escape($filter['email_confirmed'], true);
 	}
 
 	if ($filter['confirmed'] != null and $filter['confirmed'] > -1) {
@@ -380,6 +404,12 @@ function get_user_list($join_team = false, $filter = array()) {
 	$cmd .= " " . $where;
 	$cmd .= " " . $this->db->sortorder($filter);
 	$list = $this->db->fetch_rows(1, $cmd);
+
+	// Replace accesslevel with the string.
+	foreach ($list as $u => $val) {
+		$list[$u]['accesslevel'] = $this->acl_str($list[$u]['accesslevel']);
+	}
+
 	return $list;
 }
 
@@ -451,11 +481,15 @@ function & init_form(&$form) {
 function to_form_input() {
 	$this->info['userid'] ??= null;
 	$this->info['username'] ??= null;
+	$this->info['name'] ??= null;
+	$this->info['team_id'] ??= null;
 	$this->info['accesslevel'] ??= null;
 	$this->info['confirmed'] ??= null;
 	return array(
 		'userid'	=> $this->info['userid'],
 		'username'	=> $this->info['username'],
+		'name'		=> $this->info['name'],
+		'team_id'	=> $this->info['team_id'],
 //		'password'	=> $this->info['password'],	// hashed, so it's useless in a form
 		'accesslevel'	=> $this->info['accesslevel'],
 		'confirmed'	=> $this->info['confirmed']

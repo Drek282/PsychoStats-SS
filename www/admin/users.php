@@ -25,7 +25,7 @@ define("PSYCHOSTATS_ADMIN_PAGE", true);
 include("../includes/common.php");
 include("./common.php");
 
-$validfields = array('ref','start','limit','order','sort','filter','c', 'sel', 'delete','confirm');
+$validfields = array('ref','start','limit','order','sort','filter','ec','c', 'sel', 'delete','confirm');
 $cms->theme->assign_request_vars($validfields, true);
 
 $message = '';
@@ -35,6 +35,8 @@ if (!is_numeric($start) or $start < 0) $start = 0;
 if (!is_numeric($limit) or $limit < 0) $limit = 100;
 if (!in_array($order, array('asc','desc'))) $order = 'asc';
 if (!in_array($sort, array('username'))) $sort = 'username';
+$ec = trim($ec);
+if ($ec == '') $ec = -1;
 $c = trim($c);
 if ($c == '') $c = -1;
 
@@ -44,6 +46,7 @@ $_order = array(
 	'order' 	=> $order, 
 	'sort'		=> $sort,
 	'username'	=> $filter,
+	'email_confirmed'	=> $ec,
 	'confirmed'	=> $c
 );
 
@@ -54,11 +57,53 @@ if (($delete or $confirm) and is_array($sel) and count($sel)) {
 		if (is_numeric($id) and $id != $cms->user->userid()) {
 			if ($delete) {
 				if ($cms->user->delete_user($id)) {
-					$ps->db->update($ps->t_team_profile, array( 'userid' => null ), 'userid', $id);
+					$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'discord' => null, 'twitch' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $id);
 					$total_processed++;
 				}
 			} else { // confirm
 				if ($cms->user->confirm_user(1, $id)) {
+
+					// If email notifications are enabled notify the user that the account has been confirmed.
+					if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+
+						// load this team profile
+						$team = $ps->get_team_profile($id, 'userid');
+
+						// Setup the site url for the notification email.
+						$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
+						array_pop($base_url_array);
+						array_pop($base_url_array);
+						$base_url = implode('/', $base_url_array);
+						$login_url = $base_url . "/login.php";
+
+						$cms->theme->assign(array(
+							'team'	=> $team,
+							'login_url'	=> $login_url,
+						));
+
+						// Setup email variables.
+						$email = $team['email'];
+						$site_email = $ps->conf['main']['email']['admin_email'];
+
+						if ($site_name = $ps->conf['main']['site_name']) {
+							$subject = $cms->trans("Your PsychoStats Account Has Been Confirmed for") . " " . $site_name;
+						} else {
+							$subject = $cms->trans("Your PsychoStats Account Has Been Confirmed");
+						}
+					
+						$template = 'user_confirmation';
+						// Setup the email page.
+						$email_page = $cms->return_email_page($template, 'email_header', 'email_footer');
+						// Setup the email headers.
+						$headers  = 'MIME-Version: 1.0' . "\r\n";
+						$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+						$headers .= 'From: '.$site_email."\r\n".
+    						'Reply-To: '.$site_email."\r\n" .
+    						'X-Mailer: PHP/' . phpversion();
+
+						psss_send_mail($email, $subject, $email_page, $headers);
+					}
+
 					$total_processed++;
 				}
 			}
@@ -79,10 +124,20 @@ if (($delete or $confirm) and is_array($sel) and count($sel)) {
 
 $uobj =& $cms->new_user();	// start a user object
 
+// delete stale users
+$users = $uobj->get_user_list(true, $_order);
+foreach ($users as $u) {
+	if (((time() - $u['tpw_timestamp']) > 172800) && (!$u['email_confirmed'] || !$u['confirmed'])) {
+		$cms->user->delete_user($u['userid']);
+		$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'discord' => null, 'twitch' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $u['userid']);
+	}
+}
+unset($users);
+
 $users = $uobj->get_user_list(true, $_order);	// true = get associated team info too
 $total = $uobj->total_users($_order);
 $pager = pagination(array(
-	'baseurl'	=> psss_url_wrapper(array('sort' => $sort, 'order' => $order, 'limit' => $limit, 'filter' => $filter, 'c' => $c)),
+	'baseurl'	=> psss_url_wrapper(array('sort' => $sort, 'order' => $order, 'limit' => $limit, 'filter' => $filter, 'ec' => $ec, 'c' => $c)),
 	'total'		=> $total,
 	'start'		=> $start,
 	'perpage'	=> $limit, 
@@ -95,8 +150,6 @@ $pager = pagination(array(
 
 $cms->crumb('Manage', psss_url_wrapper(array('_base' => 'manage.php' )));
 $cms->crumb('Users', psss_url_wrapper(array('_base' => $php_scnm )));
-
-
 // assign variables to the theme
 $cms->theme->assign(array(
 	'page'		=> basename(__FILE__, '.php'), 

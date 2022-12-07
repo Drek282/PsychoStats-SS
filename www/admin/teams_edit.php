@@ -46,10 +46,10 @@ if ($id) {
 	if ($team and $team['team_id'] == null) { // no matching profile; lets create one (all teams should have one, regardless)
 		$_id = $ps->db->escape($id, true);
 		list($uid) = $ps->db->fetch_list("SELECT team_id FROM $ps->t_team WHERE team_id=$_id");
-		list($name) = $ps->db->fetch_list("SELECT name FROM $ps->t_team_ids_name WHERE team_id=$_id ORDER BY totaluses DESC LIMIT 1");
-		$ps->db->insert($ps->t_team_profile, array( 'team_id' => $uid, 'name' => $name ));
+		list($team_name) = $ps->db->fetch_list("SELECT team_name FROM $ps->t_team_ids_team_name WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
+		$ps->db->insert($ps->t_team_profile, array( 'team_id' => $uid, 'team_name' => $team_name ));
 		$team['team_id'] = $uid;
-		$team['name'] = $name;
+		$team['team_name'] = $team_name;
 	}
 
 	if (!$team) {
@@ -84,22 +84,16 @@ if ($del and $id and $team['team_id'] == $id) {
 // create the form variables
 $form = $cms->new_form();
 $form->default_modifier('trim');
-$form->field('team_name');	// 'team_name' is used instead of 'name' to avoid conflicts with some software (nuke)
-$form->field('email');
-$form->field('discord');
-$form->field('twitch');
-$form->field('youtube');
-$form->field('socialclub');
-$form->field('website');
-$form->field('icon');
-$form->field('cc');
-$form->field('logo');
+$form->field('team_name');
 $form->field('namelocked');
 if ($cms->user->is_admin()) {
 	$form->field('username');
 	$form->field('password');
 	$form->field('password2');
+	$form->field('email', 'email');
+	$form->field('email2');
 	$form->field('accesslevel');
+
 //	$form->field('confirmed');
 }
 
@@ -112,77 +106,24 @@ if ($submit) {
 	// protect against CSRF attacks
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
-	$input['name'] = $input['team_name'];
-	unset($input['team_name']);
-
-	// force a protocol prefix on the website url (http://)
-	if (!empty($input['website']) and !preg_match('|^\w+://|', $input['website'])) {
-		$input['website'] = "http://" . $input['website'];
-	}
-
-	// return error if website address does not exist or is unreachable
-	if (!empty($input['website']) and !url_exists($input['website'])) {
-        $form->error('website', $cms->trans("The web address is unreachable.") . " " .
-            $cms->trans("Resubmit to try again.") 
-			);
-        $form->set('website', $website);
-	}
-
-	// return error if discord id is not an 18 digit number
-	if (!empty($input['discord']) and !preg_match('|^[\d+]{17}$|', $input['discord'])) {
-        $form->error('discord', $cms->trans("The Discord ID is not in the correct format.") . " " .
-            $cms->trans("Resubmit to try again.") 
-			);
-        $form->set('discord', $discord);
-	}
-
-	// return error if twitch user name is not in correct format
-	if (!empty($input['twitch']) and !preg_match('|^[a-zA-Z0-9][\w]{3,24}$|', $input['twitch'])) {
-        $form->error('twitch', $cms->trans("Twitch user name not in correct format.") . " " .
-            $cms->trans("Resubmit to try again.") 
-			);
-        $form->set('twitch', $twitch);
-	}
-
-	// return error if youtube user name is not in correct format
-	if (!empty($input['youtube']) and !preg_match('|^[a-zA-Z0-9_-]{1,}$|', $input['youtube'])) {
-        $form->error('youtube', $cms->trans("YouTube user name not in correct format.") . " " .
-            $cms->trans("Resubmit to try again.") 
-			);
-        $form->set('youtube', $twitch);
-	}
-
-	// strip out any bad tags from the logo.
-	if (!empty($input['logo'])) {
-		$logo = psss_strip_tags($input['logo']);
-		$c1 = md5($logo);
-		$c2 = md5($input['logo']);
-		if ($c1 != $c2) {
-			$form->error('logo', $cms->trans("Invalid tags were removed.") . " " .
-				$cms->trans("Resubmit to try again.") 
-			);
-			$form->set('logo', $logo);
-		}
-		$input['logo'] = $logo;
-	}
-
 	if ($cms->user->is_admin()) {
 		if (!array_key_exists($input['accesslevel'], $cms->user->accesslevels())) {
 			$form->error('accesslevel', $cms->trans("Invalid access level specified"));
 		}
 	}
-
 	if (!$form->error('username') and $input['username'] != '') {
 		// load the user matching the username
 		$_u = $team_user->load_user($input['username'], 'username');
 		// do not allow a duplicate username if another user has it already
-		if ($_u and $_u['userid'] != $team_user->userid()) {
+		if ($_u and $_u['userid'] == $team_user->userid()) {
 			$form->error('username', $cms->trans("Username already exists; please try another name"));
+		} else {
+			unset($form->errors['username']);
 		}
 		unset($_u);
 	}
 
-	// if a username is given we need to make sure a password was provided too (if there wasn't one already)
+	// if a username is given we need to make sure a password and email address was provided too (if there wasn't one already)
 	if ($input['username'] != '') {
 		// verify the passwords match if one was specified
 		if (!$team_user->userid() and $input['password'] == '') {
@@ -191,27 +132,39 @@ if ($submit) {
 			if ($input['password'] != $input['password2']) {
 				$form->error('password', $cms->trans("Passwords do not match; please try again"));
 				$form->error('password2', ' ');
+			} elseif ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email']) && $input['email'] == '') {
+				$form->error('email', $cms->trans("An email address must be entered for new users"));
+			} else {
+				if ($input['email'] != $input['email2']) {
+					$form->error('email', $cms->trans("Email addresses do not match; please try again"));
+					$form->error('email2', ' ');
+				}
 			}
 		} else {
 			unset($input['password']);
+			unset($input['email']);
 		}
 		unset($input['password2']);
+		unset($input['email2']);
 	}
 
-	
 	$valid = ($valid and !$form->has_errors());
 	if ($valid) {
 		// setup user record
 		$u['username'] = $input['username'];
-		if ($input['password'] != '') $u['password'] = $team_user->hash($input['password']);
+		$u['password'] = $team_user->hash($input['password']);
+		//$u['email'] = $input['email'];
 		$u['accesslevel'] = $input['accesslevel'];
 		$u['confirmed'] = 1;
 		unset($input['username']);
+		unset($input['team_id']);
+		unset($input['team_name']);
 		unset($input['password']);
 		unset($input['password2']);
+		//unset($input['email']);
+		unset($input['email2']);
 		unset($input['accesslevel']);
 
-		$input['cc'] = strtoupper($input['cc']);
         if (!$input['namelocked']) $input['namelocked'] = 0;
 
 		// save a NEW user record if this team didn't have one
@@ -219,12 +172,56 @@ if ($submit) {
 		if (!$team_user->userid() and $u['username'] != '') {
 			$inserted = true;
 			$u['userid'] = $team_user->next_userid();	// assign an ID
+			$u['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $team_user->hash(psss_generate_pw()) : null;
+			$u['tpw_timestamp'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? time() : 0;
+			$u['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 			$input['userid'] = $u['userid'];		// point the team_profile to this userid
 			$ok = $team_user->insert_user($u);
 			if (!$ok) {
 				$form->error('fatal', $cms->trans("Error saving user: " . $team_user->db->errstr));
 			} else {
-				$team_user->load($u['userid']);
+				$ok = $ps->db->update($ps->t_team_profile, 
+					array( 'userid' => $input['userid'], 'email' => $input['email'] ? $input['email'] : null, 'cc' => $input['cc'] ? $input['cc'] : null), 
+					'team_id', $id
+					);
+				if (!$ok) {
+					$form->error('fatal', $cms->trans("Error updating team profile: " . $ps->db->errstr));
+				} else {
+					$team_user->load($u['userid']);
+
+					// send email confirmation notice if email notifictions are enabled
+					if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+
+						// Setup the confirmation url.
+						$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
+						array_pop($base_url_array);
+						array_pop($base_url_array);
+						$base_url = implode('/', $base_url_array);
+						$confirmation_url = $base_url . "/pwreset_final.php?userid=" . $u['userid'] . "&tpw=" . $u['temp_password'];
+						unset($base_url_array);
+
+						$cms->theme->assign(array(
+							'confirmation_url'	=> $confirmation_url,
+						));
+
+						// Setup email variables.
+						$email = $input['email'];
+						$from = $ps->conf['main']['email']['admin_email'];
+						$subject = "Please choose a password for your new account";
+						$template = 'confirmation';
+						// Setup the email page.
+						$email_page = $cms->return_email_page($template, 'email_header', 'email_footer');
+						// Setup the email headers.
+						$headers  = 'MIME-Version: 1.0' . "\r\n";
+						$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+						$headers .= 'From: '.$from."\r\n".
+    						'Reply-To: '.$from."\r\n" .
+    						'X-Mailer: PHP/' . phpversion();
+
+						psss_send_mail($email, $subject, $email_page, $headers);
+
+					}
+				}
 			}
 		}
 
@@ -239,7 +236,7 @@ if ($submit) {
 		// update user record if something was changed
 		if (!$inserted and $ok) {
 			$changed = false;
-			foreach (array('username', 'password', 'accesslevel', 'confirmed') as $k) {
+			foreach (array('username', 'password', 'temp_password', 'tpw_timestamp', 'accesslevel', 'email_confirmed', 'confirmed') as $k) {
 				if (!array_key_exists($k, $u)) continue;
 				if ($team_user->$k() != $u[$k]) {
 					$changed = true;
@@ -284,6 +281,8 @@ $cms->crumb('Edit');
 // this will also be put into a 'hidden' field in the form
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
+$username ??= null;
+
 $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowed_html_tags']);
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';
 $cms->theme->assign(array(
@@ -294,6 +293,7 @@ $cms->theme->assign(array(
 	'accesslevels'	=> $team_user->accesslevels(),
 	'form'		=> $form->values(),
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'username'	=> $username,
 ));
 
 // display the output

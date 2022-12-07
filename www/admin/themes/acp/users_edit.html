@@ -27,11 +27,20 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<label class="for" for="confirmed1"><input id="confirmed1" name="confirmed" value="1" {if  $form.confirmed}checked="" {/if}type="radio" class="radio" /> Yes</label>
 	<label class="for" for="confirmed2"><input id="confirmed2" name="confirmed" value="0" {if !$form.confirmed}checked="" {/if}type="radio" class="radio" /> No</label>
 </div>
+<div class="notes">
+	<h4><#User Name#></h4>
+	<p><#Cannot be modified.#></p>
+</div>
 
-<div{if $errors.username} class="err"{/if}>
-	<p class="err" id="err-username">{$errors.username|escape}</p>
-	<label><#Username#>:</label>
-	<input name="username" value="{$form.username|escape}" type="text" class="field" />
+<div>
+	<label><#User Name#>:</label>
+	<span class="nomodify">{$u.username|escape}</span>
+</div>
+
+<div{if $errors.name} class="err"{/if}>
+	<p class="err" id="err-name">{$errors.name|escape}</p>
+	<label><#Owner Name#>:</label>
+	<input value="{$u.name}" name="name" class="field" autocomplete="off" />
 </div>
 
 <div{if $errors.accesslevel} class="err"{/if}>
@@ -42,6 +51,13 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 		<option value="{$value}"{if $value == $form.accesslevel} selected{/if}>{$label}</option>
 {/foreach}
 	</select>
+	<p class="small"><strong><#IMPORTANT#>:</strong>  <#You must set the "Access Level" to at least "User" or the user will not be able to log in with this account.#></p>
+</div>
+
+<div{if $errors.team_id} class="err"{/if}>
+	<p class="err" id="err-team_ic">{$errors.team_id|escape}</p>
+	<label><#Team Number#>:</label>
+	<input value="{$u.team_id}" name="team_id" class="field" autocomplete="off" />
 </div>
 
 {if $id}
@@ -61,6 +77,7 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<p class="err" id="err-password2">{$errors.password2|escape}</p>
 	<label><#Retype Password#>:</label>
 	<input name="password2" type="password" class="field" autocomplete="off" />
+	<p class="small"><strong><#IMPORTANT#>:</strong>  <#If you use a password manager that fills in passwords automatically, or your browser does the same thing, make sure the passwords fields are blank or you will change the password for your user.#></p>
 </div>
 
 </fieldset>

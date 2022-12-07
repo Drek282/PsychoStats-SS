@@ -57,14 +57,19 @@ if ($del and $id and $u->userid() == $id) {
 		$cms->full_page_err(basename(__FILE__, '.php'), $data);
 		exit();
 	}
+	$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'discord' => null, 'twitch' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $id);
 	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'users.php' )));
 }
+
+// Set a variable for current confirmed status.
+$start_conf_status = $u->info['confirmed'];
 
 // create the form variables
 $form = $cms->new_form();
 $form->default_modifier('trim');
 $u->init_form($form);
-$form->field('username','blank');
+$form->field('name');
+$form->field('team_id');
 $form->field('password');
 $form->field('password2');
 $form->field('accesslevel');
@@ -97,20 +102,66 @@ if ($submit) {
 	if (!array_key_exists($input['accesslevel'], $u->accesslevels())) {
 		$form->error('accesslevel', $cms->trans("Invalid access level specified"));
 	}
-
-	if (!$form->error('username')) {
-		$_u = $u->load_user($input['username'], 'username');
-		if ($_u and $_u['userid'] != $u->userid()) {
-			$form->error('username', $cms->trans("Username already exists under a different user"));
-		}
-		unset($_u);
-	}
 	
 	$valid = ($valid and !$form->has_errors());
 	if ($valid) {
 		$ok = false;
+		// setup user record
+		$profile['team_id'] = $input['team_id'];
+		$profile['name'] = $input['name'];
+		unset($input['team_id']);
+		unset($input['name']);
 		if ($id) {
 			$ok = $u->update_user($input, $id);
+			if ($ok) {
+				$ok = $ps->db->update($ps->t_team_profile, 
+					array( 'userid' => $id, 'name' => $profile['name'] ? $profile['name'] : ''), 
+					'team_id', $profile['team_id']
+					);
+				if (!$ok) {
+					$form->error('fatal', $cms->trans("Error updating team profile: " . $ps->db->errstr));
+				}
+			}
+			if ($input['confirmed'] == true && $start_conf_status == false && $ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+
+				// load this team profile
+				$team = $ps->get_team_profile($id, 'userid');
+
+				// Setup the site url for the notification email.
+				$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
+				array_pop($base_url_array);
+				array_pop($base_url_array);
+				$base_url = implode('/', $base_url_array);
+				$login_url = $base_url . "/login.php";
+
+				$cms->theme->assign(array(
+					'team'	=> $team,
+					'login_url'	=> $login_url,
+				));
+
+				// Setup email variables.
+				$email = $team['email'];
+				$site_email = $ps->conf['main']['email']['admin_email'];
+
+				if ($site_name = $ps->conf['main']['site_name']) {
+					$subject = $cms->trans("Your PsychoStats Account Has Been Confirmed for") . " " . $site_name;
+				} else {
+					$subject = $cms->trans("Your PsychoStats Account Has Been Confirmed");
+				}
+				
+				$template = 'user_confirmation';
+				// Setup the email page.
+				$email_page = $cms->return_email_page($template, 'email_header', 'email_footer');
+				// Setup the email headers.
+				$headers  = 'MIME-Version: 1.0' . "\r\n";
+				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+				$headers .= 'From: '.$site_email."\r\n".
+    				'Reply-To: '.$site_email."\r\n" .
+    				'X-Mailer: PHP/' . phpversion();
+
+				psss_send_mail($email, $subject, $email_page, $headers);
+
+			}
 		} else {
 			$input['userid'] = $u->next_userid();
 			$ok = $u->insert_user($input);

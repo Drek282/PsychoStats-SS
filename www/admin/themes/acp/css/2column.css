@@ -200,8 +200,8 @@ dt.folder a {
 dd.edit a {
 	background-image: url(../img/icons/application_form.png);
 }
-dd.tag a {
-	background-image: url(../img/icons/tag.png);
+dd.email a {
+	background-image: url(../img/icons/email.webp);
 }
 dd.server a {
 	background-image: url(../img/icons/server.png);

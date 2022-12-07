@@ -1,10 +1,12 @@
 --- DREK ---
 
 
-Version 0.0.1b (in progress)
+Version 0.0.2b (in progress)
+
+Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.
 * [Added] Single season mode that only processes the current season and deletes or defaults all data from previous seasons.
-* [Changed] The team number on the main team listing is no longer a clickable link.
+* [Changed] The team number on the main team listing and on the division pages is no longer a clickable link.  This is due to the fact that the clickable links can include team icons and flags and it's a bit silly to have that duplicated.
 * [Changed] Added and deleted a number of team icons.
 * [Tweaked] The Hall of Fame Plaque icon.
 * [Removed] default-blue theme team template.
@@ -12,6 +14,9 @@ Version 0.0.1b (in progress)
 * [Fixed] User account subsystems.
 * [Added] Login/Logout link to the overall headers.
 * [Fixed] Readme incorrectly listed Perl as a requirement.
+* [Removed] Division management from the Admin CP.
+* [Removed] The option for users to change their username.
+* [Added] The user management page will automatically delete stale, unconfirmed user accounts.
 
 Version 0.0.0b (11/11/2022)
 * [Updated] Minimum MySQL version updated to 5.5.0

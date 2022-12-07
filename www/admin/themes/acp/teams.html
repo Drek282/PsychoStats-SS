@@ -22,7 +22,6 @@ delete_message = "<#Are you sure you want to delete the selected teams?#>\n<#Del
 		<div id="filter" class="filter">
 			<form action="{url}" method="get">
 				<input name="filter" type="text" value="{$filter|escape}" size="20" class="field" />
-				<label for="all"><input id="all" name="all" type="checkbox" value="1"{if $all} checked="checked"{/if} /> All</label>
 				<input type="submit" 	value="<#Filter#>" class="btn" />
 				<input name="order" 	value="{$order}" type="hidden" />
 				<input name="sort" 	value="{$sort}" type="hidden" />
@@ -40,19 +39,13 @@ delete_message = "<#Are you sure you want to delete the selected teams?#>\n<#Del
 			<th><p><span class="asc"><#Team Name#></span></p></th>
 			<th><p><span class="asc"><#Stats#></span></p></th>
 			<th><p><span class="asc"><#User#></span></p></th>
-			<th><p><span class="asc"><#Win %#></span></p></th>
-			<th><p><span class="asc"><#Ranked#></span></p></th>
-			<th><p><abbr title="<#Select All#>"><input id="delete-all" type="checkbox" /></abbr></p></th>
 		</tr>
-{foreach name="team" from=$teams item='p'}
+{foreach name="team" from=$teams item='t'}
 		<tr{cycle values=", class='even'"} id="row-{$smarty.foreach.team.index}">
-			<td class="item"><a href="{url _base='teams_edit.php' _ref=1 id=$p.t_id}">{$p.t_id}</a></td>
-			<td class="item"><a href="{url _base='teams_edit.php' _ref=1 id=$p.t_id}">{$p.team_name|escape}</a></td>
-			<td>[ <a href="{url _base='../team.php' id=$p.t_id}"><#stats#></a> ]</td>
-			<td>{if $p.userid}<a href="{url _base='users_edit.php' _ref=1 id=$p.userid}">{$p.username|escape}</a>{else}-{/if}</td>
-			<td>{$p.win_percent|escape}</td>
-			<td><img src="{theme->url}/img/icons/{if $p.allowrank}tick{else}cross{/if}.png" alt="{if $p.allowrank}Allow Team to Rank{else}Disallow Rank{/if}"></td>
-			<td><input name="del[]" value="{$p.t_id}" type="checkbox" /></td>
+			<td class="item"><a href="{url _base='teams_edit.php' _ref=1 id=$t.team_n}">{$t.team_n}</a></td>
+			<td class="item"><a href="{url _base='teams_edit.php' _ref=1 id=$t.team_n}">{$t.team_name|escape}</a></td>
+			<td>[ <a href="{url _base='../team.php' id=$t.team_n}"><#stats#></a> ]</td>
+			<td>{if $t.userid}<a href="{url _base='users_edit.php' _ref=1 id=$t.userid}">{$t.username|escape}</a>{else}-{/if}</td>
 		</tr>
 {foreachelse}
 		<tr><td colspan="6" class="no-data">
@@ -60,10 +53,6 @@ delete_message = "<#Are you sure you want to delete the selected teams?#>\n<#Del
 		</td></tr>
 {/foreach}
 		</table>
-	</div>
-	<div class="ps-table-footer">
-		<div style="display: none" id="delete-warning" class="warning"><b><#Warning#>:</b> <#Deleting more than a few teams at a time may take too long and timeout the request.#></div>
-		<input id="delete-btn" type="submit" value="<#Delete Selected#>" />
 	</div>
 	</form>
 </div>

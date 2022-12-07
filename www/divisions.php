@@ -27,11 +27,21 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Divisions');
 
-// Check to see if there is any data in the database before we continue.
-$cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
+// change this if you want the default sort of the division listing to be something else like 'wins'
+$DEFAULT_SORT = 'win_percent';
 
-$results = array();
-$results = $ps->db->fetch_rows(1, $cmd);
+// collect url parameters ...
+$validfields = array('season','sort','order','start','limit','xml');
+$cms->theme->assign_request_vars($validfields, true);
+
+// Set global season variable to default if undeclared.
+$season ??= $ps->get_season_c();
+$season_c ??= $ps->get_season_c();
+
+// If a season is passed from GET/POST update $season. 
+if (isset($cms->input['season'])) {
+	$season = $cms->input['season'];
+}
 
 // create the form variable
 $form = $cms->new_form();
@@ -59,6 +69,12 @@ if (isset($cms->input['cookieconsent'])) {
 	previouspage($php_scnm);
 }
 
+// Check to see if there is any data in the database before we continue.
+$cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
+
+$results = array();
+$results = $ps->db->fetch_rows(1, $cmd);
+
 // if $results is empty then we have no data in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
@@ -75,12 +91,12 @@ if (empty($results)) {
 }
 unset ($results);
 
-// change this if you want the default sort of the division listing to be something else like 'wins'
-$DEFAULT_SORT = 'win_percent';
-
-// collect url parameters ...
-$validfields = array('sort','order','start','limit','xml');
-$cms->theme->assign_request_vars($validfields, true);
+$sort = trim(strtolower($sort));
+$order = trim(strtolower($order));
+if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
+if (!in_array($order, array('asc','desc'))) $order = 'desc';
+if (!is_numeric($start) || $start < 0) $start = 0;
+if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = 6;
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {
@@ -100,17 +116,11 @@ if (isset($cms->input['language'])) {
 	previouspage($php_scnm);
 }
 
-$sort = trim(strtolower($sort));
-$order = trim(strtolower($order));
-if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
-if (!in_array($order, array('asc','desc'))) $order = 'desc';
-if (!is_numeric($start) || $start < 0) $start = 0;
-if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = 6;
-
 // fetch stats, etc...
 $totaldivisions  = $ps->get_total_divisions();
 
 $divisions = $ps->get_division_list(array(
+	'season'	=> $season,
 	'sort'		=> $sort,
 	'order'		=> $order,
 	'start'		=> $start,
@@ -144,7 +154,9 @@ $cms->theme->assign(array(
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'	=> $cms->theme->language,
 	'lastupdate'		=> $ps->get_lastupdate(),
-	'season_c'		=> null,
+	'seasons_h'		=> $ps->get_seasons_h(),
+	'season'		=> $season,
+	'season_c'		=> $season_c,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
 	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',

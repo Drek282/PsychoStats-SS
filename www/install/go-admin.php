@@ -107,8 +107,11 @@ if ($ajax_request) {
 				'accesslevel'	=> $cms->user->acl_admin(),
 				'username'	=> $username,
 				'password'	=> $cms->user->hash($password),
+				'temp_password'	=> null,
+				'tpw_timestamp'	=> 0,
 				'lastvisit'	=> time(),
 				'session_last'	=> time(),
+				'email_confirmed'	=> 1,
 				'confirmed'	=> 1
 			);
 			if (!$cms->user->insert_user($set)) {

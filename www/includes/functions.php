@@ -18,7 +18,7 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id: functions.php 559 2008-09-05 13:15:47Z lifo $
+ *	Version: 0.0.0  $
  */
 
 /***
@@ -389,7 +389,7 @@ function url($arg = array()) {
 
 function remote_addr($alt='') {
 	$ip = $alt;
-	if ($_SERVER['HTTP_X_FORWARDED_FOR'])  {
+	if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))  {
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} elseif ($_SERVER['REMOTE_ADDR']) {
 		$ip = $_SERVER['REMOTE_ADDR'];

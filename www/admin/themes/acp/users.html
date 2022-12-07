@@ -40,21 +40,23 @@ delete_message = "<#Are you sure you want to delete the selected users?#>";
 		</div>
 		{$pager}
 	</div>
-	<form action="{url order=$order sort=$sort start=$start limit=$limit filter=$filter c=$c}" method="post">
+	<form action="{url order=$order sort=$sort start=$start limit=$limit filter=$filter ec=$ec c=$c}" method="post">
 	<div class="ps-table-inner">
 		<table class='ps-table ps-user-table'>
 		<tr>
 			<th><p><a href=""><span class="asc"><#Username#></span></a></p></th>
-			<th><p><a href=""><span class="asc"><#Team#></span></a></p></th>
+			<th><p><a href=""><span class="asc"><#Team ##></span></a></p></th>
 			<th><p><a href=""><span class="asc"><#Access#></span></a></p></th>
+			<th><p><a href=""><span class="asc"><#Email Confirmed#></span></a></p></th>
 			<th><p><a href=""><span class="asc"><#Confirmed#></span></a></p></th>
 			<th><p><abbr title="<#Select All#>"><input id="select-all" type="checkbox" /></abbr></p></th>
 		</tr>
 {foreach name="user" from=$users item='u'}
 		<tr{cycle values=", class='even'"} id="row-{$smarty.foreach.user.index}">
 			<td class="item"><a href="{url _base='users_edit.php' _ref=1 id=$u.userid}">{$u.username|escape}</a></td>
-			<td class="item">{if $u.team_id}<a href="{url _base='teams_edit.php' _ref=1 id=$u.team_id}">{$u.name|escape}</a>{else}-{/if}</td>
-			<td>{user->acl_str acl=$u.accesslevel}</td>
+			<td class="item">{if $u.team_id}<a href="{url _base='teams_edit.php' _ref=1 id=$u.userid}">{$u.team_id|escape}</a>{else}-{/if}</td>
+			<td>{$u.accesslevel}</td>
+			<td><img src="{theme->url}/img/icons/{if $u.email_confirmed}tick{else}cross{/if}.png" alt="{if $u.email_confirmed}Confirmed{else}Not Confirmed{/if}"></td>
 			<td><img src="{theme->url}/img/icons/{if $u.confirmed}tick{else}cross{/if}.png" alt="{if $u.confirmed}Confirmed{else}Not Confirmed{/if}"></td>
 			<td>{if $u.userid != $user.userid}<input name="sel[]" value="{$u.userid}" type="checkbox" />{else}-{/if}</td>
 		</tr>

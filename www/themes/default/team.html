@@ -6,7 +6,7 @@
 
 	<div id="ps-page-title">
 		<div class="inner">
-            {if psss_user_can_edit_team($team)}
+            {if psss_user_can_edit_team($team) && $team.userid}
 			<span>[ <a href="{url _base='editteam.php' _ref=1  id=$team.team_id}"><#Edit Team#></a> ]</span>
             {/if}
 			<h1><#Team Statistics#> :: Team # {$team.team_id} :: {$team.team_name|escape}</h1>
@@ -17,9 +17,9 @@
 			{/if}
 
 			{if $team.rank}
-			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if} {iconimg icon=$team.icon} {$team.name|escape} <#is ranked#> <strong>#{$team.rank}</strong> <#out of#> <strong>{$totalranked|commify}</strong></h2>
+			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if}{if $conf.theme.permissions.show_team_icons} {iconimg icon=$team.icon}{/if} {$team.team_name|escape} <#is ranked#> <strong>#{$team.rank}</strong> <#out of#> <strong>{$totalranked|commify}</strong></h2>
 			{else}
-			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if} {iconimg icon=$team.icon} {$team.name|escape} <#is not ranked#></h2>
+			<h2>{if $conf.theme.permissions.show_team_flags}{flagimg cc=$team.cc}{/if}{if $conf.theme.permissions.show_team_icons} {iconimg icon=$team.icon}{/if} {$team.team_name|escape} <#is not ranked#></h2>
 			{/if}
 		</div>
 		{if $conf.theme.permissions.show_team_profile and psss_user_logged_in()}

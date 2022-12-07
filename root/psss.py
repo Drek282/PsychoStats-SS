@@ -290,11 +290,11 @@ def generate_psss_tables (league_name, working_stats_com_dfo):
         data = cursor.fetchone()
         # Add new team to db if it isn't already there.
         if not data:
-            query = "INSERT INTO psss_team_profile VALUES ('" + str(row['Team']) + "', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1)"
+            query = "INSERT INTO psss_team_profile VALUES ('" + str(row['Team']) + "', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1)"
             cursor.execute(query)
     
     ## Column Headers:
-    #  1 Team ID, 2 userid, 3 Owner Name, 4 email, 5 discord, 6 twitch, 7 youtube, 8 website, 9 icon, 10 country code, 11 logo, 12 name locked
+    #  1 Team ID, 2 userid, 3 Owner Name, 4 email, 5 youtube, 6 website, 7 icon, 8 country code, 9 logo, 10 name locked
 
 
 

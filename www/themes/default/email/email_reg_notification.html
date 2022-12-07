@@ -1,0 +1,31 @@
+<!--outermost page container for all content-->
+<div>
+
+<!--inner container for the content-->
+<div>
+
+<!--content block-->
+<div style="margin: auto; width: 600px;">
+<div style="padding-top: 1em; text-align: center;">
+  <p><strong><#A new user has registered!#></strong></p>
+</div>
+
+<div style="margin-left: 100px; padding-top: 1em; text-align: left;">
+    <ul>
+      <li><#Username#>: {$reg.username}</li>
+      <li><#Owner Email#>: {$reg.email}</li>
+      <li><#Team Number#>: {$team.team_id}</li>
+      <li><#Team Name#>: {$team.team_name}</li>
+    </ul>
+</div>
+
+<div style="padding-top: 1em; text-align: center;">
+  <p><#You can process the new user at#>: <a href="{$admin_users_url}"><#Admin CP#>: <#Users#></a></p>
+</div>
+</div>
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

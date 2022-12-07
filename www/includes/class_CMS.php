@@ -558,6 +558,29 @@ function full_page($pagename, $content, $page_header = null, $page_footer = null
 	$this->theme->showpage($page);
 }
 
+// return a full page which consists of overall header/footer and page content/header/footer
+// without displaying it, to be sent in an email.
+function return_email_page($template, $email_page_header = null, $email_page_footer = null, $template_path = 'email/email_') { 
+	$email_page = "";
+
+	$out = $this->theme->parse($template_path . 'header');
+	$this->filter('email_header', $out);
+	$this->filter('email_header_' . $template, $out);
+	$email_page .= $out;
+
+	$out = $this->theme->parse($template_path . $template);
+	$this->filter('page_content', $out);
+	$this->filter('page_content_' . $template, $out);
+	$email_page .= $out;
+
+	$out = $this->theme->parse($template_path . 'footer');
+	$this->filter('email_footer', $out);
+	$this->filter('email_footer_' . $template, $out);
+	$email_page .= $out;
+
+	return $email_page;
+}
+
 function full_page_err($pagename, $data = array()) {
 	$this->theme->assign($data);
 	$this->full_page($pagename, 'msg/error');

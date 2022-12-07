@@ -294,6 +294,13 @@ div.submit input.register {
 #ps-container .ps-form form div.block {
 	padding: 0;
 }
+#ps-editteam-form.ps-form-container .ps-form span.nomodify {
+	color: #f31414;
+	display: inline-block;
+	padding: 2px;
+	width: 200px;
+	background: #4c4c4c;
+}
 
 #ps-conf-form {
 	background: #222; /*aliceblue;*/

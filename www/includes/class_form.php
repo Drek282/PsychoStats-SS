@@ -18,7 +18,7 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id: class_form.php 367 2008-03-17 17:47:45Z lifo $
+ *	Version: 0.0.0  $
  */
 
 /***
@@ -282,6 +282,7 @@ function val_email($var, $value, &$form) {
 //		$pattern = '/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/';
 		$pattern = '/^(.+)\@(.+\..+)$/';
 		if (!preg_match($pattern, $value)) {
+			$this->valid_errors['email'] ??= null;
 			$form->error($var, $this->valid_errors['email'] ? $this->valid_errors['email'] : "Field must be a valid email address");
 			return false;
 		}

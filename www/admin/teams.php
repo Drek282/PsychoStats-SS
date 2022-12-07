@@ -28,6 +28,10 @@ include("./common.php");
 $validfields = array('ref','start','limit','order','sort','filter','all','del');
 $cms->theme->assign_request_vars($validfields, true);
 
+// Set global season variable to default if undeclared.
+$season ??= $ps->get_season_c();
+$season_c ??= $ps->get_season_c();
+
 $message = '';
 $cms->theme->assign_by_ref('message', $message);
 
@@ -35,9 +39,10 @@ if (!is_numeric($start) or $start < 0) $start = 0;
 if (!is_numeric($limit) or $limit < 0) $limit = 100;
 if (!in_array($order, array('asc','desc'))) $order = 'asc';
 if ($all == '') $all = false;
-if (!in_array($sort, array('t_id','team_name','win_percent','username','allowrank'))) $sort = 't_id';
+if (!in_array($sort, array('team_n','team_name','username'))) $sort = 'team_n';
 
 $_order = array(
+	'season'	=> $season,
 	'start'	=> $start,
 	'limit'	=> $limit,
 	'order' => $order, 
@@ -46,24 +51,9 @@ $_order = array(
 	'allowall' => (bool)$all,
 );
 
-// delete selected teams
-if (is_array($del) and count($del)) {
-	$total_deleted = 0;
-	foreach ($del as $id) {
-		if (is_numeric($id)) {
-			if ($ps->delete_team($id)) {
-				$total_deleted++;
-			}
-		}
-	}	
-	$message = $cms->message('success', array(
-		'message_title'	=> $cms->trans("Teams Deleted!"),
-		'message'	=> $cms->trans("%d teams were deleted successfully", $total_deleted),
-	));
-}
-
 $teams = $ps->get_basic_team_list($_order);
 $total = $ps->get_total_teams($_order);
+
 $pager = pagination(array(
 	'baseurl'	=> psss_url_wrapper(array('sort' => $sort, 'order' => $order, 'limit' => $limit, 'filter' => $filter, 'all' => $all ? 1 : 0)),
 	'total'		=> $total,
@@ -78,7 +68,6 @@ $pager = pagination(array(
 
 $cms->crumb('Manage', psss_url_wrapper(array('_base' => 'manage.php' )));
 $cms->crumb('Teams', psss_url_wrapper(array('_base' => $php_scnm )));
-
 
 // assign variables to the theme
 $cms->theme->assign(array(

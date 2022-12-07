@@ -38,14 +38,15 @@ $cookieconsent = $cms->session->options['cookieconsent'];
 // this will also be put into a 'hidden' field in the form
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
+
+$_GET['ref'] ??= null;
+$_GET['ref'] = htmlspecialchars($_GET['ref']); //XSS Fix. Thanks to JS2007
 $validfields = array('submit','cancel','ref');
 $cms->theme->assign_request_vars($validfields, true);
 
 if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 
 $bad_pw_error = $cms->trans('Invalid username or password');
-
-$form = $cms->new_form();
 $form->default_modifier('trim');
 $form->default_validator('blank', $cms->trans("This field can not be blank"));
 $form->field('username', 'user_exists');
@@ -62,16 +63,18 @@ if ($submit) {
 	// CSRF is more targeted at user requests and not logins, I think.
 //	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
-	$u = null;
 	if ($valid) {
 		// attempt to authenticate
 		$id = $cms->user->auth($input['username'], $input['password']);
+
 		if ($id) {
 			// now load the user if possible
 			$u = $cms->new_user();
 			if (!$u->load($id)) {
 				$form->error('fatal', $cms->trans("Error retreiving user from database") . ":" . $u->loaderr);
 				$valid = false;
+			} else {
+				$cms->user = $u;
 			}
 		} else { // auth failed
 			$form->error('fatal', $bad_pw_error);
@@ -94,8 +97,13 @@ if ($submit) {
 		$valid = false;
 	}
 
-	// If authenetication was valid then we'll set the users online flag and redirect to their previous page
+	// If authentication was valid then we'll set the users online flag and redirect to their previous page
 	if (!$form->has_errors()) {
+		// assign the session a new SID
+		$cms->session->delete_session();
+		$cms->session->sid($cms->session->generate_sid());
+		$cms->session->send_cookie($cms->session->sid());
+		$cms->session->key('');
 //		header("Cache-Control: no-cache, must-revalidate");
 		$cms->session->online_status(1, $u->userid());
 		if ($cms->input['autologin']) $cms->session->save_login($u->userid(), $u->password());
@@ -116,6 +124,7 @@ $cms->theme->assign(array(
 	'errors'	=> $form->errors(),
 	'form'		=> $form->values(),
 	'form_key'	=> '', //$ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'lastupdate'	=> $ps->get_lastupdate(),
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

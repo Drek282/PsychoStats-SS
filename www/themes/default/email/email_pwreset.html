@@ -1,0 +1,40 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-register">
+
+
+<div class="ps-form-container" id="ps-register-form">
+<div class="ps-form">
+<form>
+<fieldset>
+<legend><#Password Set or Reset Requested#></legend>
+
+<p>
+	<#Someone requested a password reset, or registered an account on your behalf, for a PsychoStats account#>{if $conf.main.site_name}
+	<#for#> <b><a href="{if $conf.main.site_url}{$conf.main.site_url|escape}{else}{url _base='index.php'}{/if}">{$conf.main.site_name|escape}</a></b>{/if}.
+</p>
+<p>&nbsp;</p>
+<p>
+	<#If this was not you, or on your behalf, please ignore this email.  If this was for you, click the link below to set your password.#>
+</p>
+<p>&nbsp;</p>
+<p style="margin: auto; width: 200px;">
+	<a style="border: 1px solid #4c4c4c; background: #ababab; width: 200px; padding: 10px; text-align: center;" href="{$setpw_url}"><b>Set Your Password</b></a>
+</p>
+<p>&nbsp;</p>
+</fieldset>
+</form>
+</div>
+</div>
+
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

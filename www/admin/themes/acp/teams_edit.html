@@ -22,7 +22,7 @@ flags_url = "{$conf.theme.flags_url}";
 <div class="ps-form">
 <form method="post" action="{url}">
 <fieldset>
-<legend>{if $id}<#Edit#>{else}<#New#>{/if} <#Team#> <small>( {$team.team_id} )</small></legend>
+<legend><#Edit Team#> <small>( {$team.team_id} )</small></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
 <div{if $errors.team_name} class="err"{/if}>
@@ -32,77 +32,15 @@ flags_url = "{$conf.theme.flags_url}";
 	<label class="for" for="namelocked1"><input id="namelocked1" name="namelocked" value="1" {if $form.namelocked}checked="checked" {/if}type="checkbox" /> Locked?</label>
 </div>
 
-<div{if $errors.icon} class="err"{/if}>
-	<p class="err" id="err-icon">{$errors.icon|escape}</p>
-	<label><#Mini Avatar#>:</label>
-	<input id="icon-input" name="icon" value="{$form.icon|escape}" type="hidden" />
-	<span class="mini-avatar"><img id="icon-img" src="{if $form.icon}{$conf.theme.icons_url}/{$form.icon}{else}{theme->url}/img/spacer.gif{/if}" alt="Avatar"></span>
-	[ <a href="javascript:toggle_gallery()"><#Toggle gallery#></a> ]
-</div>
-<img id="blank-icon" src="{theme->url}/img/spacer.gif" style="display: none" alt="Spacer">
-<div id="icon-gallery" class="inline-notes" style="display: none;"><#Loading avatars, please wait#> ...</div>
-
-<div{if $errors.cc} class="err"{/if}>
-	<p class="err" id="err-cc">{$errors.cc|escape}</p>
-	<label><#Country Code#>:</label>
-	<input id="cc" name="cc" value="{$form.cc|escape}" type="text" class="field short" maxlength="2" />
-	<img id="flag-img" src="{if $form.cc}{$conf.theme.flags_url}/{$form.cc|strtolower|escape}.webp{else}{theme->url}/img/spacer.gif{/if}" alt="Flag">
-{*
-	[ <a href="javascript:toggle_flags()"><#Toggle flags#></a> ]
-*}
-</div>
-<div id="flag-gallery" class="inline-notes" style="display: none;"><#Loading flags, please wait#> ...</div>
-
-<div{if $errors.logo} class="err"{/if}>
-	<p class="err" id="err-logo">{$errors.logo|escape}</p>
-	<label><#HTML Logo#>:
-		<small><#Allowed Tags#>: {$allowed_html_tags}</small>
-	</label>
-	<textarea id="logo" name="logo" cols="30" rows="4" wrap="soft" class="field long">{$form.logo|escape}</textarea>
-</div>
-
-<div class="inline-notes">
-	<h4><#Informational Fields#></h4>
-	<p>
-		<#All informational fields are optional and used solely for display purposes.#>
-		<#Your information is never sold or given away to third parties.#>
-	</p>
-</div>
-
-<div{if $errors.website} class="err"{/if}>
-	<p class="err" id="err-website">{$errors.website|escape}</p>
-	<label><#Website#>:</label>
-	<input id="website" name="website" value="{$form.website|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.email} class="err"{/if}>
-	<p class="err" id="err-email">{$errors.email|escape}</p>
-	<label><#Email#>:</label>
-	<input name="email" value="{$form.email|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.discord} class="err"{/if}>
-	<p class="err" id="err-discord">{$errors.discord|escape}</p>
-	<label><#Discord ID#>:</label>
-	<input name="discord" value="{$form.discord|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.twitch} class="err"{/if}>
-	<p class="err" id="err-twitch">{$errors.twitch|escape}</p>
-	<label><#Twitch User Name#>:</label>
-	<input name="twitch" value="{$form.twitch|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.youtube} class="err"{/if}>
-	<p class="err" id="err-youtube">{$errors.youtube|escape}</p>
-	<label><#YouTube User Name#>:</label>
-	<input name="youtube" value="{$form.youtube|escape}" type="text" class="field long" />
-</div>
-
 </fieldset>
 <fieldset>
 {if $form.username}
-<legend><#Edit user for this team#></legend>
+<legend><#This team already has an associated user#></legend>
+<div class="inline-notes">
+	<h4><#If this is an error#></h4>
+	<p><#The user associated with this team will have to be deleted before a new user can be associated with this team.#>
+	</p>
+</div>
 {else}
 <legend><#Create user for this team#></legend>
 <div class="inline-notes">
@@ -111,11 +49,11 @@ flags_url = "{$conf.theme.flags_url}";
 		<#This will allow the user to login and modify their profile.#>
 	</p>
 </div>
-{/if}
 <div{if $errors.username} class="err"{/if}>
 	<p class="err" id="err-username">{$errors.username|escape}</p>
 	<label><#Username#>:</label>
 	<input name="username" value="{$form.username|escape}" type="text" class="field" />
+	<p class="small"><strong><#IMPORTANT#>:</strong>  <#If you use a password manager that fills in usernames and passwords automatically, or your browser does the same thing, make sure you have selected a new username and password to associate with this team.#></p>
 </div>
 
 <div{if $errors.accesslevel} class="err"{/if}>
@@ -126,6 +64,7 @@ flags_url = "{$conf.theme.flags_url}";
 		<option value="{$value}"{if $value == $form.accesslevel} selected{/if}>{$label}</option>
 {/foreach}
 	</select>
+	<p class="small"><strong><#IMPORTANT#>:</strong>  <#You must set the "Access Level" to at least "User" or the user will not be able to log in with this account.#></p>
 </div>
 
 {if $team_user.userid}
@@ -147,6 +86,23 @@ flags_url = "{$conf.theme.flags_url}";
 	<input name="password2" type="password" class="field" autocomplete="off" />
 </div>
 
+{if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
+<div{if $errors.email} class="err"{/if}>
+	<p class="err" id="err-email">{$errors.email|escape}</p>
+	<label><#Email#>:</label>
+	<input name="email" type="text" class="field" />
+	<small><#Required#></small>
+</div>
+
+<div{if $errors.email2} class="err"{/if}>
+	<p class="err" id="err-email2">{$errors.email2|escape}</p>
+	<label><#Retype Email#>:</label>
+	<input name="email2" type="text" class="field" />
+	<small><#Please confirm the users email address#></small>
+</div>
+{/if}
+{/if}
+
 </fieldset>
 <fieldset>
 <div class="submit">
@@ -154,10 +110,9 @@ flags_url = "{$conf.theme.flags_url}";
 	<input name="ref" value="{$ref}" type="hidden" />
 	<input name="key" value="{$form_key}" type="hidden" />
 	<input name="id" value="{$id}" type="hidden" />
-	<input class="btn save" type="submit" value="<#Save#>" />
-{if $id}
-	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del" />
-{/if}
+	{if !$team_user.username}
+		<input class="btn save" type="submit" value="<#Save#>" />
+	{/if}
 	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
 </div>
 </fieldset>

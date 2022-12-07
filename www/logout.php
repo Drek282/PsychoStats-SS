@@ -68,6 +68,7 @@ $cms->theme->assign(array(
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
+	'lastupdate'	=> $ps->get_lastupdate(),
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 	// ...

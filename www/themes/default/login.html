@@ -11,7 +11,6 @@
 <div class="ps-form-container" id="ps-login-form">
 <div class="ps-form">
 <form method="post" action="{url}">
-<input name="key" value="{$form_key}" type="hidden" />
 <fieldset>
 <legend><#User Login#></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
@@ -40,7 +39,9 @@
 {if $show_register}
 	<p><strong><#Not registered?#></strong> <a href="register.php"><#Register now!#></a><br/>
 {/if}
-	<strong><#Forgot your password?#></strong> <a href="forgotpw.php"><#Reset your password#></a></p>
+{if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
+	<strong><#Forgot your password?#></strong> <a href="pwreset.php"><#Reset your password#></a></p>
+{/if}
 </div>
 </fieldset>
 <fieldset>

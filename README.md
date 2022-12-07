@@ -21,8 +21,10 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 ## **Future Plans**
 
-* Add support for Spanish.
-* Add robust support for standard, non-continuing leagues.
+* Add support for Spanish and French.
+* Add historicl season support for private, non-continuing leagues.
+* Reinstate support for division profiles.
+* Add some wizz-bang to the divisions page, which is currently boring as stale toast.
 
 
 ## **Credits**

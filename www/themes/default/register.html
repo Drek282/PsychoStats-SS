@@ -30,13 +30,12 @@
 {if $conf.main.registration == 'open'}
 		<li><b><#Registration is OPEN. New users will have instant access to their team profiles.#></b></li>
 {elseif $conf.main.registration == 'confirm'}
-		<li><b><#Registration requires confirmation from the admin. You won't be able to login until confirmed.#></b></li>
+		<li><b><#Registration requires confirmation from an admin. You won't be able to login until confirmed.#></b></li>
 {else}
 		<li><b style="color: red"><#Registration is closed! No teams may be registered at this time.#></b></li>
 {/if}
 	</ul>
 </div>
-
 
 <div{if $errors.team_id} class="err"{/if}>
 	<p class="err" id="err-team_id">{$errors.team_id|escape}</p>
@@ -47,16 +46,47 @@
 	</p>
 </div>
 
+<div{if $errors.name} class="err"{/if}>
+	<p class="err" id="err-name">{$errors.name|escape}</p>
+	<label><#Owner Name#>:</label>
+	<input name="name" value="{$form.name|escape}" type="text" class="field" />
+	<p class="small">
+		<#Your registration may need to be confirmed.  Entering the owner name you play Scoresheet under will help identify you for the purposes of registration confirmation.#>
+	</p>
+</div>
+
 <div{if $errors.username} class="err"{/if}>
 	<p class="err" id="err-username">{$errors.username|escape}</p>
 	<label><#Username#>:</label>
 	<input name="username" value="{$form.username|escape}" type="text" class="field" />
+	<p class="small">
+		<#This is the user name you will use to log into your account.#>
+	</p>
 </div>
+
+{if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
+<div{if $errors.email} class="err"{/if}>
+	<p class="err" id="err-email">{$errors.email|escape}</p>
+	<label><#Email#>:</label>
+	<input name="email" value="{$form.email|escape}" type="text" class="field" />
+	<small><#Required#></small>
+</div>
+
+<div{if $errors.email2} class="err"{/if}>
+	<p class="err" id="err-email2">{$errors.email2|escape}</p>
+	<label><#Retype Email#>:</label>
+	<input name="email2" value="{$form.email2|escape}" type="text" class="field" />
+	<small><#Please confirm your email address#></small>
+</div>
+{/if}
 
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
 	<label><#Password#>:</label>
 	<input name="password" type="password" class="field" autocomplete="off" />
+	<p class="small">
+		<#Passwords should be complex, not identifiable words, and be a combination of upper and lower case letters, numbers, and symbols.#>
+	</p>
 </div>
 
 <div{if $errors.password2} class="err"{/if}>
@@ -66,13 +96,6 @@
 </div>
 
 <div class="spacer"></div>
-
-<div{if $errors.email} class="err"{/if}>
-	<p class="err" id="err-email">{$errors.email|escape}</p>
-	<label><#Email#>:</label>
-	<input name="email" value="{$form.email|escape}" type="text" class="field" />
-	<small><#Required#></small>
-</div>
 
 
 </fieldset>

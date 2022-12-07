@@ -1,0 +1,56 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-register">
+
+
+<div class="ps-form-container" id="ps-register-form">
+<div class="ps-form">
+<form>
+<fieldset>
+<legend><#Email Confirmed#></legend>
+
+<p>
+	<#Thank you for registering your team#>
+	<a href="{url _base='team.php' id=$team.team_id}"><b>{$team.name|escape}</b></a>{if $team.team_id} (#{$team.team_id}){/if}
+{if $conf.main.site_name}
+	<#for#> <b><a href="{if $conf.main.site_url}{$conf.main.site_url|escape}{else}{url _base='index.php'}{/if}">{$conf.main.site_name|escape}</a></b>!
+{/if}
+</p>
+<p>&nbsp;</p>
+<p>
+	<!--<#REGISTRATION_COMPLETE#>-->
+	In the future, to <a href="{url _base='login.php'}">login</a> please use your username 
+	'<b><a href="{url _base='editteam.php' id=$reg.userid}">{$reg.username|escape}</a></b>' with the password you supplied in your registration.
+	<!---->
+</p>
+<p>&nbsp;</p>
+<p>
+{if $conf.main.registration == 'open' or $reg.confirmed}
+	<#After you have logged in you will be able to access and modify your own team profile.  To access your team page click on your team name on anywhere it occurs in the stats.  The link to edit your team profile will be in the upper right hand corner of your team page, if you are logged in.#>
+{else}
+	<!--<#REGISTRATION_CONFIRM#>-->
+	You will not be able to login and access your profile until an administrator confirms your account. 
+	If you entered an email address in your registration you will be notified when the account is confirmed.
+	<!---->
+{/if}
+</p>
+<p>&nbsp;</p>
+<p>
+	<#Please feel free to browse the <a href="{url _base='index.php'}">team statistics</a> now.#>
+</p>
+</fieldset>
+</form>
+</div>
+</div>
+
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

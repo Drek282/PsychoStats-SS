@@ -97,10 +97,10 @@
 }
 
 #ps-container div.ps-team-profile div label {
-    color: #444;
+    color: #bbb;
 	display: inline;
 	float: left;
-	width: 20px;
+	width: 175px;
 	padding-right: 0.5em;
 	clear: left;
 	font-weight: bold;
@@ -112,10 +112,10 @@
 }
 
 #ps-container div.ps-division-profile div label {
-    color: #444;
+    color: #bbb;
 	display: inline;
 	float: left;
-	width: 20px;
+	width: 175px;
 	padding-right: 0.5em;
 	clear: left;
 	font-weight: bold;
@@ -272,6 +272,13 @@ div.ps-team-profile #map {
 #ps-container .ps-table .left   { text-align: left; }
 #ps-container .ps-table .right  { text-align: center; }
 #ps-container .ps-table .center { text-align: center; }
+
+/* --- Style for flag and icon images in the team list */
+#ps-container .ps-table .left img  {
+	padding-top: 2px;
+	padding-right: 4px;
+	float: right;
+}
 
 /* --- Team table specific styles */
 .ps-defence-table a.defence,

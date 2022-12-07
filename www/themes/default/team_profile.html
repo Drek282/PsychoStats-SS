@@ -1,20 +1,14 @@
 <div class="ps-team-profile">
+	{if $team.name}
+	<div class="row">
+		<label><#Owner Name#>:</label>
+		<p>{$team.name|escape}</p>
+	</div>
+	{/if}
 	{if $team.website}
 	<div class="row">
 		<label><#Website#>:</label>
 		<p><a href="{$team.website|escape}" target="_blank">{$team.website|urltruncate:60|escape}</a></p>
-	</div>
-	{/if}
-	{if $team.discord}
-	<div class="row">
-		<label><#Discord Profile#>:</label>
-		<p><a href="https://discordapp.com/users/{$team.discord|escape}/" target="_blank">https://discordapp.com/users/{$team.discord|escape}/</a></p>
-	</div>
-	{/if}
-	{if $team.twitch}
-	<div class="row">
-		<label><#Twitch Channel#></label>
-		<p><a href="https://www.twitch.tv/{$team.twitch|escape}" target="_blank">https://www.twitch.tv/{$team.twitch|escape}</a></p>
 	</div>
 	{/if}
 	{if $team.youtube}

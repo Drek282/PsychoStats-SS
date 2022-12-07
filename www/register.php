@@ -43,12 +43,41 @@ if ($cancel) previouspage('index.php');
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
 
+// Check to see if there is any data in the database before we continue.
+$cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
+
+$results = array();
+$results = $ps->db->fetch_rows(1, $cmd);
+
+// if $results is empty then we have no data in the database
+if (empty($results)) {
+	$cms->full_page_err('awards', array(
+		'message_title'	=> $cms->trans("No Teams in the Database"),
+		'message'	=> $cms->trans("There must be teams in the database before anyone can register."),
+		'lastupdate'	=> $ps->get_lastupdate(),
+		'division'		=> null,
+		'wildcard'		=> null,
+		'season_c'		=> null,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+		'cookieconsent'	=> $cookieconsent,
+	));
+	exit();
+}
+unset ($results);
+
+# Are there divisions or wilcards in this league?
+$division = $ps->get_total_divisions() - 1;
+$wildcard = $ps->get_total_wc();
+$lastupdate	= $ps->get_lastupdate();
+
 $form->default_modifier('trim');
 $form->field('team_id', 'blank');
 $form->field('username', 'blank');
+$form->field('name', 'blank');
+$form->field('email', 'email,email_match');
+$form->field('email2', 'email');
 $form->field('password', 'blank,password_match');
 $form->field('password2', 'blank');
-$form->field('email', 'blank, email');
 
 if ($submit) {
 	$form->validate();
@@ -67,14 +96,13 @@ if ($submit) {
 	$team = array();
 	// lookup the worldid/team_id ... 
 	if ($input['team_id'] != '') {
-		if ($ps->conf['main']['team_id'] == 'ipaddr') {
-			$id = sprintf("%u", ip2long($id));
-		}
 		$team = $ps->get_team_profile($id, 'team_id');
 		if (!$team) {
 			$form->error('team_id', $cms->trans("The %s does not exist!", $team_id_label));
 		} elseif ($team['userid']) {
 			$form->error('team_id', $cms->trans("This team is already registered!"));
+		} elseif ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email']) && $input['email'] == '') {
+			$form->error('email', $cms->trans("An email address must be entered for new users"));
 		}
 
 		if ($u->username_exists($input['username'])) {
@@ -85,19 +113,22 @@ if ($submit) {
 	$valid = ($valid and !$form->has_errors());
 	if ($valid) {
 		$userinfo = $input;
-		// email is saved to profile, not user
-		unset($userinfo['team_id'], $userinfo['password2'], $userinfo['email']);
+		// email and name is saved to profile, not user
+		unset($userinfo['team_id'], $userinfo['password2'], $userinfo['name'], $userinfo['email'], $userinfo['email2']);
 
 		$userinfo['userid'] = $u->next_userid();
 		$userinfo['password'] = $u->hash($userinfo['password']);
+		$userinfo['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $u->hash(psss_generate_pw()) : null;
+		$userinfo['tpw_timestamp'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? time() : 0;
 		$userinfo['accesslevel'] = $u->acl_user();
+		$userinfo['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 		$userinfo['confirmed'] = $ps->conf['main']['registration'] == 'open' ? 1 : 0;
 
 		$ps->db->begin();
 		$ok = $u->insert_user($userinfo);
 		if ($ok) {
 			$ok = $ps->db->update($ps->t_team_profile, 
-				array( 'userid' => $userinfo['userid'], 'email' => $input['email'] ? $input['email'] : null), 
+				array( 'userid' => $userinfo['userid'], 'name' => $input['name'] ? $input['name'] : null, 'email' => $input['email'] ? $input['email'] : null), 
 				'team_id', $id
 			);
 			if (!$ok) $form->error('fatal', $cms->trans("Error updating team profile: " . $ps->db->errstr));
@@ -109,15 +140,49 @@ if ($submit) {
 			$ps->db->commit();
 
 			// load this team
-			$team = $ps->get_team($team['team_id'], true);
+			$team = $ps->get_team(array('team_id' 	=> $id,));
+
 			$cms->theme->assign(array(
 				'team'	=> $team,
-				'reg'	=> $userinfo, 
+				'reg'	=> $userinfo,
+				'lastupdate'	=> $lastupdate,
+				'season_c'		=> null,
+				'division'		=> $division,
+				'wildcard'		=> $wildcard,
+				'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+				'cookieconsent'	=> $cookieconsent,
 			));
 
-			// if registration is open log the user in
-			if ($ps->conf['main']['registration'] == 'open') {
-				$cms->session->online_status(1, $userinfo['userid']);
+			// send email confirmation notice if email notifictions are enabled
+			if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+
+				// Setup the confirmation url.
+				$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
+				array_pop($base_url_array);
+				$base_url = implode('/', $base_url_array);
+				$confirmation_url = $base_url . "/email_confirmation.php?user=" . $userinfo['username'] . "&tpw=" . $userinfo['temp_password'];
+				unset($base_url_array);
+
+				$cms->theme->assign(array(
+					'confirmation_url'	=> $confirmation_url,
+				));
+
+				// Setup email variables.
+				$email = $input['email'];
+				$from = $ps->conf['main']['email']['admin_email'];
+				$subject = "Please confirm your email address";
+				$template = 'confirmation';
+				// Setup the email page.
+				$email_page = $cms->return_email_page($template, 'email_header', 'email_footer');
+				// Setup the email headers.
+				$headers  = 'MIME-Version: 1.0' . "\r\n";
+				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+				$headers .= 'From: '.$from."\r\n".
+    				'Reply-To: '.$from."\r\n" .
+    				'X-Mailer: PHP/' . phpversion();
+
+				psss_send_mail($email, $subject, $email_page, $headers);
+
 			}
 	
 			// display the registration confirmation
@@ -130,20 +195,11 @@ if ($submit) {
 		}
 	}
 
-} else {
-	if ($ps->conf['main']['team_id'] == 'ipaddr') {
-		$form->set('team_id', remote_addr());
-	}
-
 }
 
 // save a new form key in the users session cookie
 // this will also be put into a 'hidden' field in the form
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
@@ -151,6 +207,8 @@ $cms->theme->assign(array(
 	'errors'	=> $form->errors(),
 	'form'		=> $form->values(),
 	'team_id_label' => $team_id_label,
+	'lastupdate'	=> $lastupdate,
+	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
 	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
@@ -164,6 +222,18 @@ $cms->theme->add_js('js/forms.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 // validator functions --------------------------------------------------------------------------
+
+function email_match($var, $value, &$form) {
+	global $valid, $cms, $ps;
+	if (!empty($value)) {
+		if ($value != $form->input['email2']) {
+			$valid = false;
+			$form->error($var, $cms->trans("Email addresses do not match"));
+			$form->error('email2', $cms->trans("Email addresses do not match"));
+		}
+	}
+	return $valid;
+}
 
 function password_match($var, $value, &$form) {
 	global $valid, $cms, $ps;

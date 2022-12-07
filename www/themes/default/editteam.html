@@ -1,5 +1,5 @@
 <script>
-delete_message = "<#Are you sure you want to delete the team?#>\n<#Deleting a team does not prevent them from re-appearing in the stats.#>";
+delete_message = "<#Are you sure you want to delete the user account?#>\n<#Deleting a user account does not delete the team from the stats.#>";
 click_icon_message = "<p>&nbsp; <#Click on an avatar to select it.#> <a href='javascript:change_icon(null, true)'><#Click here to clear your avatar.#></a></p>";
 icon_error_message = "<#Error loading icons#>";
 flags_url = "{$conf.theme.flags_url}";
@@ -22,11 +22,18 @@ flags_url = "{$conf.theme.flags_url}";
 <legend>{if $id}<#Edit#>{else}<#New#>{/if} <#Team#> <small>( {$team_team_id|escape} )</small></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
-<div{if $errors.team_name} class="err"{/if}>
-	<p class="err" id="err-team_name">{$errors.team_name|escape}</p>
+<div>
 	<label><#Team Name#>:</label>
-	<input name="team_name" value="{$form.team_name|escape}" type="text" class="field" />
-	<label class="for" for="namelocked1"><input id="namelocked1" name="namelocked" value="1" {if $form.namelocked}checked="checked" {/if}type="checkbox" /> <#Locked?#></label>
+	<span class="nomodify">{$team.team_name|escape}</span>
+</div>
+
+<div{if $errors.name} class="err"{/if}>
+	<p class="err" id="err-name">{$errors.name|escape}</p>
+	<label><#Owner Name#>:</label>
+	<input name="name" value="{$form.name|escape}" type="text" class="field" />
+	<p class="small">
+		<#This name should match the name you play Scoresheet Baseball under.#>
+	</p>
 </div>
 
 <div{if $errors.icon} class="err"{/if}>
@@ -47,6 +54,9 @@ flags_url = "{$conf.theme.flags_url}";
 {*
 	[ <a href="javascript:toggle_flags()"><#Toggle flags#></a> ]
 *}
+	<p class="small">
+		<#The country code is the Alpha-2 code.#> <#You can find a list of country codes#> <a href="https://www.iban.com/country-codes"><#here#></a>.
+	</p>
 </div>
 <div id="flag-gallery" class="inline-notes" style="display: none;"><#Loading flags, please wait#> ...</div>
 
@@ -60,7 +70,7 @@ flags_url = "{$conf.theme.flags_url}";
 
 <div class="inline-notes">
 	<h4><#Informational Fields#></h4>
-	<p><#All informational fields are optional and used solely for display purposes.#></p>
+	<p><#These fields are all optional.  Only logged in users can see this information.#></p>
 </div>
 
 <div{if $errors.website} class="err"{/if}>
@@ -69,56 +79,24 @@ flags_url = "{$conf.theme.flags_url}";
 	<input id="website" name="website" value="{$form.website|escape}" type="text" class="field long" />
 </div>
 
-<div{if $errors.email} class="err"{/if}>
-	<p class="err" id="err-email">{$errors.email|escape}</p>
-	<label><#Email#>:</label>
-	<input name="email" value="{$form.email|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.discord} class="err"{/if}>
-	<p class="err" id="err-discord">{$errors.discord|escape}</p>
-	<label><#Discord ID#>:</label>
-	<input name="discord" value="{$form.discord|escape}" type="text" class="field long" />
-</div>
-
-<div{if $errors.twitch} class="err"{/if}>
-	<p class="err" id="err-twitch">{$errors.twitch|escape}</p>
-	<label><#Twitch User Name#>:</label>
-	<input name="twitch" value="{$form.twitch|escape}" type="text" class="field long" />
-</div>
-
 <div{if $errors.youtube} class="err"{/if}>
 	<p class="err" id="err-youtube">{$errors.youtube|escape}</p>
-	<label><#YouTube User Name#>:</label>
+	<label><#YouTube User#>:</label>
 	<input name="youtube" value="{$form.youtube|escape}" type="text" class="field long" />
 </div>
 
 </fieldset>
 <fieldset>
-{if $team_user.username}
 <legend><#Edit user for this team#></legend>
-{else}
-<legend><#Create user for this team#></legend>
-<div class="inline-notes">
-	<h4><#Register new user#></h4>
-	<p>
-		<!--<#REGISTER_NEW_USER#>-->
-		Register a user for this team by entering a username and password below.
-		This will allow the user to login and modify their profile.
-		<!---->
-	</p>
+<div class="notes">
+	<h4><#User Name#></h4>
+	<p><#Cannot be modified.#></p>
 </div>
-{/if}
-
-<div{if $errors.username} class="err"{/if}>
-	<p class="err" id="err-username">{$errors.username|escape}</p>
-	<label><#Username#>:</label>
-{if $allow_username_change}
-	<input name="username" value="{$form.username|escape}" type="text" class="field" />
-{else}
-	<p>{$team_user.username|escape}</p>
-{/if}
+<div>
+	<label><#User Name#>:</label>
+	<span class="nomodify">{$team_user.username|escape}</span>
 </div>
+<br><br><br>
 
 {if psss_user_is_admin()}
 <div{if $errors.accesslevel} class="err"{/if}>
@@ -134,10 +112,22 @@ flags_url = "{$conf.theme.flags_url}";
 
 {if $team_user.userid}
 <div class="notes">
-	<h4><#Change Password?#></h4>
-	<p><#Only enter a password if you want to change it from the current password.#></p>
+	<h4><#Change Email<br>and/or<br>Password?#></h4>
+	<p><#Only enter an email address or password if you want to change one or both from the current.#></p>
 </div>
 {/if} 
+
+<div{if $errors.email} class="err"{/if}>
+	<p class="err" id="err-email">{$errors.email|escape}</p>
+	<label><#New Email#>:</label>
+	<input name="email" type="text" class="field" />
+</div>
+
+<div{if $errors.email2} class="err"{/if}>
+	<p class="err" id="err-email2">{$errors.email2|escape}</p>
+	<label><#Retype Email#>:</label>
+	<input name="email2" type="text" class="field" />
+</div>
 
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
@@ -159,8 +149,8 @@ flags_url = "{$conf.theme.flags_url}";
 	<input name="key" value="{$form_key}" type="hidden" />
 	<input name="id" value="{$id}" type="hidden" />
 	<input class="btn save" type="submit" value="<#Save#>" />
-{if $id and psss_user_is_admin()}
-	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del" />
+{if $id and psss_user_is_admin() and $team_user.username}
+	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete User#>" name="del" />
 {/if}
 	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
 </div>

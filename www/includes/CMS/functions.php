@@ -18,7 +18,7 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id$
+ *	Version: 0.0.1  $
  */
 
 /***
@@ -327,6 +327,7 @@ if (!function_exists('psss_user_can_edit_team')) {
 			$team_id = $team;
 			$team = $ps->get_team_profile($team_id);
 		}
+
 		return ($user->logged_in() and $team['userid'] == $user->userid());
 	}
 }
@@ -440,6 +441,43 @@ if (!function_exists('psss_ob_handler')) {
 		header("Vary: Accept-Encoding", true); 	// handle proxies
 
 		return false; //$buffer;
+	}
+}
+
+if (!function_exists('psss_send_mail')) { 
+	/** 
+	 * Used to send email notifications using the PHP mail function.  Return true on success, false on failure.
+	 */
+	function psss_send_mail($email, $subject, $email_page, $headers) {
+		$ok = mail($email, $subject, $email_page, $headers);
+		return $ok;
+	}
+}
+
+if (!function_exists('psss_generate_pw')) {
+	/**
+	 * Generate a random string, using a cryptographically secure 
+	 * pseudorandom number generator (random_int)
+	 * 
+	 * @param int $length      How many characters do we want?
+	 * @param string $keyspace A string of all possible characters
+	 *                         to select from
+	 * @return string
+	 */
+	function psss_generate_pw(
+		$length = 24,
+		$keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	)
+	{
+		$pw = '';
+		$max = mb_strlen($keyspace, '8bit') - 1;
+		if ($max < 1) {
+			throw new Exception('$keyspace must be at least two characters long');
+		}
+		for ($i = 0; $i < $length; ++$i) {
+			$pw .= $keyspace[random_int(0, $max)];
+		}
+		return $pw;
 	}
 }
 

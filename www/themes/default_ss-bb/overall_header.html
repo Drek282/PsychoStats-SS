@@ -53,6 +53,12 @@
 {if $show_admin and $cookieconsent}
 	<li><a href="{url _base='admin/index.php'}"><#Admin#></a></li>
 {/if}
+{if !psss_user_logged_in() and $show_login and $cookieconsent}
+	<li><a href="{url _base='login.php'}"><#Login#></a></li>
+{/if}
+{if psss_user_logged_in()}
+	<li><a href="{url _base='logout.php'}"><#Logout#></a></li>
+{/if}
 </ul>
 </div>
 <!---->

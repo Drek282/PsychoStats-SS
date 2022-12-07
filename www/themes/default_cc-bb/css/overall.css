@@ -179,6 +179,7 @@ div#ps-seasons_h-dropdown {
 	font-size: 8pt;
 }
 #ps-login-popup input.field {
+	float: left;
 	margin: 0 0.2em 0 0.2em;
 }
 div#ps-login-inner {
@@ -191,13 +192,16 @@ div#ps-login-inner {
 	margin-bottom: 0.2em;
 }
 #ps-login-inner p label {
+	padding-right: 5px;
+	margin-top: 5px;
 	float: left;
 	width: 60px;
 	text-align: right;
 }
-#ps-login-inner button, 
-#ps-search-inner button {
-	vertical-align: bottom;
+#ps-login-inner p button {
+	position: absolute;
+	right: 10px;
+	bottom: 5px;
 	border: none;
 	background: transparent;
 	cursor: pointer;
@@ -211,11 +215,14 @@ div#ps-login-inner {
 	text-decoration: underline;
 }
 #ps-login-options {
+	position: absolute;
+	right: 95px;
+	bottom: 7px;
 	font-size: 8pt;
 }
 #ps-login-popup input.field {
 	border: 1px solid gray;
-	width: 100px;
+	width: 130px;
 }
 #ps-login-options a {
 	position: absolute;

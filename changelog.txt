@@ -17,6 +17,7 @@ Version 0.0.1b (12/07/2022)
 * [Removed] Division management from the Admin CP.
 * [Removed] The option for users to change their username.
 * [Added] The user management page will automatically delete stale, unconfirmed user accounts.
+* [Fixed] Incorrect data displayed in Division Rundown.
 
 Version 0.0.0b (11/11/2022)
 * [Updated] Minimum MySQL version updated to 5.5.0

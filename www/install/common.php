@@ -22,7 +22,7 @@
  */
 if (!defined("PSYCHOSTATS_INSTALL_PAGE")) die("Unauthorized access to " . basename(__FILE__));
 
-define("PS_INSTALL_VERSION", '0.0.1b');
+define("PS_INSTALL_VERSION", '0.0.2b');
 
 define("PS_ROOTDIR", rtrim(dirname(__DIR__), '/\\'));
 define("PS_INSTALLDIR", __DIR__);

@@ -21,20 +21,20 @@
 <div{if $errors.enabled} class="err"{/if}>
 	<p class="err" id="err-enabled">{$errors.enabled|escape}</p>
 	<label><#Enabled?#></label>
-	<label class="for" for="enabled1"><input id="enabled1" name="enabled" value="1" {if  $form.enabled}checked="" {/if}type="radio" class="radio" /> Yes</label>
-	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio" /> No</label>
+	<label class="for" for="enabled1"><input id="enabled1" name="enabled" value="1" {if  $form.enabled}checked="" {/if}type="radio" class="radio"> Yes</label>
+	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio"> No</label>
 </div>
 
 <div id="ls-source"{if $errors.source} class="err"{/if}>
 	<p class="err" id="err-source">{$errors.source|escape}</p>
 	<label><#League Page URL#>:</label>
-	<input name="source" value="{$form.source|escape}" type="text" class="field long" />
+	<input name="source" value="{$form.source|escape}" type="text" class="field long">
 </div>
 
 <div{if $errors.league_name} class="err"{/if}>
 	<p class="err" id="err-league_name">{$errors.league_name|escape}</p>
 	<label><#Short League Name#>:</label>
-	<input name="league_name" value="{$form.league_name|escape}" type="text" class="field" />
+	<input name="league_name" value="{$form.league_name|escape}" type="text" class="field">
 </div>
 
 <div id="ln-notes" class="inline-notes">
@@ -49,16 +49,16 @@
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="submit" value="1" type="hidden" />
-	<input name="ref" value="{$ref}" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
-	<input name="id" value="{$id}" type="hidden" />
-	<input class="btn save" type="submit" value="<#Save#>" />
+	<input name="submit" value="1" type="hidden">
+	<input name="ref" value="{$ref}" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
+	<input name="id" value="{$id}" type="hidden">
+	<input class="btn save" type="submit" value="<#Save#>">
 {if $id}
-	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del" />
+	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete#>" name="del">
 {/if}
-	<input name="test" class="btn test" type="submit" value="<#Test#>" />
-	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+	<input name="test" class="btn test" type="submit" value="<#Test#>">
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>
 </form>

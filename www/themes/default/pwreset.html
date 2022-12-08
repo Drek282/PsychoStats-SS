@@ -11,7 +11,7 @@
 <div class="ps-form-container" id="ps-register-form">
 <div class="ps-form">
 <form method="post" action="{url}">
-<input name="key" value="{$form_key}" type="hidden" />
+<input name="key" value="{$form_key}" type="hidden">
 <fieldset>
 <legend><#Reset Password#></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
@@ -26,14 +26,14 @@
 <div{if $errors.email} class="err"{/if}>
 	<p class="err" id="err-email">{$errors.email|escape}</p>
 	<label><#Email#>:</label>
-	<input name="email" value="{$form.email|escape}" type="text" class="field" />
+	<input name="email" value="{$form.email|escape}" type="text" class="field">
 	<small><#Required#></small>
 </div>
 
 <div{if $errors.email2} class="err"{/if}>
 	<p class="err" id="err-email2">{$errors.email2|escape}</p>
 	<label><#Retype Email#>:</label>
-	<input name="email2" value="{$form.email2|escape}" type="text" class="field" />
+	<input name="email2" value="{$form.email2|escape}" type="text" class="field">
 	<small><#Please confirm your email address#></small>
 </div>
 
@@ -42,10 +42,10 @@
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="submit" value="1" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
-	<input class="btn register" type="submit" value="<#Submit#>" />
-	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+	<input name="submit" value="1" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
+	<input class="btn register" type="submit" value="<#Submit#>">
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>
 </form>

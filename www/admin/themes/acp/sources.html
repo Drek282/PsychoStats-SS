@@ -21,7 +21,7 @@ delete_message = "<#Are you sure you want to delete the lp source?#>";
 		<div id="filter" class="filter">
 			<form action="{url _base='sources_edit.php'}" method="get">
 				{include file='ajax.html' float='left' size='small-snake'}
-				<input type="submit" value="<#New League Page#>" class="btn" />
+				<input type="submit" value="<#New League Page#>" class="btn">
 			</form>
 		</div>
 		{$pager}
@@ -51,7 +51,7 @@ delete_message = "<#Are you sure you want to delete the lp source?#>";
 {foreachelse}
 		<tr><td colspan="4" class="no-data">
 			<#No League Page Defined!#>
-			<br/>
+			<br>
 			<a href="{url _base='sources_edit.php'}"><#Click here to add a league page#></a>
 		</td></tr>
 {/foreach}

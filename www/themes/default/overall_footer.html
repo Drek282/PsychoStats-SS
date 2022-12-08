@@ -3,7 +3,7 @@
 {if $language_list and $cookieconsent}
 	<div class="language">
 		<form action="{url _base='index.php' _ref=1}" method="post">
-	    <input name="key" value="{$form_key}" type="hidden" />
+	    <input name="key" value="{$form_key}" type="hidden">
 		  <select name="language" class="language" title="<#Select a Language#>">
 			  {foreach from=$language_list item='lang'}
 			    <option{if $lang == $language} selected='selected' class='sel'{/if}>{$lang|escape}</option>
@@ -22,7 +22,7 @@
     {if $show_benchmark}
 		-- <#Page loaded in#> <!--PAGE_BENCHMARK--> <#seconds with#> {db->totalqueries} <#SQL queries#> 
     {/if}
-    -- <#Last Updated#>: {$lastupdate|date_format:'%Y-%m-%d %H:%M:%S'}<br/>
+    -- <#Last Updated#>: {$lastupdate|date_format:'%Y-%m-%d %H:%M:%S'}<br>
     {if ! $conf.theme.permissions.show_admin and $cookieconsent}
         <strong>[ <a href="{url _base='admin/index.php'}"><#Admin Control Panel#></a> ]</strong>
     {/if}
@@ -43,14 +43,14 @@
 {if ! $cookieconsent}
 <div class="form-cookieconsent" id="cookieconsentForm">
   <form method="post" class="form-cccontainer">
-	  <input name="key" value="{$form_key}" type="hidden" />
+	  <input name="key" value="{$form_key}" type="hidden">
     <p><strong>COOKIE CONSENT:</strong>  This stats software uses two cookies to save your theme preference and allow users with accounts to log into their account.  These cookies are also used to determine what browser you are using to allow for browser specific code in displaying content.  These cookies are not used to deliver advertising, they are not tracking cookies and they do not collect any other form of data, personal or otherwise.  If you wish to allow this stats software to set these cookies for the stated purposes, please click on the accept button.</p>
     {if $conf.main.security.show_privacy_policy}
       <p class="privacy"><strong>Please see our <a href="{url _base='privacy.php'}"><#Privacy Policy#></a> for more details.</strong></p>
     {/if}
 
-    <button name="cookieconsent" value="1" class="btn accept""><#Accept#></button>
-    <button name="cookieconsent" value="0" class="btn reject""><#Reject#></button>
+    <button name="cookieconsent" value="1" class="btn accept"><#Accept#></button>
+    <button name="cookieconsent" value="0" class="btn reject"><#Reject#></button>
   </form>
 </div> 
 {/if}

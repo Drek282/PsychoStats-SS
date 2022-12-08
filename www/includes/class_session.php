@@ -342,7 +342,7 @@ function start() {
 	$this->sessdata['session_last'] = $now;
 
 	// If the user is NOT logged in and there is a 'login' cookie set, try to verify and log the user in automatically
-//	print "START SESSION<br/>\n";
+//	print "START SESSION<br>\n";
 	if ($this->online_status()==0 and !empty($this->cms->cookie[ $this->sid_name('_login') ])) {
 		$auto = $this->load_login();
 		if ($auto['userid'] and $auto['password']) {
@@ -525,7 +525,7 @@ function load_session_options() {
 		if ($this->config['cookiecompress'] and function_exists('gzinflate')) $decoded = @gzinflate($decoded);
 		if ($decoded === FALSE) $this->delete_cookie('_opts');
 		$o = unserialize($decoded);
-#		print "COOKIE: "; print_r($o); print "<br/>\n";	// DEBUG
+#		print "COOKIE: "; print_r($o); print "<br>\n";	// DEBUG
 	}
 	if (!is_array($o)) $o = array();
 	$this->options = $o;

@@ -91,7 +91,7 @@ function toggle_gallery() {
 	if (!icons_loaded) {
 		$.get('ajax/iconlist.php', { t: 'img' }, function(data){
 			icons_loaded = data;
-			gallery.html(click_icon_message + "<br/>" + data);
+			gallery.html(click_icon_message + "<br>" + data);
 			$('img[@id^=icon]', gallery).click(change_icon);
 			icons_loading = false;
 		});

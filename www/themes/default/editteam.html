@@ -30,7 +30,7 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.name} class="err"{/if}>
 	<p class="err" id="err-name">{$errors.name|escape}</p>
 	<label><#Owner Name#>:</label>
-	<input name="name" value="{$form.name|escape}" type="text" class="field" />
+	<input name="name" value="{$form.name|escape}" type="text" class="field">
 	<p class="small">
 		<#This name should match the name you play Scoresheet Baseball under.#>
 	</p>
@@ -39,8 +39,8 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.icon} class="err"{/if}>
 	<p class="err" id="err-icon">{$errors.icon|escape}</p>
 	<label><#Mini Avatar#>:</label>
-	<input id="icon-input" name="icon" value="{$form.icon|escape}" type="hidden" />
-	<span class="mini-avatar"><img id="icon-img" src="{if $form.icon}{$conf.theme.icons_url}/{$form.icon}{else}{theme->url}/img/spacer.gif{/if}" /></span>
+	<input id="icon-input" name="icon" value="{$form.icon|escape}" type="hidden">
+	<span class="mini-avatar"><img id="icon-img" src="{if $form.icon}{$conf.theme.icons_url}/{$form.icon}{else}{theme->url}/img/spacer.gif{/if}"></span>
 	[ <a href="javascript:toggle_gallery()"><#Toggle gallery#></a> ]
 </div>
 <img id="blank-icon" src="{theme->url}/img/spacer.gif" style="display: none" alt="Spacer">
@@ -49,8 +49,8 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.cc} class="err"{/if}>
 	<p class="err" id="err-cc">{$errors.cc|escape}</p>
 	<label><#Country Code#>:</label>
-	<input id="cc" name="cc" value="{$form.cc|escape}" type="text" class="field short" maxlength="2" />
-	<img id="flag-img" src="{if $form.cc}{$conf.theme.flags_url}/{$form.cc|strtolower|escape}.webp{else}{theme->url}/img/spacer.gif{/if}" />
+	<input id="cc" name="cc" value="{$form.cc|escape}" type="text" class="field short" maxlength="2">
+	<img id="flag-img" src="{if $form.cc}{$conf.theme.flags_url}/{$form.cc|strtolower|escape}.webp{else}{theme->url}/img/spacer.gif{/if}">
 {*
 	[ <a href="javascript:toggle_flags()"><#Toggle flags#></a> ]
 *}
@@ -76,13 +76,13 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.website} class="err"{/if}>
 	<p class="err" id="err-website">{$errors.website|escape}</p>
 	<label><#Website#>:</label>
-	<input id="website" name="website" value="{$form.website|escape}" type="text" class="field long" />
+	<input id="website" name="website" value="{$form.website|escape}" type="text" class="field long">
 </div>
 
 <div{if $errors.youtube} class="err"{/if}>
 	<p class="err" id="err-youtube">{$errors.youtube|escape}</p>
 	<label><#YouTube User#>:</label>
-	<input name="youtube" value="{$form.youtube|escape}" type="text" class="field long" />
+	<input name="youtube" value="{$form.youtube|escape}" type="text" class="field long">
 </div>
 
 </fieldset>
@@ -120,39 +120,39 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.email} class="err"{/if}>
 	<p class="err" id="err-email">{$errors.email|escape}</p>
 	<label><#New Email#>:</label>
-	<input name="email" type="text" class="field" />
+	<input name="email" type="text" class="field">
 </div>
 
 <div{if $errors.email2} class="err"{/if}>
 	<p class="err" id="err-email2">{$errors.email2|escape}</p>
 	<label><#Retype Email#>:</label>
-	<input name="email2" type="text" class="field" />
+	<input name="email2" type="text" class="field">
 </div>
 
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
 	<label><#New Password#>:</label>
-	<input name="password" type="password" class="field" autocomplete="off" />
+	<input name="password" type="password" class="field" autocomplete="off">
 </div>
 
 <div{if $errors.password2} class="err"{/if}>
 	<p class="err" id="err-password2">{$errors.password2|escape}</p>
 	<label><#Retype Password#>:</label>
-	<input name="password2" type="password" class="field" autocomplete="off" />
+	<input name="password2" type="password" class="field" autocomplete="off">
 </div>
 
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="submit" value="1" type="hidden" />
-	<input name="ref" value="{$ref}" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
-	<input name="id" value="{$id}" type="hidden" />
-	<input class="btn save" type="submit" value="<#Save#>" />
+	<input name="submit" value="1" type="hidden">
+	<input name="ref" value="{$ref}" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
+	<input name="id" value="{$id}" type="hidden">
+	<input class="btn save" type="submit" value="<#Save#>">
 {if $id and psss_user_is_admin() and $team_user.username}
-	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete User#>" name="del" />
+	<input id="btn-delete" class="btn delete" type="submit" value="<#Delete User#>" name="del">
 {/if}
-	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>
 </form>

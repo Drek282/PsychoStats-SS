@@ -84,7 +84,6 @@ if ($del and $id and $team['team_id'] == $id) {
 // create the form variables
 $form = $cms->new_form();
 $form->default_modifier('trim');
-$form->field('team_name');
 $form->field('namelocked');
 if ($cms->user->is_admin()) {
 	$form->field('username');
@@ -158,7 +157,6 @@ if ($submit) {
 		$u['confirmed'] = 1;
 		unset($input['username']);
 		unset($input['team_id']);
-		unset($input['team_name']);
 		unset($input['password']);
 		unset($input['password2']);
 		//unset($input['email']);

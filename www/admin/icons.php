@@ -98,12 +98,12 @@ if ($upload) {
 			// open the URL for reading ... 
 			if (!($dl = @fopen($from, 'rb'))) {
 				$err = $cms->trans("Unable to download file from server");
-//				if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+//				if (isset($php_errormsg)) $err .= "<br>\n" . $php_errormsg;
 			}
 			// open the tmp file for writting ... 
 			if ($dl and !($fh = @fopen($file['tmp_name'], 'wb'))) {
 				$err = $cms->trans("Unable to process download");
-//				if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+//				if (isset($php_errormsg)) $err .= "<br>\n" . $php_errormsg;
 			}
 
 			// get the headers from the request
@@ -167,8 +167,8 @@ if ($upload) {
 		$ok = @rename_file($file['tmp_name'], $newfile);
 		if (!$ok) {
 			$err = $cms->trans("Error copying new image to icon directory!");
-//			$err .= is_writable(dirname($newfile)) ? "<br/>" . $cms->trans("Permission Denied") : '';
-//			if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+//			$err .= is_writable(dirname($newfile)) ? "<br>" . $cms->trans("Permission Denied") : '';
+//			if (isset($php_errormsg)) $err .= "<br>\n" . $php_errormsg;
 		} else {
 			$action_result = $cms->trans("File '%s' uploaded successfully!", $file['name']);
 			if ($overwrote) $action_result .= " (" . $cms->trans("Original file was overwritten") . ")";

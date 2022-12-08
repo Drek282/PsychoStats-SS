@@ -11,7 +11,7 @@
 <div class="ps-form-container" id="ps-register-form">
 <div class="ps-form">
 <form method="post" action="{url}">
-<input name="key" value="{$form_key}" type="hidden" />
+<input name="key" value="{$form_key}" type="hidden">
 <fieldset>
 <legend><#Please Enter Your Password#></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
@@ -19,7 +19,7 @@
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
 	<label><#Password#>:</label>
-	<input name="password" type="password" class="field" autocomplete="off" />
+	<input name="password" type="password" class="field" autocomplete="off">
 	<p class="small">
 		<#Passwords should be complex, not identifiable words, and be a combination of upper and lower case letters, numbers, and symbols.#>
 	</p>
@@ -28,7 +28,7 @@
 <div{if $errors.password2} class="err"{/if}>
 	<p class="err" id="err-password2">{$errors.password2|escape}</p>
 	<label><#Retype Password#>:</label>
-	<input name="password2" type="password" class="field" autocomplete="off" />
+	<input name="password2" type="password" class="field" autocomplete="off">
 </div>
 
 <div class="spacer"></div>
@@ -37,12 +37,12 @@
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="userid" value="{$userid}" type="hidden" />
-	<input name="tpw" value="{$tpw}" type="hidden" />
-	<input name="submit" value="1" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
-	<input class="btn register" type="submit" value="<#Submit#>" />
-	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+	<input name="userid" value="{$userid}" type="hidden">
+	<input name="tpw" value="{$tpw}" type="hidden">
+	<input name="submit" value="1" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
+	<input class="btn register" type="submit" value="<#Submit#>">
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>
 </form>

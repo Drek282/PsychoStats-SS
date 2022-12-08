@@ -16,15 +16,15 @@
 	<div class="ps-table-header">
 		<div class="filter">
 			<form action="{url _base='awards_edit.php'}" method="post">
-				<input type="submit" value="<#New Award#>" class="btn left" />
+				<input type="submit" value="<#New Award#>" class="btn left">
 				{include file='ajax.html' float='left' size='small-snake'}
 			</form>
 			<form action="{url}" method="get">
-				<input type="submit" 	value="<#Filter#>" class="btn" />
-				<input name="order" 	value="{$order}" type="hidden" />
-				<input name="sort" 	value="{$sort}" type="hidden" />
-				<input name="start" 	value="0" type="hidden" />
-				<input name="limit" 	value="{$limit}" type="hidden" />
+				<input type="submit" 	value="<#Filter#>" class="btn">
+				<input name="order" 	value="{$order}" type="hidden">
+				<input name="sort" 	value="{$sort}" type="hidden">
+				<input name="start" 	value="0" type="hidden">
+				<input name="limit" 	value="{$limit}" type="hidden">
 			</form>
 		</div>
 		{$pager}
@@ -48,7 +48,7 @@
 {foreachelse}
 		<tr><td colspan="6" class="no-data">
 			<#No Awards Defined#>
-			<br/>
+			<br>
 			<a href="{url _base='awards_edit.php'}"><#Click here to add an award#></a>
 		</td></tr>
 {/foreach}

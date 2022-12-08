@@ -25,11 +25,9 @@ flags_url = "{$conf.theme.flags_url}";
 <legend><#Edit Team#> <small>( {$team.team_id} )</small></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
-<div{if $errors.team_name} class="err"{/if}>
-	<p class="err" id="err-team_name">{$errors.team_name|escape}</p>
+<div>
 	<label><#Team Name#>:</label>
-	<input name="team_name" value="{$form.team_name|escape}" type="text" class="field" />
-	<label class="for" for="namelocked1"><input id="namelocked1" name="namelocked" value="1" {if $form.namelocked}checked="checked" {/if}type="checkbox" /> Locked?</label>
+	<span class="nomodify">{$team.team_name|escape}</span>
 </div>
 
 </fieldset>
@@ -52,7 +50,7 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.username} class="err"{/if}>
 	<p class="err" id="err-username">{$errors.username|escape}</p>
 	<label><#Username#>:</label>
-	<input name="username" value="{$form.username|escape}" type="text" class="field" />
+	<input name="username" value="{$form.username|escape}" type="text" class="field">
 	<p class="small"><strong><#IMPORTANT#>:</strong>  <#If you use a password manager that fills in usernames and passwords automatically, or your browser does the same thing, make sure you have selected a new username and password to associate with this team.#></p>
 </div>
 
@@ -77,27 +75,27 @@ flags_url = "{$conf.theme.flags_url}";
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
 	<label><#New Password#>:</label>
-	<input name="password" type="password" class="field" autocomplete="off" />
+	<input name="password" type="password" class="field" autocomplete="off">
 </div>
 
 <div{if $errors.password2} class="err"{/if}>
 	<p class="err" id="err-password2">{$errors.password2|escape}</p>
 	<label><#Retype Password#>:</label>
-	<input name="password2" type="password" class="field" autocomplete="off" />
+	<input name="password2" type="password" class="field" autocomplete="off">
 </div>
 
 {if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
 <div{if $errors.email} class="err"{/if}>
 	<p class="err" id="err-email">{$errors.email|escape}</p>
 	<label><#Email#>:</label>
-	<input name="email" type="text" class="field" />
+	<input name="email" type="text" class="field">
 	<small><#Required#></small>
 </div>
 
 <div{if $errors.email2} class="err"{/if}>
 	<p class="err" id="err-email2">{$errors.email2|escape}</p>
 	<label><#Retype Email#>:</label>
-	<input name="email2" type="text" class="field" />
+	<input name="email2" type="text" class="field">
 	<small><#Please confirm the users email address#></small>
 </div>
 {/if}
@@ -106,14 +104,14 @@ flags_url = "{$conf.theme.flags_url}";
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="submit" value="1" type="hidden" />
-	<input name="ref" value="{$ref}" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
-	<input name="id" value="{$id}" type="hidden" />
+	<input name="submit" value="1" type="hidden">
+	<input name="ref" value="{$ref}" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
+	<input name="id" value="{$id}" type="hidden">
 	{if !$team_user.username}
-		<input class="btn save" type="submit" value="<#Save#>" />
+		<input class="btn save" type="submit" value="<#Save#>">
 	{/if}
-	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>" />
+	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>
 </form>

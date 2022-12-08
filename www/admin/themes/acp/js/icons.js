@@ -33,7 +33,7 @@ function click_icon(e) {
 			$('#result').addClass('good').removeClass('bad').html("Icon '" + file + "' was deleted successfully.");
 			$(img).fadeOut('slow');
 		} else {
-			$('#result').addClass('bad').removeClass('good').html("Unable to delete icon '" + file + "'<br/>\n" + data.substr(0,255));
+			$('#result').addClass('bad').removeClass('good').html("Unable to delete icon '" + file + "'<br>\n" + data.substr(0,255));
 		}
 		if (!result_in) {
 			$('#result').fadeIn('slow');

@@ -101,7 +101,7 @@ if (!is_dir($compiledir)) {
 		for ($i=0; $i < count($dirs); $i++) {
 			if (empty($dirs[$i])) continue;
 			$path .= DIRECTORY_SEPARATOR . $dirs[$i];
-//			print "$path<br/>\n";
+//			print "$path<br>\n";
 			if (!is_dir($path) && !@mkdir($path, 0777)) {
 				$ok = false;
 				break;

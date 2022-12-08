@@ -212,7 +212,7 @@ function verify_config() {
 	$dbtype = $dbhost = $dbport = $dbname = $dbuser = $dbpass = $dbtblprefix = '';
 	if (!@include(PS_ROOTDIR . "/config.php")) return false;
 	foreach (array('dbtype','dbhost','dbport','dbname','dbuser','dbpass','dbtblprefix') as $v) {
-//		print "$v: " . $$v . " == " . $db->$v . "<br/>\n";
+//		print "$v: " . $$v . " == " . $db->$v . "<br>\n";
 		if ($$v != $db->$v) {
 			return false;
 		}

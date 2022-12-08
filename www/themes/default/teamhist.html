@@ -40,7 +40,7 @@
 
 <div class="ps-column-frame">
 {*
-	<img id='teamwin_percent' src="{url _base='imgquick.php' id=$team.team_id}" />
+	<img id='teamwin_percent' src="{url _base='imgquick.php' id=$team.team_id}">
 *}
 	{ofc url="team.php?ofc=win_percent&id=`$id`" width=287 height=180}
 </div>
@@ -48,7 +48,7 @@
 <div id="ps-id-teamsess" class="ps-column-frame{if $shades.s_teamsess} s-closed{/if}">
 <div class="ps-column-header"><a href="" onclick="return false"><span><#Team Session Chart#></span></a></div>
 <div class="ps-column-content" style="text-align: center">
-	<img src="{url _base='imgsess.php' id=$team.team_id}" alt="[img]" />
+	<img src="{url _base='imgsess.php' id=$team.team_id}" alt="[img]">
 </div>
 </div>
 

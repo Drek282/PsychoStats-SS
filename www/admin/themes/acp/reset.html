@@ -42,33 +42,33 @@
 <div{if $errors.team_profiles} class="err"{/if}>
 	<p class="err" id="err-team_profiles">{$errors.team_profiles|escape}</p>
 	<label><#Team Profiles?#></label>
-	<label class="for" for="team_profiles1"><input id="team_profiles1" name="team_profiles" value="0" {if !$form.team_profiles}checked="" {/if}type="radio" class="radio" /> <#Erase#></label>
-	<label class="for" for="team_profiles2"><input id="team_profiles2" name="team_profiles" value="1" {if  $form.team_profiles}checked="" {/if}type="radio" class="radio" /> <#Keep#></label>
+	<label class="for" for="team_profiles1"><input id="team_profiles1" name="team_profiles" value="0" {if !$form.team_profiles}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
+	<label class="for" for="team_profiles2"><input id="team_profiles2" name="team_profiles" value="1" {if  $form.team_profiles}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
 </div>
 
 <div{if $errors.team_aliases} class="err"{/if}>
 	<p class="err" id="err-team_aliases">{$errors.team_aliases|escape}</p>
 	<label><#Team Aliases?#></label>
-	<label class="for" for="team_aliases1"><input id="team_aliases1" name="team_aliases" value="0" {if !$form.team_aliases}checked="" {/if}type="radio" class="radio" /> <#Erase#></label>
-	<label class="for" for="team_aliases2"><input id="team_aliases2" name="team_aliases" value="1" {if  $form.team_aliases}checked="" {/if}type="radio" class="radio" /> <#Keep#></label>
+	<label class="for" for="team_aliases1"><input id="team_aliases1" name="team_aliases" value="0" {if !$form.team_aliases}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
+	<label class="for" for="team_aliases2"><input id="team_aliases2" name="team_aliases" value="1" {if  $form.team_aliases}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
 </div>
 
 <div{if $errors.users} class="err"{/if}>
 	<p class="err" id="err-users">{$errors.users|escape}</p>
 	<label><#Non-Admin Users?#></label>
-	<label class="for" for="users1"><input id="users1" name="users" value="0" {if !$form.users}checked="" {/if}type="radio" class="radio" /> <#Erase#></label>
-	<label class="for" for="users2"><input id="users2" name="users" value="1" {if  $form.users}checked="" {/if}type="radio" class="radio" /> <#Keep#></label>
+	<label class="for" for="users1"><input id="users1" name="users" value="0" {if !$form.users}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
+	<label class="for" for="users2"><input id="users2" name="users" value="1" {if  $form.users}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
 </div>
 
 </fieldset>
 <fieldset>
 <div class="submit">
-	<input name="submit" value="1" type="hidden" />
-	<input name="ref" value="{$ref}" type="hidden" />
-	<input name="key" value="{$form_key}" type="hidden" />
+	<input name="submit" value="1" type="hidden">
+	<input name="ref" value="{$ref}" type="hidden">
+	<input name="key" value="{$form_key}" type="hidden">
 
-	<input class="btn reset" type="submit" value="<#Reset#>" />
-	<input class="btn cancel" type="submit" value="<#Cancel#>" name="cancel" />
+	<input class="btn reset" type="submit" value="<#Reset#>">
+	<input class="btn cancel" type="submit" value="<#Cancel#>" name="cancel">
 </div>
 </fieldset>
 </form>

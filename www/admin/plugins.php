@@ -74,7 +74,7 @@ if (($enable or $disable) and $id) {
 				'message_title'	=> $on ? $cms->trans("Plugin was enabled") : $cms->trans("Plugin was disabled"),
 				'message'	=> $plugin['plugin'] . " " . 
 					($on ? $cms->trans("was enabled successfully!") : $cms->trans("was disabled successfully!"))
-					. "<br/>\n" . $cms->trans("Changes will not be applied until the next page request.")
+					. "<br>\n" . $cms->trans("Changes will not be applied until the next page request.")
 			));
 		} else {
 			$message = $cms->message('failure', array(
@@ -183,7 +183,7 @@ if ($install) {
 		} else {
 			$message = $cms->message('failure', array(
 				'message_title'	=> $cms->trans("Plugin Installation Error"),
-				'message'	=> $cms->trans("Error loading plugin code!") . $err ? "<br/>\n$err" : ''
+				'message'	=> $cms->trans("Error loading plugin code!") . $err ? "<br>\n$err" : ''
 			));
 		}
 	}

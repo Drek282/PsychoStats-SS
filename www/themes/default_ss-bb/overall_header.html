@@ -3,9 +3,9 @@
 <head>
 	<title>{$title|default:"PsychoStats for Scoresheet Baseball"|escape}</title>
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="author" content="Stormtrooper" />
-	<meta name="keywords" content="{$conf.main.meta_keywords|escape}" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="author" content="Stormtrooper">
+	<meta name="keywords" content="{$conf.main.meta_keywords|escape}">
 {theme->css_links}
 {theme->js_sources}
 </head>
@@ -20,7 +20,7 @@
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
-	<select name="season" id="season_h" onchange="this.form.submit()">
+	<select name="season" id="season_h" onchange="this.form.submit()" >
 	<option selected='selected' class='sel'>{if $season_c}{$season_c}{else}--na--{/if}</option>
 	{foreach from=$seasons_h item='season_h'}
 		<option{if $season_h == $season} selected='selected' class='sel'{/if}>{$season_h}</option>
@@ -29,7 +29,7 @@
 </div>
 </form>
 {if $show_login and $cookieconsent}
-<a id="ps-login-link" href="{url _base='login.php' _ref=1}" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.png" alt="<#Login#>" /></a>
+<a id="ps-login-link" href="{url _base='login.php' _ref=1}" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.png" alt="<#Login#>"></a>
 {/if}
 </div>
 <ul>
@@ -71,16 +71,16 @@
 	{if $show_register}<div id="ps-login-reg"><#Newbie?#> -- <a href="register.php"><#Register!#></a></div>{/if}
 	<p>
 	<label><#Username#></label>
-	<input id="username" name="username" type="text" class="field" value="" />
-	<input name="submit" value="1" type="hidden" />
+	<input id="username" name="username" type="text" class="field">
+	<input name="submit" value="1" type="hidden">
 	</p>
 	<p>
 	<label><#Password#></label>
-	<input id="password" name="password" type="password" class="field" value="" />
-	<button type="submit"><img src="{theme->url}/img/go.gif" alt="go" /></button>
+	<input id="password" name="password" type="password" class="field">
+	<button type="submit"><img src="{theme->url}/img/go.gif" alt="go"></button>
 	</p>
 	<div id="ps-login-options">
-		<input id="ps-remember-login" name="autologin" type="checkbox" value="1" />
+		<input id="ps-remember-login" name="autologin" type="checkbox" value="1">
 		<label for="ps-remember-login"><#Remember me!#></label>
 {*
 		<a href="forgotpw.php"><#Forgot password?#></a>
@@ -101,8 +101,8 @@
 <!---->
 <!--#LOGGEDIN_POPUP#-->
 <div id="ps-loggedin-popup" style="display: none">
-	<#Welcome#>, <b>{$user.username|escape}</b><br/>
-	<#You have been logged in.#><br/>
+	<#Welcome#>, <b>{$user.username|escape}</b><br>
+	<#You have been logged in.#><br>
 	<#This window will close in a few seconds.#>
 </div>
 <!---->

@@ -49,7 +49,7 @@ function toggle_gallery() {
 	if (!icons_loaded) {
 		$.get('../ajax/iconlist.php', { t: 'img' }, function(data){	// iconlist.php is a non-admin file
 			icons_loaded = data;
-			gallery.html(click_icon_message + "<br/>" + data);
+			gallery.html(click_icon_message + "<br>" + data);
 			$('img[@id^=icon]', gallery).click(change_icon);
 			icons_loading = false;
 		});
@@ -82,7 +82,7 @@ function toggle_flags() {
 	if (!flags_loaded) {
 		$.get('../ajax/flaglist.php', { t: 'img' }, function(data){	// flaglist.php is a non-admin file
 			flags_loaded = data;
-			gallery.html(click_flag_message + "<br/>" + data);
+			gallery.html(click_flag_message + "<br>" + data);
 			$('img', gallery).click(change_flag);
 			flags_loading = false;
 		});

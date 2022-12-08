@@ -168,7 +168,8 @@ unset ($idx);
 
 // Declare shades array.
 $shades = array(
-	's_modactions'		=> null,
+	's_titles'		=> null,
+	's_championships'		=> null,
 );
 
 // assign variables to the theme

@@ -241,7 +241,7 @@ $otable->columns(array(
 	'doubles'			=> array( 'label' => $cms->trans("Doubles"), 'tooltip' => $cms->trans("Team Total Doubles") ),
 	'triples'			=> array( 'label' => $cms->trans("Triples"), 'tooltip' => $cms->trans("Team Total Triples") ),
 	'home_runs'			=> array( 'label' => $cms->trans("HR"), 'tooltip' => $cms->trans("Team Total Home Runs") ),
-	'team_rbis'			=> array( 'label' => $cms->trans("RBI"), 'tooltip' => $cms->trans("Team Total RBI's") ),
+	'team_rbis'			=> array( 'label' => $cms->trans("RBI"), 'tooltip' => $cms->trans("Team Total RBI&#39;s") ),
 	'walks'			=> array( 'label' => $cms->trans("BB"), 'tooltip' => $cms->trans("Team Total Base on Balls") ),
 	'strikeouts'			=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Team Total Strikeouts") ),
 	'batting_average'			=> array( 'label' => $cms->trans("BA"), 'tooltip' => $cms->trans("Team Combined Batting Average") ),
@@ -270,7 +270,8 @@ $wildcard = $ps->get_total_wc();
 
 // Declare shades array.
 $shades = array(
-	's_team_rundown'	=> null,
+	's_season_rundown'	=> null,
+	's_historical_record'	=> null,
 	's_modactions'		=> null,
 	's_team_hist'		=> null,
 	's_teamname'		=> null,

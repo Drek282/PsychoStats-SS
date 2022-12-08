@@ -21,11 +21,13 @@
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
-	<select name="season" id="season_h" onchange="this.form.submit()" >
+	<select name="season" id="season_h" onchange="this.form.submit()">
 	<option selected='selected' class='sel'>{if $season_c}{$season_c}{else}--na--{/if}</option>
+	{if isset($seasons_h)}
 	{foreach from=$seasons_h item='season_h'}
 		<option{if $season_h == $season} selected='selected' class='sel'{/if}>{$season_h}</option>
 	{/foreach}
+	{/if}
 	</select>
 </div>
 </form>

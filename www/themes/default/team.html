@@ -35,9 +35,9 @@
 <div class="ps-column-sep"><p><#* this graph only includes data from the past <strong>10</strong> seasons#></p></div>
 </div>
 
-<div class="ps-column-frame{if $shades.s_team_rundown} s-closed{/if}">
+<div class="ps-column-frame{if $shades.s_season_rundown} s-closed{/if}">
 <div class="ps-column-header"><a href="" onclick="return false"><span>{$team.season} <#Season Rundown#></span></a></div>
-<div id="s-team-rundown" class="ps-column-content">
+<div id="s-season-rundown" class="ps-column-content">
 <p class="hl firstrow">
 	<label><#Rank#></label>
 	<em>{rankchange team=$team}</em>
@@ -90,9 +90,9 @@
 
 {$team_left_column_mod} {* include this where you want the mod block of stats to appear (left side) *}
 
-<div class="ps-column-frame{if $shades.s_team_rundown} s-closed{/if}">
+<div class="ps-column-frame{if $shades.s_historical_record} s-closed{/if}">
 <div class="ps-column-header"><a href="" onclick="return false"><span><#Historical Records#></span></a></div>
-<div id="s-team-rundown" class="ps-column-content">
+<div id="s-historical-record" class="ps-column-content">
 <p class="hl firstrow">
 	<label><#Championships#></label>
 	<span>{if $team.league_cs}{$team.league_cs}{else}-{/if}</span>

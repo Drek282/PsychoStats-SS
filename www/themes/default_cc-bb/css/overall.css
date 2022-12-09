@@ -321,6 +321,9 @@ div#ps-login-inner {
 	text-align: left; 
 	max-width: 80%;
 }
+.form-cccontainer p {
+	width: 92%;
+}
 .form-cccontainer p.privacy {
 	text-align: center; 
 }
@@ -356,13 +359,13 @@ div#ps-login-inner {
 /* Add a red background color to the cancel button */
 .form-cccontainer .accept {
   background-color: #04AA6D;
-  bottom: 25px;
+  bottom: 32px;
 }
 
 /* Add a red background color to the cancel button */
 .form-cccontainer .reject {
   background-color: red;
-  bottom: 5px;
+  bottom: 12px;
 }
 
 /* Add some hover effects to buttons */

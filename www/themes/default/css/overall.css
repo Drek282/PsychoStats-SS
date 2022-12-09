@@ -318,7 +318,7 @@ div#ps-login-inner {
 /* The popup form - hidden by default */
 .form-cookieconsent {
   display: block;
-  height: 45px;
+  height: 55px;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -334,6 +334,9 @@ div#ps-login-inner {
 	size: 100%;
 	text-align: left; 
 	max-width: 80%;
+}
+.form-cccontainer p {
+	width: 92%;
 }
 .form-cccontainer p.privacy {
 	text-align: center; 
@@ -370,13 +373,13 @@ div#ps-login-inner {
 /* Add a red background color to the cancel button */
 .form-cccontainer .accept {
   background-color: #04AA6D;
-  bottom: 25px;
+  bottom: 32px;
 }
 
 /* Add a red background color to the cancel button */
 .form-cccontainer .reject {
   background-color: red;
-  bottom: 5px;
+  bottom: 12px;
 }
 
 /* Add some hover effects to buttons */

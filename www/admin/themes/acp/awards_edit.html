@@ -23,20 +23,20 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 
 <div class="notes">
 	<h4>Hint</h4>
-	<p>If you want a list of the tokens you can use in the <em><strong>Expression</strong></em> browse your database with something like PHPMyAdmin and look for the names of the columns in the following tables:
+	<p><#If you want a list of the tokens you can use in the#> <em><strong><#Expression#></strong></em> <#browse your database with something like PHPMyAdmin and look for the names of the columns in the following tables#>:</p>
 		<ul>
 			<li><em><strong>psss_team_adv</strong></em></li>
 			<li><em><strong>psss_team_def</strong></em></li>
 			<li><em><strong>psss_team_off</strong></em></li>
 		</ul>
-	<strong>Note:</strong> You cannot use the <em><strong>season</strong></em> and <em><strong>team_id</strong></em> column names as tokens.</p>
+	<p><strong><#Note#>:</strong> <#You cannot use the#> <em><strong>season</strong></em> <#and#> <em><strong>team_id</strong></em> <#column names as tokens#>.</p>
 </div>
 
 <div{if $errors.enabled} class="err"{/if}>
 	<p class="err">{$errors.enabled|escape}</p>
 	<label><#Enabled?#></label>
 	<label class="for" for="enabled1"><input id="enabled1" name="enabled" value="1" {if  $form.enabled}checked="" {/if}type="radio" class="radio"> Yes</label>
-	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio"> No</label>
+	<label class="for" for="enabled2"><input id="enabled2" name="enabled" value="0" {if !$form.enabled}checked="" {/if}type="radio" class="radio"> <#No#></label>
 </div>
 
 <div{if $errors.negative} class="err"{/if}>
@@ -45,7 +45,7 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label class="for" for="negative1"><input id="negative1" name="negative" value="1" {if  $form.negative}checked="" {/if}type="radio" class="radio"> Yes</label>
 	<label class="for" for="negative2"><input id="negative2" name="negative" value="0" {if !$form.negative}checked="" {/if}type="radio" class="radio"> No</label>
 	<p class="small">
-		Negative awards are achievements that reflect poor team results
+		<#Negative awards are achievements that reflect poor team results#>
 	</p>
 </div>
 
@@ -54,8 +54,8 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Award Name#>:</label>
 	<input name="name" value="{$form.name|escape}" type="text" class="field medium">
 	<p class="small">
-		The award name is a short, generic description of what the overall award is. It should not include
-		any specific team information.
+		<#The award name is a short, generic description of what the overall award is. It should not include
+		any specific team information.#>
 	</p>
 </div>
 
@@ -64,18 +64,18 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Award Phrase#>:</label>
 	<textarea name="phrase" rows="4" class="field short">{$form.phrase|escape}</textarea>
 	<p class="small">
-		The award phrase is what is displayed in the awards listing for the team that won the award and should 
-		contain <b>{ldelim}$tokens{rdelim}</b> which are specific Smarty variables. 
-		For example: "<em><strong>{ldelim}$team.link{rdelim} has the most season wins ({ldelim}$award.value{rdelim} total) in {ldelim}$award.awardseason{rdelim}</strong></em>".
+		<#The award phrase is what is displayed in the awards listing for the team that won the award and should 
+		contain#> <b>{ldelim}$tokens{rdelim}</b> <#which are specific Smarty variables#>. 
+		<#For example#>: "<em><strong>{ldelim}$team.link{rdelim} <#has the most season wins#> ({ldelim}$award.value{rdelim} total) <#in#> {ldelim}$award.awardseason{rdelim}</strong></em>".
 	</p>
 	<p class="small">
-		Every award phrase should contain the following tokens.  Note that these are not the same tokens as the tokens used in the <em><strong>Expression</strong></em>.  Those are described in the upper right hint box:
-		<ul>
-			<li><em><strong>{ldelim}$team.link{rdelim}</strong></em></li>
-			<li><em><strong>{ldelim}$award.topteamvalue{rdelim}</strong></em></li>
-			<li><em><strong>{ldelim}$award.awardseason{rdelim}</strong></em></li>
-		</ul>
+		<#Every award phrase should contain the following tokens.  Note that these are not the same tokens as the tokens used in the#> <em><strong><#Expression#></strong></em>.  <#Those are described in the upper right hint box#>:
 	</p>
+	<ul>
+		<li><em><strong>{ldelim}$team.link{rdelim}</strong></em></li>
+		<li><em><strong>{ldelim}$award.topteamvalue{rdelim}</strong></em></li>
+		<li><em><strong>{ldelim}$award.awardseason{rdelim}</strong></em></li>
+	</ul>
 </div>
 
 <div{if $errors.expr} class="err"{/if}>
@@ -126,21 +126,20 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 		<option value="asc" {if $form.order == 'asc'}selected=""{/if}><#Ascending#></option>
 	</select>
 	<p class="small">
-		Most awards will be ordered in DESCending order, but a few will require ASCending order instead.
+		<#Most awards will be ordered in DESCending order, but a few will require ASCending order instead#>.
 	</p>
 </div>
 
 <div class="notes">
 	<h4>Hint</h4>
-	<p>Some useful sprintf "formats" include:
-		<ul>
-			<li><em><strong>%s</strong></em>&nbsp;&nbsp;for standard text or numbers</li>
-			<li><em><strong>%.1f</strong></em>&nbsp;&nbsp;for a single place decimal format</li>
-			<li><em><strong>%.2f</strong></em>&nbsp;&nbsp;for a decimal to two places</li>
-			<li><em><strong>\%</strong></em>&nbsp;&nbsp;to print a percent sign</li>
-			<li><em><strong>commify</strong></em>&nbsp;&nbsp;to add commas to a large number</li>
-		</ul>
-	</p>
+	<p>Some useful sprintf "formats" include:</p>
+	<ul>
+		<li><em><strong>%s</strong></em>&nbsp;&nbsp;<#for standard text or numbers#></li>
+		<li><em><strong>%.1f</strong></em>&nbsp;&nbsp;<#for a single place decimal format#></li>
+		<li><em><strong>%.2f</strong></em>&nbsp;&nbsp;<#for a decimal to two places#></li>
+		<li><em><strong>\%</strong></em>&nbsp;&nbsp;<#to print a percent sign#></li>
+		<li><em><strong>commify</strong></em>&nbsp;&nbsp;<#to add commas to a large number#></li>
+	</ul>
 </div>
 
 <div{if $errors.format} class="err"{/if}>

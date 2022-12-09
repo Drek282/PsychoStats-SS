@@ -78,14 +78,6 @@ CREATE TABLE `psss_team` (
   KEY `allowrank` (`allowrank`),
   KEY `rank` (`rank`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
-CREATE TABLE `psss_team_aliases` (
-  `id` int unsigned NOT NULL default '0',
-  `team_id` varchar(128) NOT NULL default '',
-  `alias` varchar(128) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `team_id` (`team_id`),
-  KEY `alias` (`alias`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE TABLE `psss_team_data` (
   `season` smallint unsigned default NULL,
   `team_id` int unsigned NOT NULL default '0',

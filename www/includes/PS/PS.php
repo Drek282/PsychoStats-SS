@@ -373,6 +373,8 @@ function get_seasons_h() {
 		$seasons_h[$v] = implode($seasons_h[$v]);
 	}
 
+	$seasons_h = array_reverse($seasons_h);
+
 	return $seasons_h;
 }
 

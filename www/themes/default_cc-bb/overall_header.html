@@ -24,7 +24,9 @@
 	<option selected='selected' class='sel'>{if $season_c}{$season_c}{else}--na--{/if}</option>
 	{if isset($seasons_h)}
 	{foreach from=$seasons_h item='season_h'}
+		{if $season_c != $season_h}
 		<option{if $season_h == $season} selected='selected' class='sel'{/if}>{$season_h}</option>
+		{/if}
 	{/foreach}
 	{/if}
 	</select>

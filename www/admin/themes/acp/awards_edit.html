@@ -83,11 +83,11 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Expression#>:</label>
 	<input name="expr" value="{$form.expr|escape}" type="text" class="field long">
 	<p class="small">
-		The expression defines what MySQL columns the award is calculated with and how.  The column is defined as a token.  If the column name is "<em><strong>wins</strong></em>" then the token would be "<em><strong>{ldelim}$wins{rdelim}</strong></em>".
+		<#The expression defines what MySQL columns the award is calculated with and how.  The column is defined as a token.  If the column name is#> "<em><strong><#wins#></strong></em>" <#then the token would be#> "<em><strong>{ldelim}$wins{rdelim}</strong></em>".
 	</p>
 	<p class="small">
-		You can do calculations with the tokens.  So, for example, if you wanted to add the wins and losses, then
-		divide the wins by that number to find win %, you would enter "<em><strong>{ldelim}$wins{rdelim} / ({ldelim}$wins{rdelim} + {ldelim}$losses{rdelim})</strong></em>" into the expression field.  Of course, you don't need to do that, because the "<em><strong>{ldelim}$win_percent{rdelim}</strong></em>" token already exists.  That's just an example of what you can do with this.
+		<#You can do calculations with the tokens.  So, for example, if you wanted to add the wins and losses, then
+		divide the wins by that number to find win %, you would enter#> "<em><strong>{ldelim}$wins{rdelim} / ({ldelim}$wins{rdelim} + {ldelim}$losses{rdelim})</strong></em>" <#into the expression field.  Of course, you don't need to do that, because the#> "<em><strong>{ldelim}$win_percent{rdelim}</strong></em>" <#token already exists.  That's just an example of what you can do with this.#>
 	</p>
 </div>
 
@@ -96,15 +96,15 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Where Clause#>:</label>
 	<input name="where" value="{$form.where|escape}" type="text" class="field long">
 	<p class="small">
-		The where clause allows your award calculations to limit who or what will be counted in the calculations.
+		<#The where clause allows your award calculations to limit who or what will be counted in the calculations.
 		For example you could generate an award for the highest number of season wins but limit the results so that only
-		teams with more than a certain amount will count. This should use tokens as does the Expression field, and it must be in MySQL format for the "WHERE" clause.
+		teams with more than a certain amount will count. This should use tokens as does the Expression field, and it must be in MySQL format for the "WHERE" clause.#>
 	</p>
 	<p class="small">
-		For example:  "<em><strong>{ldelim}$wins{rdelim} > 20</strong></em>".
+		<#For example#>:  "<em><strong>{ldelim}$wins{rdelim} > 20</strong></em>".
 	</p>
 	<p class="small">
-		If you want to exclude the 2020 season from your Hall of Fame, use the following code in the Where Clause:
+		<#If you want to exclude the 2020 season from your Hall of Fame, use the following code in the Where Clause#>:
 	</p>
 	<p class="small">
 		"<em><strong>{ldelim}$season_n{rdelim} != 2020</strong></em>".
@@ -115,7 +115,7 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<p class="err">{$errors.limit|escape}</p>
 	<label><#Maximum Results#>:</label>
 	<input name="limit" value="{$form.limit|escape}" type="text" class="field short">
-	<p class="small">Maximum teams included in the award results. 5 is default for all awards.</p>
+	<p class="small"><#Maximum teams included in the award results. 5 is default for all awards.#></p>
 </div>
 
 <div{if $errors.order} class="err"{/if}>
@@ -147,7 +147,7 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Format#>:</label>
 	<input name="format" value="{$form.format|escape}" type="text" class="field small">
 	<p class="small">
-		The format is either a <a href="http://php.net/sprintf">sprintf</a> string or the name of a Smarty function that takes a single argument and returns the modified result (such as 'commify' to put comma's in numbers).
+		<#The format is either a#> <a href="http://php.net/sprintf">sprintf</a> <#string or the name of a Smarty function that takes a single argument and returns the modified result (such as 'commify' to put comma's in numbers).#>
 	</p>
 </div>
 
@@ -156,7 +156,7 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<label><#Description#>: <small style="text-align: right"><#Plain text only#>&nbsp;</small></label>
 	<textarea name="description" rows="5" class="field short">{$form.description|escape}</textarea>
 	<p class="small">
-		<strong>Optional:</strong> Explain what the award is. This is displayed in the awards listing and should be kept short and simple. The special tokens can be used in this text.
+		<strong><#Optional#>:</strong> <#Explain what the award is. This is displayed in the awards listing and should be kept short and simple. The special tokens can be used in this text.#>
 	</p>
 </div>
 

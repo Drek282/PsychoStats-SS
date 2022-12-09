@@ -84,7 +84,7 @@ function smarty_function_confvarinput($args, &$smarty)
 			$attr['cols'] = $attr['cols'] ?? null;
 			$cols = $attr['cols'] ? $attr['cols'] : 40;
 			$attr['wrap'] = $attr['wrap'] ?? null;
-			$wrap = $attr['wrap'] ? $attr['wrap'] : 'virtual';
+			$wrap = $attr['wrap'] ? $attr['wrap'] : 'soft';
 			$attr['class'] = $attr['class'] ?? null;
 			$class = $attr['class'] ? $attr['class'] : 'field';
 //			unset($attr['size'], $attr['class']);

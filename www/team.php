@@ -234,12 +234,11 @@ $otable->sort_baseurl(array( 'id' => $id, '_anchor' => 'offence' ));
 $otable->start_and_sort($ostart, $osort, $oorder, 'o');
 $otable->columns(array(
 	'season'			=> array( 'label' => $cms->trans("Season") ),
-	'run_support'			=> array( 'label' => $cms->trans("Run Support"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game") ),
-	'at_bats'			=> array( 'label' => $cms->trans("AB"), 'tooltip' => $cms->trans("Team Total At Bats") ),
+	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game") ),
 	'runs'			=> array( 'label' => $cms->trans("R"), 'tooltip' => $cms->trans("Team Total Runs Scored") ),
 	'hits'			=> array( 'label' => $cms->trans("H"), 'tooltip' => $cms->trans("Team Total Hits") ),
-	'doubles'			=> array( 'label' => $cms->trans("Doubles"), 'tooltip' => $cms->trans("Team Total Doubles") ),
-	'triples'			=> array( 'label' => $cms->trans("Triples"), 'tooltip' => $cms->trans("Team Total Triples") ),
+	'doubles'			=> array( 'label' => $cms->trans("2B"), 'tooltip' => $cms->trans("Team Total Doubles") ),
+	'triples'			=> array( 'label' => $cms->trans("3B"), 'tooltip' => $cms->trans("Team Total Triples") ),
 	'home_runs'			=> array( 'label' => $cms->trans("HR"), 'tooltip' => $cms->trans("Team Total Home Runs") ),
 	'team_rbis'			=> array( 'label' => $cms->trans("RBI"), 'tooltip' => $cms->trans("Team Total RBI&#39;s") ),
 	'walks'			=> array( 'label' => $cms->trans("BB"), 'tooltip' => $cms->trans("Team Total Base on Balls") ),

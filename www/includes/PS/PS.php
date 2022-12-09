@@ -1889,7 +1889,7 @@ function version($force = false) {
 		$v = $this->conf['info']['version'];
 		// if the DB version and class_PS version differ show both versions
 		if ($v != PSYCHOSTATS_VERSION) {
-			$v = "$v-php (" . PSYCHOSTATS_VERSION . "-db)";
+			$v = "$v-db (" . PSYCHOSTATS_VERSION . "-php)";
 		}
 //		$v = 'v' . $v;
 	}

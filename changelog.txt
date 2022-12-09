@@ -7,6 +7,8 @@ Version 0.0.2b (in progress)
 * [Fixed] CSS problem in cookie consent popup.
 * [Removed] Support for team aliases.
 * [Fixed] Minor issue in version string display.
+* [Improved] Compacted the offensive tables for better display on lower resolution screens.
+* [Improved] The way the historical seasons dropdown menu works.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

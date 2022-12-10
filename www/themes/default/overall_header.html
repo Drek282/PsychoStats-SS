@@ -47,21 +47,21 @@
 </div>
 <ul>
 {if $conf.main.site_url}
-	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_url|escape}"><#Scoresheet League Home#></a></li>
-	<li><a href="{url _base='index.php'}"><#Overall Teams Records#></a></li>
+	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_url|escape}"><#Home#></a></li>
+	<li><a href="{url _base='index.php'}"><#Overall#></a></li>
 {else}
-	<li class="first"><a href="{url _base='index.php'}"><#Overall Teams Records#></a></li>
+	<li class="first"><a href="{url _base='index.php'}"><#Overall#></a></li>
 {/if}
 {if $division}
 	<li><a href="{url _base='divisions.php'}"><#Divisions#></a></li>
 {/if}
 {if $wildcard}
-	<li><a href="{url _base='wc.php'}"><#Wild Card Standings#></a></li>
+	<li><a href="{url _base='wc.php'}"><#Wild Card#></a></li>
 {/if}
-	<li><a href="{url _base='def.php'}"><#Teams Defensive Stats#></a></li>
-	<li><a href="{url _base='off.php'}"><#Teams Offensive Stats#></a></li>
+	<li><a href="{url _base='def.php'}"><#Defensive#></a></li>
+	<li><a href="{url _base='off.php'}"><#Offensive#></a></li>
 {if $conf.main.awards.enable}
-	<li><a href="{url _base='awards.php'}"><#Hall of Fame#></a></li>
+	<li><a href="{url _base='awards.php'}"><#HoF#></a></li>
 {/if}
 {if $show_admin and $cookieconsent}
 	<li><a href="{url _base='admin/index.php'}"><#Admin#></a></li>

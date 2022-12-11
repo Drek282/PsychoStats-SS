@@ -88,7 +88,7 @@ body.psychostats {
 /* --- OVERALL FOOTER ------------------------------------- */
 #ps-overall-footer {
 	font-size: 80%;
-	background: #333;
+	background: #333 url(../img/footer-bg.gif) repeat-x;
 	margin-top: 2em;
 	min-height: 41px;					/* FF  */
 	height: expression(this.height = 41 + 'px');		/* IE6 */

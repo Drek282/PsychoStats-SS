@@ -127,8 +127,11 @@ div.ps-team-profile #map {
 }
 
 #ps-container .ps-team-logo {
+	margin: 0 1em 1em 1em;
+	border: 1px solid gray;
+	padding: 1em 0 1em 0;
+	background: #eee;
 	text-align: center;
-	margin-bottom: 1em;
 }
 
 /* --- TABLE LAYOUT --------------------------------------------------------------- */

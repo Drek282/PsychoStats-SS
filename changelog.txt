@@ -2,7 +2,6 @@
 
 
 Version 0.0.2b (in progress)
-* [Changed] Moved team logo to main column on team page.
 * [Fixed] Cleaned up a significant number of html errors and warnings.
 * [Fixed] CSS problem in cookie consent popup.
 * [Removed] Support for team aliases.
@@ -11,6 +10,7 @@ Version 0.0.2b (in progress)
 * [Improved] The way the historical seasons dropdown menu works.
 * [Improved] Shortened names in header links to improve display on mobile devices.
 * [Tweaked] Added tooltips to the header menu to compensate for the shorter link names.
+* [Added] Style to team logo.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

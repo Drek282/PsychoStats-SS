@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<theme>
+	<name>default_fiori-bb</name>
+	<parent>default</parent>
+	<version>0.0</version>
+	<title>Fiori Scoresheet Baseball Theme</title>
+	<author>Stormtrooper (modded by Drek)</author>
+	<website></website>
+	<source>themes/default_fiori-bb/theme.xml</source>
+	<image></image>
+	<file></file>
+	<description>Default PsychoStats for Scoresheet Baseball theme based on the colours of a Fiori fabric</description>
+</theme>

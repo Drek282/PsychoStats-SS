@@ -138,9 +138,9 @@ div.ps-team-profile #map {
 
 #ps-container .ps-team-logo {
 	margin: 0 1em 1em 1em;
-	border: 1px solid #e2e4f3;
+	border: 1px solid #a4abad;
 	padding: 1em 0 1em 0;
-	background: #ffffff;
+	background: #d9eabf;
 	text-align: center;
 }
 
@@ -177,8 +177,10 @@ div.ps-team-profile #map {
 	text-align: right;
 }
 #ps-container .ps-table-footer {
+	height: 21px;
 	padding: 0.2em 0.2em 0 0;
 	text-align: right;
+	background-color: #c0d5a4;
 }
 #ps-container .ps-table {
 	width: 100%;

@@ -161,7 +161,7 @@
 	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Overall Team Records#></span></a></div>
 	<div id="s-teamadvanced" class="ps-table-inner{if $shades.s_teamadvanced} s-closed{/if}">
 	{$advanced_table}
-	{if $advancedpager}<div class="ps-table-footer">{$advancedpager}</div>{/if}
+	<div class="ps-table-footer">{if $advancedpager}{$advancedpager}{/if}</div>
 	</div>
 	</div>
 	<!---->
@@ -172,7 +172,7 @@
 	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Team Defensive Stats#></span></a></div>
 	<div id="s-teamdefence" class="ps-table-inner{if $shades.s_teamdefence} s-closed{/if}">
 	{$defence_table}
-	{if $defencepager}<div class="ps-table-footer">{$defencepager}</div>{/if}
+	<div class="ps-table-footer">{if $defencepager}{$defencepager}{/if}</div>
 	</div>
 	</div>
 	<!---->
@@ -183,7 +183,7 @@
 	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Team Offensive Stats#></span></a></div>
 	<div id="s-teamoffence" class="ps-table-inner{if $shades.s_teamoffence} s-closed{/if}">
 	{$offence_table}
-	{if $offencepager}<div class="ps-table-footer">{$offencepager}</div>{/if}
+	<div class="ps-table-footer">{if $offencepager}{$offencepager}{/if}</div>
 	</div>
 	</div>
 	<!---->

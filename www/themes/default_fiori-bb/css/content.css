@@ -15,7 +15,7 @@
 	font-size: 140%;
 	font-weight: normal;
 }
-#ps-main h1 { border-bottom: 2px solid #342b24; font-weight: bold; }
+#ps-main h1 { border-bottom: 2px solid #394a9a; font-weight: bold; }
 #ps-main h2 { font-size: 110%; }
 #ps-main h3 { font-size: 80%; }
 
@@ -582,6 +582,7 @@ em.add-friend a {
 	display: block;
 }
 #gallery div.theme p {
+	color: #7a5e30;
 	line-height: 1.5em;
 	overflow: hidden;
 }

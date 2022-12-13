@@ -222,7 +222,7 @@ div.ps-team-profile #map {
 */
 
 #ps-container .ps-table th {
-	color: #5766c1;
+	color: #1f2861;
 }
 
 #ps-container .ps-table th a,
@@ -231,7 +231,7 @@ div.ps-team-profile #map {
 #ps-container .ps-table th a:hover,
 #ps-container .ps-table th a:active 
 {
-	color: #4a58b3;
+	color: #252d6e;
 }
 #ps-container .ps-table th.active a {
 	color:  #ffcc44;

@@ -71,6 +71,7 @@ if ($reinstall and $dir) {			// reinstall a local theme already on the hard driv
 			));
 		} else {
 			$message = $cms->message('theme-failure', array( 
+				'invalid'	=> true,
 				'message_title'	=> "Error reinstalling theme",
 				'message'	=> $newtheme->error()
 			));

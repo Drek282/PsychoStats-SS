@@ -108,5 +108,5 @@ INSERT INTO `psss_config` (`id`, `conftype`, `section`, `var`, `value`, `label`,
 
 INSERT INTO `psss_config_themes` (`name`, `parent`, `enabled`, `version`, `title`, `author`, `website`, `source`, `image`, `description`) 
     VALUES 
-        ('default',NULL,1,'1.0','Default Theme','Stormtrooper','','','','Default PsychoStats theme.'),
-        ('default-blue','default',1,'1.0','Default Theme - blue skin','Stormtrooper','','','','blue skin for default theme.');
+        ('default',NULL,1,'1.0','Default Theme','Stormtrooper','','themes/default/theme.xml','default.webp','Default PsychoStats theme.'),
+        ('default-blue','default',1,'1.0','Default Theme - blue skin','Stormtrooper','','themes/default-blue/theme.xml','blue.webp','blue skin for default theme.');

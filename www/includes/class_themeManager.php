@@ -422,9 +422,9 @@ function validate_theme($skip_file = false) {
 	}
 
 	// make sure the image is valid
-	if (!$this->re_match('|^https?:/\/|', $this->xml_image())) {
+	if (!$this->re_match('/.(?:jpg|png|webp)$/', $this->xml_image())) {
 		$this->error($cms->trans("Invalid image defined"), PSTHEME_ERR_VALUE);
-		$this->invalid('image', $cms->trans("Image must start with http:// or https://"));
+		$this->invalid('image', $cms->trans("Image must be in jpg, png or webp format."));
 	}
 
 	// if there's a parent defined make sure we have the appropriate parent already installed

@@ -267,7 +267,7 @@ function search_teams($search_id, $criteria) {
 	
 	// loop through each field and add it to the 'where' clause.
 	// Search team, profile and ids
-	foreach (array('team.team_id', 'names.team_name', 'prof.email', 'prof.name') as $field) {
+	foreach (array('adv.team_id', 'adv.divisionname', 'names.team_name', 'prof.email', 'prof.name') as $field) {
 		foreach ($tokens as $t) {
 			$token = $this->token_to_sql($t, $criteria['mode']);
             $inner[] = "$field LIKE '$token'";
@@ -287,10 +287,9 @@ function search_teams($search_id, $criteria) {
 	// perform search and find Jimmy Hoffa!
 	// NOTE: SQL_CALC_FOUND_ROWS is MYSQL specific and would need to be
 	// changed for other databases.
-	$cmd  = "SELECT SQL_CALC_FOUND_ROWS DISTINCT team.team_id " .
-		"FROM $this->t_team_ids_team_name names, $this->t_team team, $this->t_team_profile prof " .
-		"WHERE team.team_id=names.team_id AND team.team_id=prof.team_id ";
-		$cmd .= "AND team.allowrank=1 ";
+	$cmd  = "SELECT SQL_CALC_FOUND_ROWS DISTINCT adv.team_id " .
+		"FROM $this->t_team_ids_team_name names, $this->t_team_adv adv, $this->t_team_profile prof " .
+		"WHERE adv.team_id=names.team_id AND adv.team_id=prof.team_id ";
 	
 	$cmd .= "AND ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];
@@ -967,47 +966,49 @@ function get_team_list($args = array()) {
 		//echo $cmd . "<br>";
 		//exit;
 		$list = $this->db->fetch_rows(1, $cmd);
-	}
 
-	// Generate games_played and games_remaining
-	$list[0]['games_played'] ??= 0;
-	$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
+		// Generate games_played and games_remaining
+		$list[0]['games_played'] ??= 0;
+		$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
 
-	// Get playoff status if the season has not ended.
-	if ($list[0]['games_remaining'] != 0) {
-		$clinch_count = array();
-		$div_count = array();
-		foreach ($list as $tm => $val) {
-			$list[$tm]['games_back'] = $this->get_playoff_status($list[$tm]['games_played'], $list[$tm]['games_back']);
-			$clinch_count[$list[$tm]['divisionname']] ??= null;
-			if ($list[$tm]['games_back'] == 'elim') $clinch_count[$list[$tm]['divisionname']]++;
-			$div_count[$list[$tm]['divisionname']] ??= null;
-			$div_count[$list[$tm]['divisionname']]++;
-		}
+		// Get playoff status if the season has not ended.
+		if ($list[0]['games_remaining'] != 0) {
+			$clinch_count = array();
+			$div_count = array();
+			foreach ($list as $tm => $val) {
+				$list[$tm]['games_back'] = $this->get_playoff_status($list[$tm]['games_played'], $list[$tm]['games_back']);
+				$clinch_count[$list[$tm]['divisionname']] ??= null;
+				if ($list[$tm]['games_back'] == 'elim')
+					$clinch_count[$list[$tm]['divisionname']]++;
+				$div_count[$list[$tm]['divisionname']] ??= null;
+				$div_count[$list[$tm]['divisionname']]++;
+			}
 
-		// Get clinched status.
-		$div_status = array();
-		foreach ($clinch_count as $div => $val) {
-			if (($div_count[$div] - $clinch_count[$div]) == 1) $div_status[$div] = 'clinch';
-		}
+			// Get clinched status.
+			$div_status = array();
+			foreach ($clinch_count as $div => $val) {
+				if (($div_count[$div] - $clinch_count[$div]) == 1) $div_status[$div] = 'clinch';
+			}
 
-		// Assign clinch status to team array.
-		foreach ($div_status as $div => $val) {
-			foreach ($list as $tm => $val1) {
-				if ($list[$tm]['divisionname'] == $div) {
-					$list[$tm]['games_back'] = 'clinch';
-					break;
+			// Assign clinch status to team array.
+			foreach ($div_status as $div => $val) {
+				foreach ($list as $tm => $val1) {
+					if ($list[$tm]['divisionname'] == $div) {
+						$list[$tm]['games_back'] = 'clinch';
+						break;
+					}
 				}
 			}
 		}
+
+		// Generate games_played and games_remaining
+		$list[0]['games_played'] ??= 0;
+		$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
+
+		// Set divisionname if it has not been set.
+		$list[0]['divisionname'] ??= 'na';
+
 	}
-
-	// Generate games_played and games_remaining
-	$list[0]['games_played'] ??= 0;
-	$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
-
-	// Set divisionname if it has not been set.
-	$list[0]['divisionname'] ??= 'na';
 
 	return $list;
 }

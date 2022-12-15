@@ -195,6 +195,7 @@ $table->attr('class', 'ps-table ps-team-table');
 $table->sort_baseurl($search ? array( 'search' => $search ) : array( 'q' => $q ));
 $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
+	'rank'			=> array( 'label' => $cms->trans("Rank"), 'callback' => 'dash_if_empty', 'tooltip' => $cms->trans("Ranked by Team Winning Percentage") ),
 	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 //	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'callback' => 'ps_table_division_link' ),

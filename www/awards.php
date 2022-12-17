@@ -175,9 +175,7 @@ $shades = array(
 // assign variables to the theme
 $cms->theme->assign(array(
 	'page'			=> basename(__FILE__,'.php'),
-	//'view'		=> $v,
 	'awards'		=> $awards,
-	//'team_id'		=> $p,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,

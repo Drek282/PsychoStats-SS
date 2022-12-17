@@ -10,7 +10,7 @@ The local 'root' files SHOULD NEVER BE located inside your website directory tre
 
 ## IF YOU ARE UPGRADING FROM A PREVIOUS VERSION OF PSYCHOSTATS FOR SCORESHEET BASEBALL
 
-There is no option currenty for a graceful or automated upgrade.  Typically in an update you will need to upload all the files other than the install folder and the config.php file from the new version www folder to your web hosting folder.  If the psss.py script has changed you will need to upload that from the root folder, reset the stats from the Manage page of your Admin CP and rerun the psss.py script.  If the database structure has changed you will need to upload the "install" folder from the www folder to your web hosting folder and reinstall the software.
+There is no option currently for a graceful or automated upgrade.  Typically in an update you will need to upload all the files other than the install folder and the config.php file from the new version www folder to your web hosting folder.  If the psss.py script has changed you will need to upload that from the root folder, reset the stats from the Manage page of your Admin CP and rerun the psss.py script.  If the database structure has changed you will need to upload the "install" folder from the www folder to your web hosting folder and reinstall the software.
 
 
 ## INSTALLATION

@@ -9,6 +9,7 @@ CREATE TABLE `psss_team_adv` (
   `games_back` varchar(64) NOT NULL default '-',
   `team_rdiff` decimal(4,2) NOT NULL default '0.00',
   `pythag` decimal(4,3) NOT NULL default '0.000',
+  `pythag_plus` decimal(4,3) NOT NULL default '0.000',
   PRIMARY KEY  (`season`,`team_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 

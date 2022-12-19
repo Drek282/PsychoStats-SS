@@ -743,6 +743,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Calculate Pythag.
     working_stats_com_dfo['Pythag'] = round(1 / (1 + pow(working_stats_com_dfo['RA'] / working_stats_com_dfo['R'], 1.83)), 3)
 
+    # Calculate Pythag+.
+    working_stats_com_dfo['Pythag+'] = working_stats_com_dfo['pct.'] - working_stats_com_dfo['Pythag']
+
     # Create the ADV stats table.
     working_stats_adv_dfo = working_stats_com_dfo.drop(['Team_Name','ERA','CG','ShO','RS','Sv','IP','RA','ER','HA','BAA','BBA','KA','WP','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','SH','F','SF','GDP','SB','CS','LOB','OP','DP','E','OSB','OCS','PB'], axis=1)
 
@@ -756,7 +759,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         league_c = get_league_c(season_url)
 
     ## Column Headers:
-    #  1 Season, 2 Team Number, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 RDiff, 10 Pythag
+    #  1 Season, 2 Team Number, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 RDiff, 10 Pythag, 11 Pythag+
 
     # Create the DEF stats table.
     working_stats_def_dfo = working_stats_com_dfo.drop(['Team_Name','Division','GP','W','L','pct.','GB','RS','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','SH','F','SF','GDP','SB','CS','LOB'], axis=1)
@@ -850,11 +853,11 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         # Is the table empty?
         if data:
             # Update database.
-            query = "UPDATE psss_team_adv a SET a.games_played='" + str(row['GP']) + "', a.wins='" + str(row['W']) + "', a.losses='" + str(row['L']) + "', a.win_percent='" + str(row['pct.']) + "', a.games_back='" + str(row['GB']) + "', a.team_rdiff='" + str(row['RDiff']) + "', a.pythag='" + str(row['Pythag']) + "' WHERE a.season='" + str(row['Season']) + "' AND a.team_id='" + str(row['Team']) + "'"
+            query = "UPDATE psss_team_adv a SET a.games_played='" + str(row['GP']) + "', a.wins='" + str(row['W']) + "', a.losses='" + str(row['L']) + "', a.win_percent='" + str(row['pct.']) + "', a.games_back='" + str(row['GB']) + "', a.team_rdiff='" + str(row['RDiff']) + "', a.pythag='" + str(row['Pythag']) + "', a.pythag_plus='" + str(row['Pythag+']) + "' WHERE a.season='" + str(row['Season']) + "' AND a.team_id='" + str(row['Team']) + "'"
             cursor.execute(query)
         else:
             # Add new entry to db.
-            query = "INSERT INTO psss_team_adv VALUES ('" + str(row['Season']) + "', '" + str(row['Team']) + "', '" + str(row['Division']) + "', '" + str(row['GP']) + "', '" + str(row['W']) + "', '" + str(row['L']) + "', '" + str(row['pct.']) + "', '" + str(row['GB']) + "', '" + str(row['RDiff']) + "', '" + str(row['Pythag']) + "')"
+            query = "INSERT INTO psss_team_adv VALUES ('" + str(row['Season']) + "', '" + str(row['Team']) + "', '" + str(row['Division']) + "', '" + str(row['GP']) + "', '" + str(row['W']) + "', '" + str(row['L']) + "', '" + str(row['pct.']) + "', '" + str(row['GB']) + "', '" + str(row['RDiff']) + "', '" + str(row['Pythag']) + "', '" + str(row['Pythag+']) + "')"
             cursor.execute(query)
     
     # Output league championship status to psss_team_adv data table
@@ -1027,7 +1030,7 @@ else:
 # Get the league url and name.
 cursor.execute("SELECT source, league_name FROM psss_config_sources WHERE enabled='1' AND idx=(SELECT MIN(idx) FROM psss_config_sources)")
 data = cursor.fetchone()
-if (data['source'] and data['league_name']):
+if (data):
     league_url = str(data['source'])
     league_name = str(data['league_name'])
 else:

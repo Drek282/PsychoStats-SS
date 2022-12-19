@@ -17,6 +17,8 @@ Version 0.0.2b (in progress)
 * [Added] Defense and offense tables now include a rank column.
 * [Fixed] Pages with multiple sort columns correctly show the primary sort column again.
 * [Tweaked] Simplified header link url's.
+* [Added] Pythag+ to overall tables and team pages.
+* [Fixed] Python error in backend when no source page defined.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

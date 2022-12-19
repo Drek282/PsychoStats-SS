@@ -198,7 +198,8 @@ $table->columns(array(
 	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
 	'games_back'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Playoff status and how many games behind division leader\n—\"dtlc\" icookiendicates division title and league champion\n—\"lc\" indicates league champion\n—\"dt\" indicates division title") ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings") ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") )
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
+	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
 ));
 $table->column_attr('team_name', 'class', 'left');
 $table->column_attr('team_rdiff', 'class', 'right');

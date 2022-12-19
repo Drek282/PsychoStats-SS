@@ -604,6 +604,15 @@ function get_team($args = array(), $minimal = false) {
 	}
 	$team['hist_rdiff'] = round($team['hist_rdiff'] / $count, 2);
 
+	// Get historical team average pythag+.
+	$team['hist_pythag_plus'] = 0;
+	$count = 0;
+	foreach ($team['advanced'] as $s => $val) {
+		$team['hist_pythag_plus'] = $team['hist_pythag_plus'] + $team['advanced'][$s]['pythag_plus'];
+		$count++;
+	}
+	$team['hist_pythag_plus'] = round($team['hist_pythag_plus'] / $count, 3);
+
 	// Count the number of division titles.
 	$count = 0;
 	foreach ($team['advanced'] as $s => $val) {

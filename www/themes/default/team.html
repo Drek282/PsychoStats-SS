@@ -87,6 +87,10 @@
 	<label><#Pythag#></label>
 	<span>{$team.pythag}</span>
 </p>
+<p>
+	<label><#Pythag+#></label>
+	<span>{$team.pythag_plus}</span>
+</p>
 </div>
 </div>
 
@@ -120,6 +124,10 @@
 <p>
 	<label><#Run Differential#></label>
 	<span>{if $team.hist_rdiff}{$team.hist_rdiff}{else}-{/if}</span>
+</p>
+<p>
+	<label><#Pythag+#></label>
+	<span>{if $team.hist_pythag_plus}{$team.hist_pythag_plus}{else}-{/if}</span>
 </p>
 {*
 {if $team.totalawards}

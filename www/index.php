@@ -158,6 +158,11 @@ $teams = $ps->get_team_list(array(
 	'limit'		=> $limit,
 ));
 
+// reset $sort variable to first sort column
+$sort_arr = explode(", ", $sort);
+$sort = $sort_arr[0];
+unset($sort_arr);
+
 $baseurl = array('sort' => $sort, 'order' => $order, 'limit' => $limit);
 if ($search) {
 	$baseurl['search'] = $search;

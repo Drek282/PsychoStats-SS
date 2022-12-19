@@ -181,6 +181,11 @@ if ($total['ranked'] > 0) {
 	$teams[0]['la_team_rs'] = round($la_team_rs / $total['ranked'], 2);
 }
 
+// reset $sort variable to first sort column
+$sort_arr = explode(", ", $sort);
+$sort = $sort_arr[0];
+unset($sort_arr);
+
 $baseurl = array('sort' => $sort, 'order' => $order, 'limit' => $limit);
 if ($search) {
 	$baseurl['search'] = $search;

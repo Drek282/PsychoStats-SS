@@ -16,6 +16,7 @@ Version 0.0.2b (in progress)
 * [Fixed] Theme previews now display as originally intended.
 * [Added] Defense and offense tables now include a rank column.
 * [Fixed] Pages with multiple sort columns correctly show the primary sort column again.
+* [Tweaked] Simplified header link url's.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

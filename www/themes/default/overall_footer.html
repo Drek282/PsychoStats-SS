@@ -2,7 +2,7 @@
 <div id="ps-footer-middle">
 {if $language_list and $cookieconsent}
 	<div class="language">
-		<form action="{url _base='index.php' _ref=1}" method="post">
+		<form action="index.php" method="post">
 	    <input name="key" value="{$form_key}" type="hidden">
 		  <select name="language" class="language" title="<#Select a Language#>">
 			  {foreach from=$language_list item='lang'}
@@ -14,7 +14,7 @@
 {/if}
 {if $theme_list and count($theme_list) > 1 and $cookieconsent}
 	<div class="theme">
-		[ <a href="{url _base='themes.php'}"><#Change Theme#></a> ]
+		[ <a href="themes.php"><#Change Theme#></a> ]
 	</div>
 {/if}
 <div class="poweredby">
@@ -24,11 +24,11 @@
     {/if}
     -- <#Last Updated#>: {$lastupdate|date_format:'%Y-%m-%d %H:%M:%S'}<br>
     {if ! $conf.theme.permissions.show_admin and $cookieconsent}
-        <strong>[ <a href="{url _base='admin/index.php'}"><#Admin Control Panel#></a> ]</strong>
+        <strong>[ <a href="admin/index.php"><#Admin Control Panel#></a> ]</strong>
     {/if}
     {if $conf.main.security.show_privacy_policy}
         <strong>
-            [ <a href="{url _base='privacy.php'}"><#Privacy Policy#></a> ]
+            [ <a href="privacy.php"><#Privacy Policy#></a> ]
         </strong>
     {/if}
 </div>
@@ -46,7 +46,7 @@
 	  <input name="key" value="{$form_key}" type="hidden">
     <p><strong>COOKIE CONSENT:</strong>  This stats software uses two cookies to save your theme preference and allow users with accounts to log into their account.  These cookies are also used to determine what browser you are using to allow for browser specific code in displaying content.  These cookies are not used to deliver advertising, they are not tracking cookies and they do not collect any other form of data, personal or otherwise.  If you wish to allow this stats software to set these cookies for the stated purposes, please click on the accept button.</p>
     {if $conf.main.security.show_privacy_policy}
-      <p class="privacy"><strong>Please see our <a href="{url _base='privacy.php'}"><#Privacy Policy#></a> for more details.</strong></p>
+      <p class="privacy"><strong>Please see our <a href="privacy.php"><#Privacy Policy#></a> for more details.</strong></p>
     {/if}
 
     <button name="cookieconsent" value="1" class="btn accept"><#Accept#></button>

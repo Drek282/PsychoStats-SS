@@ -111,21 +111,23 @@ if ($upload) {
 
 			// find the Content-Type and Size
 			foreach ($hdr as $h) {
-				list($key, $str) = explode(":", $h, 2);
-				$str = trim($str);
-				if ($key == 'Content-Type') {
-					list($mime,$type) = explode("/", $str, 2);
-					if ($mime != 'image') {
-						$err = $cms->trans("The URL does not point to an image");
-					} else {
-						// add the type (png, gif, jpg, ...) to the filename (if not already present)
-						if (substr($file['name'],-strlen($type)) != $type) {
-							$file['name'] .= '.' . $type;
+				if (preg_match('/:/', $h)) {
+					list($key, $str) = explode(":", $h, 2);
+					$str = trim($str);
+					if ($key == 'Content-Type') {
+						list($mime,$type) = explode("/", $str, 2);
+						if ($mime != 'image') {
+							$err = $cms->trans("The URL does not point to an image");
+						} else {
+							// add the type (png, gif, jpg, ...) to the filename (if not already present)
+							if (substr($file['name'],-strlen($type)) != $type) {
+								$file['name'] .= '.' . $type;
+							}
 						}
-					}
-				} elseif ($key == 'Content-Length') {
-					if ($str > $ps->conf['theme']['icons']['max_size']) {
-						$err = $cms->trans("File download is too large") . " (" . abbrnum($str) . " > " . abbrnum($ps->conf['theme']['icons']['max_size']) . ")";
+					} elseif ($key == 'Content-Length') {
+						if ($str > $ps->conf['theme']['icons']['max_size']) {
+							$err = $cms->trans("File download is too large") . " (" . abbrnum($str) . " > " . abbrnum($ps->conf['theme']['icons']['max_size']) . ")";
+						}
 					}
 				}
 			}
@@ -133,6 +135,7 @@ if ($upload) {
 			// read the contents of the URL into the tmp file ... 
 			if (!$err and $dl and $fh) {
 				// make sure the URL file is a valid image type before we download it
+				$match ??= null;
 				if (!preg_match("/$match/", $file['name'])) {
 					$err = $cms->trans("Image type of URL must be one of the following:") . " <b>" . $ps->conf['theme']['image']['search_ext'] . "</b>";
 				} else {
@@ -152,7 +155,7 @@ if ($upload) {
 		}
 	}
 	$file['info'] = array();
-	if ($file['tmp_name']) $file['info'] = @getimagesize($file['tmp_name']);
+	if (isset($file['tmp_name'])) $file['info'] = @getimagesize($file['tmp_name']);
 	if (!$err) {
 		$res = validate_img($file);
 		if ($res !== true) {
@@ -255,6 +258,7 @@ function validate_img($file) {
 	$list = array_map('trim', $list);
 	$match = '\\.(' . implode('|', $list) . ')$';
 	$res = true;
+	$file['name'] ??= null;
 	if (!preg_match("/$match/", $file['name'])) {
 		return $cms->trans("Image type must be one of the following:") . ' <b>' . implode(', ', $list) . '</b>';
 #	} elseif ($file['info'][2] > 3) {

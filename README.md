@@ -11,11 +11,12 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 * The CSRF protection is currently not working as intended.  This should not be a serious security issue but the hope is to revisit the code and get this working at some point in the future.
 * The coded language support is incomplete.  The goal is to update and finish it, as well as add support, at a minimum, for Spanish.
+* The setting to allow uploads for icons has no effect.  There is no code in place to allow users to upload images.
 
 
 ## **Stuff that Remains Untested**
 
-* Uploading images.
+* Nothing that I know of.
 
 
 ## **Future Plans**
@@ -23,6 +24,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Add support for Spanish and French.
 * Add historical season support for private, non-continuing leagues.
 * Reinstate support for division profiles.
+* Add user upload functionality for icon images.
 
 
 ## **Credits**

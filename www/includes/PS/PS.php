@@ -678,13 +678,25 @@ function get_division($args = array(), $minimal = false) {
 		'minimal'	=> false, // if true, overrides all 'load...' options to false (or use $minimal parameter)
 		'fields'	=> '',
 		'allowall'	=> 0,
-		'loadmembers'	=> 1,
+		'loadadvanced'	=> 1,
+		'loaddefence'	=> 1,
+		'loadoffence'	=> 1,
 		'loadcounts'	=> 1,
-		'membersort'	=> 'win_percent',
-		'memberorder'	=> 'desc',
-		'memberstart'	=> 0,
-		'memberlimit'	=> 20,
-		'memberfields'	=> '',
+		'asort'	=> 'win_percent, team_rdiff',
+		'aorder'	=> 'desc',
+		'astart'	=> 0,
+		'alimit'	=> 10,
+		'dsort'	=> 'team_ra, team_era',
+		'dorder'	=> 'asc',
+		'dstart'	=> 0,
+		'dlimit'	=> 10,
+		'osort'	=> 'run_support, woba',
+		'oorder'	=> 'desc',
+		'ostart'	=> 0,
+		'olimit'	=> 10,
+		'afields'	=> '',
+		'dfields'	=> '',
+		'ofields'	=> '',
 	);
 	$division = array();
 	$id = $this->db->escape($args['divisionname']);
@@ -692,15 +704,17 @@ function get_division($args = array(), $minimal = false) {
 
 	if ($minimal) $args['minimal'] = true;
 
-	$values = "names.*, adv.*,adv.team_id team_n, ";
+	$values = "names.*, adv.*,adv.team_id team_n,def.*,off.*, ";
 
 	$types = $this->get_types('DIVISION');
 	$fields = !empty($args['fields']) ? explode(',',$args['fields']) : array_keys($types);
 	$values .= $this->_values($fields, $types);
 
 	$cmd  = "SELECT $values ";
-	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_team_name names ";
+	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_team_name names, $this->t_team_def def, $this->t_team_off off ";
 	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "AND names.team_id=def.team_id AND def.season=" . $args['season'] . " ";
+	$cmd .= "AND names.team_id=off.team_id AND off.season=" . $args['season'] . " ";
 	$args['where'] ??= null;
 	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
 	$cmd .= "GROUP BY adv.divisionname ";
@@ -708,51 +722,84 @@ function get_division($args = array(), $minimal = false) {
 
 	$division = $this->db->fetch_row(1, $cmd);
 
-	if (!$args['minimal'] and $args['loadmembers']) {
+	// Load advanced stats for the division.
+	if (!$args['minimal'] and $args['loadadvanced']) {
         $s ??= null;
-		$division['members'] = $this->get_team_list(array(
+		$division['advanced'] = $this->get_team_list(array(
 			'where' => "AND adv.divisionname='$id'",
 			'season'	=> $args['season'],
-			'sort'	=> $args['membersort'],
-			'order' => $args['memberorder'],
-			'start' => $args['memberstart'],
-			'limit' => $args['memberlimit'],
-			'fields'=> $args['memberfields'],
+			'sort'	=> $args['asort'],
+			'order' => $args['aorder'],
+			'start' => $args['astart'],
+			'limit' => $args['alimit'],
+			'fields'=> $args['afields'],
+//			'allowall' => 1,
+			'allowall' => $args['allowall'],
+		),$s);
+	}
+
+	// Load defensive stats for the division.
+	if (!$args['minimal'] and $args['loaddefence']) {
+        $s ??= null;
+		$division['defence'] = $this->get_team_list(array(
+			'where' => "AND adv.divisionname='$id'",
+			'season'	=> $args['season'],
+			'sort'	=> $args['dsort'],
+			'order' => $args['dorder'],
+			'start' => $args['dstart'],
+			'limit' => $args['dlimit'],
+			'fields'=> $args['dfields'],
+//			'allowall' => 1,
+			'allowall' => $args['allowall'],
+		),$s);
+	}
+
+	// Load offensive stats for the team.
+	if (!$args['minimal'] and $args['loadoffence']) {
+        $s ??= null;
+		$division['offence'] = $this->get_team_list(array(
+			'where' => "AND adv.divisionname='$id'",
+			'season'	=> $args['season'],
+			'sort'	=> $args['osort'],
+			'order' => $args['oorder'],
+			'start' => $args['ostart'],
+			'limit' => $args['olimit'],
+			'fields'=> $args['ofields'],
 //			'allowall' => 1,
 			'allowall' => $args['allowall'],
 		),$s);
 	}
 
 	// Get totalmembers.
-	$division['totalmembers'] = count($division['members']);
+	$division['totalmembers'] = count($division['advanced']);
 
 	// Generate games_played and games_remaining
-	$division['members'][0]['games_played'] ??= 0;
-	$division['members'][0]['games_remaining'] = 162 - $division['members'][0]['games_played'];
+	$division['advanced'][0]['games_played'] ??= 0;
+	$division['advanced'][0]['games_remaining'] = 162 - $division['advanced'][0]['games_played'];
 
 	// Get playoff status and stat totals.
-	$clinch_count = ($division['members'][0]['games_remaining'] != 0) ? 0 : null;
+	$clinch_count = ($division['advanced'][0]['games_remaining'] != 0) ? 0 : null;
 	$division['games_played'] = 0;
 	$division['wins'] = 0;
 	$division['losses'] = 0;
 	$division['win_percent'] = 0;
 	$division['team_rdiff'] = 0;
-	foreach ($division['members'] as $tm => $val) {
+	foreach ($division['advanced'] as $tm => $val) {
 		// Playoff status.
 		if (!is_null($clinch_count)) {
-			$division['members'][$tm]['games_back'] = $this->get_playoff_status($division['members'][$tm]['games_played'], $division['members'][$tm]['games_back']);
-			if ($division['members'][$tm]['games_back'] == 'elim') $clinch_count++;
+			$division['advanced'][$tm]['games_back'] = $this->get_playoff_status($division['advanced'][$tm]['games_played'], $division['advanced'][$tm]['games_back']);
+			if ($division['advanced'][$tm]['games_back'] == 'elim') $clinch_count++;
 		}
 		// Stat totals.
-		$division['games_played'] = $division['games_played'] + $division['members'][$tm]['games_played'];
-		$division['wins'] = $division['wins'] + $division['members'][$tm]['wins'];
-		$division['losses'] = $division['losses'] + $division['members'][$tm]['losses'];
-		$division['win_percent'] = $division['win_percent'] + $division['members'][$tm]['win_percent'];
-		$division['team_rdiff'] = $division['team_rdiff'] + $division['members'][$tm]['team_rdiff'];
+		$division['games_played'] = $division['games_played'] + $division['advanced'][$tm]['games_played'];
+		$division['wins'] = $division['wins'] + $division['advanced'][$tm]['wins'];
+		$division['losses'] = $division['losses'] + $division['advanced'][$tm]['losses'];
+		$division['win_percent'] = $division['win_percent'] + $division['advanced'][$tm]['win_percent'];
+		$division['team_rdiff'] = $division['team_rdiff'] + $division['advanced'][$tm]['team_rdiff'];
 	}
 
 	// Set clinched status.
-	if (!is_null($clinch_count) and ($division['totalmembers'] - $clinch_count) == 1) $division['members'][0]['games_back'] = 'clinch';
+	if (!is_null($clinch_count) and ($division['totalmembers'] - $clinch_count) == 1) $division['advanced'][0]['games_back'] = 'clinch';
 
 	$division['win_percent'] = round($division['win_percent'] / $division['totalmembers'], 3);
 	$division['team_rdiff'] = round($division['team_rdiff'] / $division['totalmembers'], 2);
@@ -2112,6 +2159,9 @@ function division_teams_table_mod(&$table) {}
 function team_advanced_table_mod(&$table) {}
 function team_defence_table_mod(&$table) {}
 function team_offence_table_mod(&$table) {}
+function division_advanced_table_mod(&$table) {}
+function division_defence_table_mod(&$table) {}
+function division_offence_table_mod(&$table) {}
 
 // add a block of stats to the left side of the stats page.
 // this is useful for mods to add their team specific stats.

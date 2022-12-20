@@ -227,8 +227,9 @@ $table->columns(array(
 	'left_on_base_percent'			=> array( 'label' => $cms->trans("LOB %"), 'tooltip' => $cms->trans("(Team RBI - Team HR)/(Team Total Base Runners - Team HR)") ),
 	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed") )
 ));
+$table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
-$table->column_attr('team_rdiff', 'class', 'right');
+$table->column_attr('team_srat', 'class', 'right');
 //$table->column_attr('rank', 'class', 'left');
 //$table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);

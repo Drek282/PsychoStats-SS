@@ -138,7 +138,7 @@ $table->columns(array(
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings\n—division average") ),
 ));
 $table->column_attr('divisionname', 'class', 'left');
-$table->column_attr('name', 'class', 'left');
+$table->column_attr('team_rdiff', 'class', 'right');
 $ps->divisions_table_mod($table);
 $cms->filter('divisions_table_object', $table);
 

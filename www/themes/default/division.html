@@ -7,7 +7,7 @@
 	<div id="ps-page-title">
 		<div class="inner">
 		<h1><#Standings#> :: {$division.divisionname|escape} <#Division#></h1>
-		<h2><#season#> <strong>{$division.season}</strong> :: <strong>{$division.members.0.games_played}</strong> <#games played#> :: <strong>{$division.members.0.games_remaining}</strong> <#games remaining#></h2>
+		<h2><#season#> <strong>{$division.season}</strong> :: <strong>{$division.advanced.0.games_played}</strong> <#games played#> :: <strong>{$division.advanced.0.games_remaining}</strong> <#games remaining#></h2>
 		</div>
 	</div>
 
@@ -44,12 +44,32 @@
 <!--content block-->
 <div id="ps-main-content" class="ps-page-division">
 
-	<!--#MEMBERS#-->
-	<a href="members"></a>
+	<!--#ADVANCED#-->
+	<a href="advanced"></a>
 	<div class="ps-table-frame">
-	<div class="ps-frame-header"><a href="" onclick="return false"><span>{$division.totalmembers|commify} <#Division Members#></span></a></div>
-	<div id="s-divisionmembers" class="ps-table-inner{if $shades.s_divisionmembers} s-closed{/if}">
-	{$members_table}
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Overall Teams Records#></span></a></div>
+	<div id="s-divisionadvanced" class="ps-table-inner{if $shades.s_divisionadvanced} s-closed{/if}">
+	{$advanced_table}
+	</div>
+	</div>
+	<!---->
+
+	<!--#DEFENCE#-->
+	<a href="defence"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Teams Defensive Stats#></span></a></div>
+	<div id="s-divisiondefence" class="ps-table-inner{if $shades.s_divisiondefence} s-closed{/if}">
+	{$defence_table}
+	</div>
+	</div>
+	<!---->
+
+	<!--#OFFENCE#-->
+	<a href="offence"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Teams Offensive Stats#></span></a></div>
+	<div id="s-divisionoffence" class="ps-table-inner{if $shades.s_divisionoffence} s-closed{/if}">
+	{$offence_table}
 	</div>
 	</div>
 	<!---->

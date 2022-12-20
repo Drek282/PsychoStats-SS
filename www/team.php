@@ -186,7 +186,7 @@ $atable->columns(array(
 	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
 ));
 $atable->column_attr('season', 'class', 'first');
-$atable->column_attr('pythag', 'class', 'right');
+$atable->column_attr('pythag_plus', 'class', 'right');
 $ps->team_advanced_table_mod($atable);
 $cms->filter('team_advanced_table_object', $atable);
 
@@ -260,7 +260,7 @@ $otable->columns(array(
 	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed") ),
 ));
 $otable->column_attr('season', 'class', 'first');
-$otable->column_attr('left_on_base_percent', 'class', 'right');
+$otable->column_attr('team_srat', 'class', 'right');
 $ps->team_offence_table_mod($otable);
 $cms->filter('team_offence_table_object', $otable);
 

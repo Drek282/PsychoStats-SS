@@ -226,8 +226,9 @@ $table->columns(array(
 	'opp_caught_stealing'			=> array( 'label' => $cms->trans("OCS"), 'tooltip' => $cms->trans("Team Total Opponents Caught Stealing") ),
 	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings") )
 ));
+$table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
-$table->column_attr('team_rdiff', 'class', 'right');
+$table->column_attr('team_drat', 'class', 'right');
 //$table->column_attr('rank', 'class', 'left');
 //$table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);

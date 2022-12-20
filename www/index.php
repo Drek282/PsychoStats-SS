@@ -201,6 +201,7 @@ $table->columns(array(
 	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
 	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
 ));
+$table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
 $table->column_attr('team_rdiff', 'class', 'right');
 //$table->column_attr('rank', 'class', 'left');

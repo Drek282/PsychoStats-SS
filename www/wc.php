@@ -156,10 +156,12 @@ $table->columns(array(
 	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
 	'games_back_wc'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Wildcard status and how many games out of wild card playoff position") ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings") ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") )
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
+	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
 ));
+$table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
-$table->column_attr('team_rdiff', 'class', 'right');
+$table->column_attr('pythag_plus', 'class', 'right');
 //$table->column_attr('rank', 'class', 'left');
 $table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);

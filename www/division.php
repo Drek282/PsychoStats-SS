@@ -137,10 +137,12 @@ $atable->columns(array(
 	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
 	'games_back'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Playoff status and how many games behind division leader\n—\"dtlc\" indicates division title and league champion\n—\"lc\" indicates league champion\n—\"dt\" indicates division title") ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings") ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") )
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
+	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
 ));
+$atable->column_attr('rank', 'class', 'first');
 $atable->column_attr('team_name', 'class', 'left');
-$atable->column_attr('team_rdiff', 'class', 'right');
+$atable->column_attr('pythag_plus', 'class', 'right');
 $ps->division_teams_table_mod($atable);
 $atable->header_attr('rank', 'colspan', '2');
 $cms->filter('division_advanced_table_object', $atable);
@@ -232,6 +234,7 @@ $wildcard = $ps->get_total_wc();
 $shades = array(
 	's_division_rundown'	=> null,
 	's_modactions'			=> null,
+	's_division_average'	=> null,
 	's_divisionadvanced'	=> null,
 	's_divisiondefence'		=> null,
 	's_divisionoffence'		=> null,
@@ -252,11 +255,11 @@ $cms->theme->assign(array(
 	'cookieconsent'	=> $cookieconsent,
 ));
 
-// allow mods to have their own section on the left side bar
-$ps->division_left_column_mod($division, $cms->theme);
-
 $basename = basename(__FILE__, '.php');
 if ($division['divisionname']) {
+	// allow mods to have their own section on the left side bar
+	$ps->division_left_column_mod($division, $cms->theme);
+
 	$cms->theme->add_css('css/2column.css');	// this page has a left column
 	$cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 } else {

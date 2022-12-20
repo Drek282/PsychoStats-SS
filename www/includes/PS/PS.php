@@ -66,6 +66,15 @@ var $DIVISION_TYPES = array(
 	'losses'					=> '=',
 	'win_percent'				=> '=',
 	'team_rdiff'				=> '=',
+	'losses'					=> '=',
+	'win_percent'				=> '=',
+	'team_rdiff'				=> '=',
+	'team_ra'					=> '=',
+	'run_support'				=> '=',
+	'team_whip'					=> '=',
+	'ops'						=> '=',
+	'team_drat'					=> '=',
+	'team_srat'					=> '=',
 );
 
 var $WC_TYPES = array( 
@@ -78,6 +87,7 @@ var $WC_TYPES = array(
 	'games_back_wc'				=> '=',
 	'team_rdiff'				=> '=',
 	'pythag'					=> '=',
+	'pythag_plus'				=> '=',
 );
 
 var $ADV_TYPES = array( 
@@ -91,6 +101,7 @@ var $ADV_TYPES = array(
 	'games_back'				=> '=',
 	'team_rdiff'				=> '=',
 	'pythag'					=> '=',
+	'pythag_plus'				=> '=',
 );
 
 var $DEF_TYPES = array( 
@@ -143,6 +154,7 @@ var $OFF_TYPES = array(
 	'caught_stealing'			=> '=', 
 	'left_on_base'				=> '=',
 	'left_on_base_percent'		=> '=',
+	'team_srat'					=> '=', 
 );
 
 var $db = null;
@@ -704,7 +716,7 @@ function get_division($args = array(), $minimal = false) {
 
 	if ($minimal) $args['minimal'] = true;
 
-	$values = "names.*, adv.*,adv.team_id team_n,def.*,off.*, ";
+	$values = "names.*, adv.*,adv.team_id team_n, ";
 
 	$types = $this->get_types('DIVISION');
 	$fields = !empty($args['fields']) ? explode(',',$args['fields']) : array_keys($types);
@@ -713,8 +725,6 @@ function get_division($args = array(), $minimal = false) {
 	$cmd  = "SELECT $values ";
 	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_team_name names, $this->t_team_def def, $this->t_team_off off ";
 	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=" . $args['season'] . " ";
-	$cmd .= "AND names.team_id=def.team_id AND def.season=" . $args['season'] . " ";
-	$cmd .= "AND names.team_id=off.team_id AND off.season=" . $args['season'] . " ";
 	$args['where'] ??= null;
 	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
 	$cmd .= "GROUP BY adv.divisionname ";
@@ -784,6 +794,12 @@ function get_division($args = array(), $minimal = false) {
 	$division['losses'] = 0;
 	$division['win_percent'] = 0;
 	$division['team_rdiff'] = 0;
+	$division['team_ra'] = 0;
+	$division['run_support'] = 0;
+	$division['team_whip'] = 0;
+	$division['ops'] = 0;
+	$division['team_drat'] = 0;
+	$division['team_srat'] = 0;
 	foreach ($division['advanced'] as $tm => $val) {
 		// Playoff status.
 		if (!is_null($clinch_count)) {
@@ -796,6 +812,12 @@ function get_division($args = array(), $minimal = false) {
 		$division['losses'] = $division['losses'] + $division['advanced'][$tm]['losses'];
 		$division['win_percent'] = $division['win_percent'] + $division['advanced'][$tm]['win_percent'];
 		$division['team_rdiff'] = $division['team_rdiff'] + $division['advanced'][$tm]['team_rdiff'];
+		$division['team_ra'] = $division['team_ra'] + $division['defence'][$tm]['team_ra'];
+		$division['run_support'] = $division['run_support'] + $division['offence'][$tm]['run_support'];
+		$division['team_whip'] = $division['team_whip'] + $division['defence'][$tm]['team_whip'];
+		$division['ops'] = $division['ops'] + $division['offence'][$tm]['ops'];
+		$division['team_drat'] = $division['team_drat'] + $division['defence'][$tm]['team_drat'];
+		$division['team_srat'] = $division['team_srat'] + $division['offence'][$tm]['team_srat'];
 	}
 
 	// Set clinched status.
@@ -803,6 +825,23 @@ function get_division($args = array(), $minimal = false) {
 
 	$division['win_percent'] = round($division['win_percent'] / $division['totalmembers'], 3);
 	$division['team_rdiff'] = round($division['team_rdiff'] / $division['totalmembers'], 2);
+	$division['team_ra'] = round($division['team_ra'] / $division['totalmembers'], 2);
+	$division['run_support'] = round($division['run_support'] / $division['totalmembers'], 1);
+	$division['team_whip'] = round($division['team_whip'] / $division['totalmembers'], 2);
+	$division['ops'] = round($division['ops'] / $division['totalmembers'], 2);
+	$division['team_drat'] = round($division['team_drat'] / $division['totalmembers'], 2);
+	$division['team_srat'] = round($division['team_srat'] / $division['totalmembers'], 2);
+
+	// unset a bunch of unnecessary crap
+	unset($division['team_id']);
+	unset($division['team_name']);
+	unset($division['totaluses']);
+	unset($division['firstseen']);
+	unset($division['lastseen']);
+	unset($division['games_back']);
+	unset($division['pythag']);
+	unset($division['pythag_plus']);
+	unset($division['team_n']);
 
 	return $division;
 }
@@ -1146,22 +1185,32 @@ function get_division_list($args = array()) {
 		'where'		=> '',
 		'allowall'	=> 0,
 	);
-	$values = "adv.*, COUNT(*) totalmembers, ";
 
-	$types = $this->get_types("DIVISION");
-	$fields = !empty($args['fields']) ? explode(',',$args['fields']) : array_keys($types);
-	$values .= $this->_values($fields, $types);
+	$cmd  = "SELECT COUNT(DISTINCT adv.team_id) totalmembers,adv.season,adv.team_id,adv.divisionname,SUM(adv.win_percent) win_percent,SUM(adv.team_rdiff) team_rdiff,";
+	$cmd .= "def.season,def.team_id,SUM(def.team_ra) team_ra,SUM(def.team_whip) team_whip,SUM(def.team_drat) team_drat,";
+	$cmd .= "off.season,off.team_id,SUM(off.run_support) run_support,SUM(off.ops) ops,SUM(off.team_srat) team_srat ";
+	
+	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off ";
 
-	$cmd  = "SELECT $values ";
-	$cmd .= "FROM $this->t_team_adv adv ";
 	$cmd .= "WHERE adv.season=" . $args['season'] . " ";
+	$cmd .= "AND def.season=adv.season AND def.team_id=adv.team_id ";
+	$cmd .= "AND off.season=adv.season AND off.team_id=adv.team_id ";
+
 	$cmd .= "GROUP BY adv.divisionname ";
 	$cmd .= $this->getsortorder($args);
+
 	$list = array();
 	$list = $this->db->fetch_rows(1, $cmd);
+
 	foreach ($list as $div => $val) {
         $list[$div]['win_percent'] = round($list[$div]['win_percent'] / $list[$div]['totalmembers'], 3);
         $list[$div]['team_rdiff'] = round($list[$div]['team_rdiff'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['team_ra'] = round($list[$div]['team_ra'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['run_support'] = round($list[$div]['run_support'] / $list[$div]['totalmembers'], 1);
+        $list[$div]['team_whip'] = round($list[$div]['team_whip'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['ops'] = round($list[$div]['ops'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['team_drat'] = round($list[$div]['team_drat'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['team_srat'] = round($list[$div]['team_srat'] / $list[$div]['totalmembers'], 2);
     }
 //	print "explain " . $this->db->lastcmd;
 

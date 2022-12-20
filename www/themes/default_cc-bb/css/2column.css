@@ -159,6 +159,11 @@
 	background: url(../img/hof_plaque.webp) no-repeat;
 }
 
+#ps-random-img {
+	height: 460px;
+	background: url(../img/anson.webp) no-repeat;
+}
+
 #chart {
     display: block;
     margin-left: auto;

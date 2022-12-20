@@ -14,6 +14,12 @@
 <!--left column block -->
 <div id="ps-main-column">
 
+<!--
+<div class="ps-column-frame">
+<div id="ps-random-img"></div>
+</div>
+-->
+
 <div class="ps-column-frame{if $shades.s_division_rundown} s-closed{/if}">
 <div class="ps-column-header"><a href="" onclick="return false"><span><#Division Rundown#></span></a></div>
 <div id="s-division-rundown" class="ps-column-content">
@@ -32,6 +38,36 @@
 <p>
 	<label><#Run Differential#></label>
 	<span>{$division.team_rdiff}</span>
+</p>
+</div>
+</div>
+
+<div class="ps-column-frame{if $shades.s_division_average} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Division Averages#></span></a></div>
+<div id="s-division-average" class="ps-column-content">
+<p>
+	<label><#Runs Against#></label>
+	<span>{$division.team_ra}</span>
+</p>
+<p>
+	<label><#Run Support#></label>
+	<span>{$division.run_support}</span>
+</p>
+<p>
+	<label><#WHIP#></label>
+	<span>{$division.team_whip}</span>
+</p>
+<p>
+	<label><#OPS#></label>
+	<span>{$division.ops}</span>
+</p>
+<p>
+	<label><#Defensive Rating#></label>
+	<span>{$division.team_drat}</span>
+</p>
+<p>
+	<label><#Speed Rating#></label>
+	<span>{$division.team_srat}</span>
 </p>
 </div>
 </div>

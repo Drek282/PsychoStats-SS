@@ -15,7 +15,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 ## **Stuff that Remains Untested**
 
-* Nothing that I know of.
+* Uploading images.
 
 
 ## **Future Plans**
@@ -23,7 +23,6 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Add support for Spanish and French.
 * Add historical season support for private, non-continuing leagues.
 * Reinstate support for division profiles.
-* Add some wizz-bang to the divisions page, which is currently boring as stale toast.
 
 
 ## **Credits**

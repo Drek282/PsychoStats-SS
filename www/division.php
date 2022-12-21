@@ -126,7 +126,7 @@ unset($sort_arr);
 $atable = $cms->new_table($division['advanced']);
 $atable->attr('class', 'ps-table ps-team-table');
 $atable->sort_baseurl(array( 'id' => $id, '_anchor' => 'advanced' ));
-$atable->start_and_sort($astart, $asort, $aorder, 't');
+$atable->start_and_sort($astart, $asort, $aorder, 'a');
 $atable->columns(array(
 	'rank'			=> array( 'label' => $cms->trans("Rank"), 'callback' => 'dash_if_empty' ),
 	'prevrank'		=> array( 'nolabel' => true, 'callback' => 'rankchange' ),

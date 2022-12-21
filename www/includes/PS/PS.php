@@ -828,7 +828,7 @@ function get_division($args = array(), $minimal = false) {
 	$division['team_ra'] = round($division['team_ra'] / $division['totalmembers'], 2);
 	$division['run_support'] = round($division['run_support'] / $division['totalmembers'], 1);
 	$division['team_whip'] = round($division['team_whip'] / $division['totalmembers'], 2);
-	$division['ops'] = round($division['ops'] / $division['totalmembers'], 2);
+	$division['ops'] = round($division['ops'] / $division['totalmembers'], 3);
 	$division['team_drat'] = round($division['team_drat'] / $division['totalmembers'], 2);
 	$division['team_srat'] = round($division['team_srat'] / $division['totalmembers'], 2);
 
@@ -1208,7 +1208,7 @@ function get_division_list($args = array()) {
         $list[$div]['team_ra'] = round($list[$div]['team_ra'] / $list[$div]['totalmembers'], 2);
         $list[$div]['run_support'] = round($list[$div]['run_support'] / $list[$div]['totalmembers'], 1);
         $list[$div]['team_whip'] = round($list[$div]['team_whip'] / $list[$div]['totalmembers'], 2);
-        $list[$div]['ops'] = round($list[$div]['ops'] / $list[$div]['totalmembers'], 2);
+        $list[$div]['ops'] = round($list[$div]['ops'] / $list[$div]['totalmembers'], 3);
         $list[$div]['team_drat'] = round($list[$div]['team_drat'] / $list[$div]['totalmembers'], 2);
         $list[$div]['team_srat'] = round($list[$div]['team_srat'] / $list[$div]['totalmembers'], 2);
     }

@@ -72,18 +72,18 @@ if (isset($cms->input['cookieconsent'])) {
 }
 
 // SET DEFAULTS
-if (!$asort) $asort = 'win_percent, team_rdiff';
-if (!$dsort) $dsort = 'team_ra, team_era';
-if (!$osort) $osort = 'run_support, woba';
-if (!$aorder) $aorder = 'desc';
-if (!$dorder) $dorder = 'asc';
-if (!$oorder) $oorder = 'desc';
-if (!$astart) $astart = 0;
-if (!$dstart) $dstart = 0;
-if (!$ostart) $ostart = 0;
-if (!$alimit) $alimit = 20;
-if (!$dlimit) $dlimit = 20;
-if (!$olimit) $olimit = 20;
+if (!isset($asort)) $asort = 'win_percent, team_rdiff';
+if (!isset($dsort)) $dsort = 'team_ra, team_era';
+if (!isset($osort)) $osort = 'run_support, woba';
+if (!isset($aorder)) $aorder = 'desc';
+if (!isset($dorder)) $dorder = 'asc';
+if (!isset($oorder)) $oorder = 'desc';
+if (!isset($astart)) $astart = 0;
+if (!isset($dstart)) $dstart = 0;
+if (!isset($ostart)) $ostart = 0;
+if (!isset($alimit)) $alimit = 20;
+if (!isset($dlimit)) $dlimit = 20;
+if (!isset($olimit)) $olimit = 20;
 
 $division = $ps->get_division(array(
 	'season'	=> $season,

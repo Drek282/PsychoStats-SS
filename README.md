@@ -25,6 +25,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Add historical season support for private, non-continuing leagues.
 * Reinstate support for division profiles.
 * Add user upload functionality for icon images.
+* Fix CSRF protection.
 
 
 ## **Credits**

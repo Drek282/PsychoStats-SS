@@ -627,6 +627,15 @@ img.img-delete { /* editdivision.php */
 	background: url(../img/icons/delete.gif) no-repeat 0 0;
 }
 
+#ps-random-img {
+	display: block;
+	height: 80px;
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	background: url(../img/random_bat.webp) no-repeat;
+}
+
 .ps-debug {
 	font-size: 80%;
 	font-family: Tahoma,Arial,sans-serif;

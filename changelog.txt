@@ -23,6 +23,7 @@ Version 0.0.2b (in progress)
 * [Fixed] Themes can now handle gif, jpg, png and webp images in the context of certain javascript.
 * [Tweaked] Search icon modified to make it's function more clear.
 * [Fixed] Can now click on theme image to select theme.
+* [Improved] Games played limit for pre-defined HoF awards set to 81.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

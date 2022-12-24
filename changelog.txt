@@ -21,6 +21,7 @@ Version 0.0.2b (in progress)
 * [Fixed] Python error in backend when no source page defined.
 * [Added] Eye candy to divisions and division pages.
 * [Fixed] Themes can now handle gif, jpg, png and webp images in the context of certain javascript.
+* [Tweaked] Search icon modified to make it's function more clear.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

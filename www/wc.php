@@ -75,7 +75,7 @@ if (empty($results)) {
 unset ($results);
 
 // change this if you want the default sort of the team listing to be something else like 'wins'
-$DEFAULT_SORT = 'win_percent';
+$DEFAULT_SORT = 'win_percent, team_rdiff';
 $DEFAULT_LIMIT = 20;
 
 // collect url parameters ...
@@ -127,18 +127,10 @@ $teams = $ps->get_wc_list(array(
 	'limit'		=> $limit,
 ));
 
-$baseurl = array('sort' => $sort, 'order' => $order, 'limit' => $limit);
-$pager = pagination(array(
-	'baseurl'	=> psss_url_wrapper($baseurl),
-	'total'		=> $total['ranked'],
-	'start'		=> $start,
-	'perpage'	=> $limit, 
-	'pergroup'	=> 5,
-	'separator'	=> ' ', 
-	'force_prev_next' => true,
-	'next'		=> $cms->trans("Next"),
-	'prev'		=> $cms->trans("Previous"),
-));
+// reset $sort variable to first sort column
+$sort_arr = explode(", ", $sort);
+$sort = $sort_arr[0];
+unset($sort_arr);
 
 // build a dynamic table that plugins can use to add custom columns of data
 $table = $cms->new_table($teams);
@@ -176,7 +168,6 @@ $cms->theme->assign(array(
 	'teams'	=> $teams,
 	'teams_table'	=> $table->render(),
 	'total'		=> $total,
-	'pager'		=> $pager,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'	=> $cms->theme->language,

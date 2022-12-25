@@ -28,7 +28,7 @@ $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Divisions');
 
 // change this if you want the default sort of the division listing to be something else like 'wins'
-$DEFAULT_SORT = 'win_percent';
+$DEFAULT_SORT = 'win_percent, team_rdiff';
 
 // collect url parameters ...
 $validfields = array('season','sort','order','start','limit','xml');
@@ -126,6 +126,11 @@ $divisions = $ps->get_division_list(array(
 	'start'		=> $start,
 	'limit'		=> $limit,
 ));
+
+// reset $sort variable to first sort column
+$sort_arr = explode(", ", $sort);
+$sort = $sort_arr[0];
+unset($sort_arr);
 
 // build a dynamic table that plugins can use to add custom columns of data
 $table = $cms->new_table($divisions);

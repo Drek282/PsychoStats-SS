@@ -24,7 +24,8 @@ Version 0.0.2b (in progress)
 * [Tweaked] Search icon modified to make it's function more clear.
 * [Fixed] Can now click on theme image to select theme.
 * [Improved] Games played limit for pre-defined HoF awards set to 81.
-* [Added] Secondary sort column for divisions page.
+* [Added] Secondary sort column for divisions and wildcard pages.
+* [Removed] Pager for wildcard page.
 
 Version 0.0.1b (12/07/2022)
 * [Fixed] Corrected an error in the SRAT formula.

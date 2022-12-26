@@ -169,17 +169,6 @@ if ($search) {
 } else if ($q != '') {
 	$baseurl['q'] = $q;
 }
-$pager = pagination(array(
-	'baseurl'	=> psss_url_wrapper($baseurl),
-	'total'		=> $total['ranked'],
-	'start'		=> $start,
-	'perpage'	=> $limit, 
-	'pergroup'	=> 5,
-	'separator'	=> ' ', 
-	'force_prev_next' => true,
-	'next'		=> $cms->trans("Next"),
-	'prev'		=> $cms->trans("Previous"),
-));
 
 // build a dynamic table that plugins can use to add custom columns of data
 $table = $cms->new_table($teams);
@@ -230,7 +219,6 @@ $cms->theme->assign(array(
 	'teams'	=> $teams,
 	'teams_table'	=> $table->render(),
 	'total'		=> $total,
-	'pager'		=> $pager,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'	=> $cms->theme->language,

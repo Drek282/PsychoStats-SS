@@ -169,7 +169,7 @@ div#ps-seasons_h-dropdown {
 	position: absolute;
 	width: 230px;
 	height: 103px;
-	background: transparent url(../img/popup-login.gif) no-repeat;
+	background: transparent url(../img/popup-login.webp) no-repeat;
 	overflow: hidden;
 	z-index: 65535;
 }

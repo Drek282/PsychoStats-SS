@@ -260,16 +260,9 @@ div#ps-login-inner h4 {
 	background: url(../img/popup-search.gif) no-repeat;
 	z-index: 65535;
 }
-#ps-search-popup input.field {
-	color: #8a8b79;
-	background: #000 url(../img/search-input-icon.gif) no-repeat 0 50%;
-	border: 1px solid #8a8b79;
-	width: 155px;
-	padding-left: 17px;
-}
 #ps-container input.search { /* generic search class */
 	color: #8a8b79;
-	background: #000 url(../img/search-input-icon.gif) no-repeat 0 50%;
+	background: #121112 url(../img/search-input-icon.gif) no-repeat 0 50%;
 	padding-left: 17px;
 	border: 1px solid #8a8b79;
 	width: 125px;

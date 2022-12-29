@@ -1,7 +1,9 @@
 --- DREK ---
 
 
-Version 0.0.2b (in progress)
+Version 0.0.3b (in progress)
+
+Version 0.0.2b (12/29/2022)
 * [Fixed] Cleaned up a significant number of html errors and warnings.
 * [Fixed] CSS problem in cookie consent popup.
 * [Removed] Support for team aliases.

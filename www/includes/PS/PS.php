@@ -360,6 +360,7 @@ function get_season_c() {
 	$cmd = "SELECT season_c FROM $this->t_state LIMIT 1";
 	$season_c = $this->db->fetch_row(1, $cmd);
 	if (is_array($season_c)) $season_c = implode($season_c);
+	$season_c ??= '1900';
 
 	// Make sure that data exists for the current season.
 	// if it doesn't set current season to most recent season with data.

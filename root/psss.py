@@ -331,8 +331,19 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     ### Convert league page into CSV file.
     
-    # Remove raw_lp_dump prefix to search string.
+    # Check to see if the season has started.
     my_regex =  r"(^.+Standings, Pitching +W   L   .+_)"
+    if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
+        print("WARNING:  There is no data for the current season.  The season has probably not started or the first week results have not yet been published.")
+        print()
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,There is no data for the current season.  The season has probably not started or the first week results have not yet been published.\n"
+
+        return
+
+    # Remove raw_lp_dump prefix to search string.
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
     raw_lp_dump = my_list[1] + my_list[2]
 
@@ -1207,7 +1218,7 @@ cursor.execute(query)
 # Process the current season and skip the current season if it is in the historical list.
 season_c_skipped = int()
 if (seasons_h[0] != season_c):
-    process_data (season_c, league_name, raw_lp_dump)
+    process_data (league_url, season_c, league_name, raw_lp_dump)
 else:
     season_c_skipped = 1
 

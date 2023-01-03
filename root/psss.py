@@ -845,7 +845,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         working_stats_wc_dfo.to_csv(wc_stats_fname)
     
     # Generate additional psss tables.
-    if (season == season_c):
+    cursor.execute("SELECT * FROM psss_team")
+    data = cursor.fetchone()
+    if (season == season_c or (season == seasons_h[0] and not data)):
         generate_psss_tables(league_name, working_stats_com_dfo)
     
     # Generate the team ids names table.

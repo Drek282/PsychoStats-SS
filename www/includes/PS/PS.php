@@ -359,12 +359,15 @@ function get_lastupdate() {
 function get_season_c() {
 	$cmd = "SELECT season_c FROM $this->t_state LIMIT 1";
 	$season_c = $this->db->fetch_row(1, $cmd);
-
 	if (is_array($season_c)) $season_c = implode($season_c);
 
-	if (!isset($season_c)) {
-		$cmd = "SELECT season_h FROM $this->t_seasons_h ORDER BY season_h DESC LIMIT 1";
-		$season_c = $this->db->fetch_rows(1, $cmd);
+	// Make sure that data exists for the current season.
+	// if it doesn't set current season to most recent season with data.
+	$cmd = "SELECT season FROM $this->t_team_adv WHERE season=$season_c LIMIT 1";
+	$data = $this->db->fetch_row(1, $cmd);
+	if (!$data) {
+		$cmd = "SELECT season FROM $this->t_team_adv ORDER BY season DESC LIMIT 1";
+		$season_c = $this->db->fetch_row(1, $cmd);
 		if (is_array($season_c)) $season_c = implode($season_c);
 	}
 	

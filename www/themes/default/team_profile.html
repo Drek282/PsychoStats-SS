@@ -5,6 +5,12 @@
 		<p>{$team.owner_name|escape}</p>
 	</div>
 	{/if}
+	{if $team.email}
+	<div class="row">
+		<label><#Email Address#>:</label>
+		<p><a href="mailto:{$team.email}">{$team.email}</a></p>
+	</div>
+	{/if}
 	{if $team.website}
 	<div class="row">
 		<label><#Website#>:</label>

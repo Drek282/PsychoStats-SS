@@ -1,7 +1,9 @@
 --- DREK ---
 
 
-Version 0.0.3b (in progress)
+Version 0.0.4b (in progress)
+
+Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.
 * [Changed] Made problematic "name" columns more specific.
 * [Added] User accounts are now linked to owner names.

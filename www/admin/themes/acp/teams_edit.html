@@ -30,9 +30,14 @@ flags_url = "{$conf.theme.flags_url}";
 	<span class="nomodify">{$team.team_name|escape}</span>
 </div>
 
+<div>
+	<label><#Owener Name#>:</label>
+	<span class="nomodify">{$team.owner_name|escape}</span>
+</div>
+
 </fieldset>
 <fieldset>
-{if $form.username}
+{if isset($team.username)}
 <legend><#This team already has an associated user#></legend>
 <div class="inline-notes">
 	<h4><#If this is an error#></h4>
@@ -70,19 +75,7 @@ flags_url = "{$conf.theme.flags_url}";
 	<h4><#Change Password?#></h4>
 	<p><#Only enter a password if you want to change it from the current password.#></p>
 </div>
-{/if} 
-
-<div{if $errors.password} class="err"{/if}>
-	<p class="err" id="err-password">{$errors.password|escape}</p>
-	<label><#New Password#>:</label>
-	<input name="password" type="password" class="field" autocomplete="off">
-</div>
-
-<div{if $errors.password2} class="err"{/if}>
-	<p class="err" id="err-password2">{$errors.password2|escape}</p>
-	<label><#Retype Password#>:</label>
-	<input name="password2" type="password" class="field" autocomplete="off">
-</div>
+{/if}
 
 {if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
 <div{if $errors.email} class="err"{/if}>
@@ -99,6 +92,18 @@ flags_url = "{$conf.theme.flags_url}";
 	<small><#Please confirm the users email address#></small>
 </div>
 {/if}
+
+<div{if $errors.password} class="err"{/if}>
+	<p class="err" id="err-password">{$errors.password|escape}</p>
+	<label><#New Password#>:</label>
+	<input name="password" type="password" class="field" autocomplete="off">
+</div>
+
+<div{if $errors.password2} class="err"{/if}>
+	<p class="err" id="err-password2">{$errors.password2|escape}</p>
+	<label><#Retype Password#>:</label>
+	<input name="password2" type="password" class="field" autocomplete="off">
+</div>
 {/if}
 
 </fieldset>

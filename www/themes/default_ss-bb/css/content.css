@@ -280,12 +280,13 @@ div.ps-team-profile #map {
 	float: right;
 }
 
-/* --- Team table specific styles */
+/* --- Table specific styles
 .ps-defence-table a.defence,
 .ps-offence-table a.offence
 {
 	font-weight: bold;
 }
+*/
 
 
 /* --- PAGER styles ------------ */

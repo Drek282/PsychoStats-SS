@@ -42,10 +42,10 @@
 {/if}
 	<div>&nbsp;</div>
 	<div class="theme-info">
-		{if $newtheme.image}<div class="image"><img src="{$newtheme.image|escape}" alt="No preview available" title="Preview of {$newtheme.name|escape}"></div>{/if}
+		{if $newtheme.image}<div class="image"><img src="{$newtheme.image|escape}" alt="No preview available" title="Preview of {$newtheme.theme_name|escape}"></div>{/if}
 		<div>
 			<label><#Short Name#>:</label>
-			<span>{$newtheme.name|escape} {if $newtheme.parent}<em>(<#parent#>: {$newtheme.parent|escape})</em>{/if}</span>
+			<span>{$newtheme.theme_name|escape} {if $newtheme.parent}<em>(<#parent#>: {$newtheme.parent|escape})</em>{/if}</span>
 		</div>
 		<div>
 			<label><#Title#>:</label>

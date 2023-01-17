@@ -35,9 +35,11 @@ $validfields = array(
 	'asort','aorder','astart','alimit',	// advanced
 	'dsort','dorder','dstart','dlimit',	// defence
 	'osort','oorder','ostart','olimit',	// offence
-	'xml'
 );
 $cms->theme->assign_request_vars($validfields, true);
+
+// Set global season variable to default if undeclared.
+$season_c ??= $ps->get_season_c();
 
 // create the form variable
 $form = $cms->new_form();
@@ -87,7 +89,7 @@ foreach ($validfields as $var) {
 $totalranked  = $ps->get_total_teams(array('allowall' => 0));
 
 $team = $ps->get_team(array(
-	'season'		=> null,
+	'season_c'		=> $season_c,
 	'team_id' 	=> $id,
 	'loadnames'	=> 1, 
 	//'loadawards'	=> 1,
@@ -109,22 +111,7 @@ $team = $ps->get_team(array(
 	'idorder'		=> 'desc',
 ));
 
-$cms->theme->page_title(' for Team #' . $team['team_id'], true);
-
-/*$x = substr($xml,0,1);
-if (($x == 'd') or ($x == 'o')) {	// team
-	// we have to alter some of the data for team arrays otherwise we'll end up with invalid or strange keys
-	$ary = $team;
-	$ary['defence'] = array();
-	$ary['offence'] = array();
-	foreach ($team['defence'] as $d) {
-		$ary['defence'][ $d['team_id'] ] = $d;
-	} 
-	foreach ($team['offence'] as $o) {
-		$ary['offence'][ $o['team_id'] ] = $o;
-	} 
-	print_xml($ary);
-}*/
+$cms->theme->page_title(' for Team #' . $id, true);
 
 $team['totaladvanced'] ??= null;
 $advancedpager = pagination(array(
@@ -176,7 +163,7 @@ $atable->attr('class', 'ps-table ps-advanced-table');
 $atable->sort_baseurl(array( 'id' => $id, '_anchor' => 'advanced' ));
 $atable->start_and_sort($astart, $asort, $aorder, 'a');
 $atable->columns(array(
-	'season'			=> array( 'label' => $cms->trans("Season") ),
+	'season'			=> array( 'label' => $cms->trans("Roster"), 'tooltip' => $cms->trans("Click on the season to view the player roster"), 'callback' => 'psss_table_team_roster_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
 	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
@@ -201,8 +188,8 @@ $dtable->columns(array(
 	'season'			=> array( 'label' => $cms->trans("Season") ),
 	'team_era'			=> array( 'label' => $cms->trans("ERA"), 'tooltip' => $cms->trans("Team Earned Runs Against Average per 9 Innings") ),
 	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Team Runs Against Average per 9 Innings") ),
-//	'complete_games'			=> array( 'label' => $cms->trans("Complete Games") ),
-	'shutouts'			=> array( 'label' => $cms->trans("Shutouts") ),
+	'complete_games'			=> array( 'label' => $cms->trans("CG"), 'tooltip' => $cms->trans("Complete Games\n—Pitcher AAA excluded") ),
+	'shutouts'			=> array( 'label' => $cms->trans("ShO"), 'tooltip' => $cms->trans("Team Total Shutouts") ),
 	'team_saves'			=> array( 'label' => $cms->trans("Saves") ),
 	'innings_pitched'			=> array( 'label' => $cms->trans("IP"), 'tooltip' => $cms->trans("Team Total Innings Pitched") ),
 	'total_runs_against'			=> array( 'label' => $cms->trans("TRA"), 'tooltip' => $cms->trans("Team Total Runs Scored Against") ),
@@ -219,7 +206,7 @@ $dtable->columns(array(
 	'passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Team Total Passed Balls") ),
 	'opp_stolen_bases'			=> array( 'label' => $cms->trans("OSB"), 'tooltip' => $cms->trans("Team Total Stolen Bases Allowed") ),
 	'opp_caught_stealing'			=> array( 'label' => $cms->trans("OCS"), 'tooltip' => $cms->trans("Team Total Opponents Caught Stealing") ),
-	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings") ),
+	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings") )
 ));
 $dtable->column_attr('season', 'class', 'first');
 $dtable->column_attr('team_drat', 'class', 'right');
@@ -257,7 +244,7 @@ $otable->columns(array(
 	'caught_stealing'		=> array( 'label' => $cms->trans("CS"), 'tooltip' => $cms->trans("Team Total Caught Stealing") ),
 	'left_on_base'			=> array( 'label' => $cms->trans("LOB"), 'tooltip' => $cms->trans("Team Total Runners Left on Base") ),
 	'left_on_base_percent'			=> array( 'label' => $cms->trans("LOB %"), 'tooltip' => $cms->trans("(Team Total Base Runners - Team HR)/(Team RBI - Team HR)") ),
-	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed") ),
+	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed") )
 ));
 $otable->column_attr('season', 'class', 'first');
 $otable->column_attr('team_srat', 'class', 'right');
@@ -274,6 +261,7 @@ $shades = array(
 	's_historical_record'	=> null,
 	's_modactions'		=> null,
 	's_team_hist'		=> null,
+	's_ownername'		=> null,
 	's_teamname'		=> null,
 	's_teamadvanced'	=> null,
 	's_teamdefence'		=> null,

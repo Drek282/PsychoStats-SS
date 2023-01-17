@@ -349,7 +349,7 @@ function key_is_valid(&$session, $key_name = 'key', $error = true) {
 		$this->error('fatal', 
 			"Invalid key token! Using the 'refresh' button in your browser or waiting too long to submit " .
 			"a request can cause problems on these forms. " . 
-			"If you continue to encounter problems then go back to the previous page and try again."
+			"If you continue to encounter problems you may need to log out, log back in, and try again."
 		);
 	}
 	return $valid;

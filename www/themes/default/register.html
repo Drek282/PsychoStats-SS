@@ -17,6 +17,7 @@
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
 <div class="inline-notes">
+{if $conf.main.registration != 'closed'}
 	<h4><#Why and How to Register?#></h4>
 	<p>
 		<strong><#Registering a user will allow you to edit your team's profile information.#></strong>
@@ -27,16 +28,21 @@
 	<ul>
 		<li><#The team # given for your team must exist or registration will fail.#></li>
 		<li><#A user can only be associated with a single team.#></li>
-{if $conf.main.registration == 'open'}
+	{if $conf.main.registration == 'open'}
 		<li><b><#Registration is OPEN. New users will have instant access to their team profiles.#></b></li>
-{elseif $conf.main.registration == 'confirm'}
+	{else}
 		<li><b><#Registration requires confirmation from an admin. You won't be able to login until confirmed.#></b></li>
-{else}
-		<li><b style="color: red"><#Registration is closed! No teams may be registered at this time.#></b></li>
-{/if}
+	{/if}
 	</ul>
+{else}
+	<div class="closed">
+		<p><#Registration is closed.</p>
+		<p>No teams may be registered at this time.#></p>
+	</div>
+{/if}
 </div>
 
+{if $conf.main.registration != 'closed'}
 <div{if $errors.team_id} class="err"{/if}>
 	<p class="err" id="err-team_id">{$errors.team_id|escape}</p>
 	<label>{$team_id_label}:</label>
@@ -46,13 +52,12 @@
 	</p>
 </div>
 
-<div{if $errors.name} class="err"{/if}>
-	<p class="err" id="err-name">{$errors.name|escape}</p>
+<div{if $errors.owner_name} class="err"{/if}>
+	<p class="err" id="err-ownername">{$errors.owner_name|escape}</p>
 	<label><#Owner Name#>:</label>
-	<input name="name" value="{$form.name|escape}" type="text" class="field">
-	<p class="small">
-		<#Your registration may need to be confirmed.  Entering the owner name you play Scoresheet under will help identify you for the purposes of registration confirmation.#>
-	</p>
+	<input name="owner_name" value="{$form.owner_name|escape}" type="text" class="field">
+	<p class="small"><#You must enter the owner name you play Scoresheet Baseball under.#></p>
+	<p class="small"><#ie: Herman Perwinkle#></p>
 </div>
 
 <div{if $errors.username} class="err"{/if}>
@@ -108,6 +113,7 @@
 </div>
 </fieldset>
 </form>
+{/if}
 </div>
 </div>
 

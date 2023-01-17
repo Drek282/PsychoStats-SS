@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <theme>
-	<name>default-blue</name>
+	<theme_name>default-blue</theme_name>
 	<parent>default</parent>
 	<version>1.0</version>
 	<title>Default Psychostats for Scoresheet Theme - blue skin</title>

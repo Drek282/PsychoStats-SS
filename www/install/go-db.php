@@ -132,7 +132,7 @@ function do_test(&$t, $skip_create = false) {
 		$t['table'] = $tbl;
 		$t['tbl_create'] = $db->query(
 			"CREATE TABLE " . $db->qi($tbl) . " ( id INT UNSIGNED NOT NULL ) " . 
-			"ENGINE = MYISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci "
+			"ENGINE = INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci "
 		);
 		if ($t['tbl_create']) {
 			// attempt an insert

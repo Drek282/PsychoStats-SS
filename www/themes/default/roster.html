@@ -1,0 +1,45 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+	<div id="ps-page-title">
+		<div class="inner">
+			<h1><#Team Roster Statistics#> :: Team # {$team.team_id} :: <a href="team.php?id={$team.team_id}">{$team.team_name|escape}</a></h1>
+
+			<h3><#these tables reflect the player rosters as of the last Scoresheet update for season#>: <strong>{$season}</strong></h3>
+			<h3><#stats are Scoresheet stats, not MLB stats, and include only player stats for this team#></h3>
+		</div>
+	</div>
+
+<!--content block-->
+<div id="ps-main-content" class="ps-page-roster">
+
+	<!--#PITCHER#-->
+	<a href="pitcher"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Pitcher Stats#></span></a></div>
+	<div id="s-teampitcher" class="ps-table-inner{if $shades.s_teampitcher} s-closed{/if}">
+	{$pitcher_table}
+	<div class="ps-table-footer">{if $pitcherpager}{$pitcherpager}{/if}</div>
+	</div>
+	</div>
+	<!---->
+
+	<!--#POSITION#-->
+	<a href="position"></a>
+	<div class="ps-table-frame">
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Position Player Stats#></span></a></div>
+	<div id="s-teamposition" class="ps-table-inner{if $shades.s_teamposition} s-closed{/if}">
+	{$position_table}
+	<div class="ps-table-footer">{if $positionpager}{$positionpager}{/if}</div>
+	</div>
+	</div>
+	<!---->
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

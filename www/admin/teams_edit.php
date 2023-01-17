@@ -46,8 +46,8 @@ if ($id) {
 	if ($team and $team['team_id'] == null) { // no matching profile; lets create one (all teams should have one, regardless)
 		$_id = $ps->db->escape($id, true);
 		list($uid) = $ps->db->fetch_list("SELECT team_id FROM $ps->t_team WHERE team_id=$_id");
-		list($team_name) = $ps->db->fetch_list("SELECT team_name FROM $ps->t_team_ids_team_name WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
-		$ps->db->insert($ps->t_team_profile, array( 'team_id' => $uid, 'team_name' => $team_name ));
+		list($team_name) = $ps->db->fetch_list("SELECT team_name FROM $ps->t_team_ids_names WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
+		$ps->db->insert($ps->t_team_profile, array( 'team_id' => $uid ));
 		$team['team_id'] = $uid;
 		$team['team_name'] = $team_name;
 	}
@@ -114,7 +114,7 @@ if ($submit) {
 		// load the user matching the username
 		$_u = $team_user->load_user($input['username'], 'username');
 		// do not allow a duplicate username if another user has it already
-		if ($_u and $_u['userid'] == $team_user->userid()) {
+		if ($_u and $_u['userid']) {
 			$form->error('username', $cms->trans("Username already exists; please try another name"));
 		} else {
 			unset($form->errors['username']);
@@ -195,7 +195,7 @@ if ($submit) {
 						array_pop($base_url_array);
 						array_pop($base_url_array);
 						$base_url = implode('/', $base_url_array);
-						$confirmation_url = $base_url . "/pwreset_final.php?userid=" . $u['userid'] . "&tpw=" . $u['temp_password'];
+						$confirmation_url = $base_url . "/pwreset_final.php?username=" . $u['username'] . "&tpw=" . $u['temp_password'];
 						unset($base_url_array);
 
 						$cms->theme->assign(array(
@@ -257,7 +257,6 @@ if ($submit) {
 } else {
 	// fill in defaults
 	if ($id) {
-		//$team['team_name'] = $team['name'];
 		$in = $team;
 		if ($team_user->userid()) {
 			$in = array_merge($in, $team_user->to_form_input());

@@ -31,7 +31,7 @@ You should not use a database super user for PsychoStats, especially in a produc
 
 3. You will need to have Python version 3.x installed to run the stats generation script, and your web hosting will need to have PHP installed on it.  Note that there are a number of Python and PHP modules that you will need to have installed.  Again, Google is your friend, if you encounter errors when you try to run the web install, or when you run the stats generation script, those errors should let you know what you need to install.
 
-The minimum required version of Python is `3.0`, of PHP is `7.1.0` and MySQL is `5.5.0`.  Required Python modules include the `timezone`, `urlopen`, `html2text`, `pandas`, `numpy`, and `pymysql` modules.
+The minimum required version of Python is `3.0`, of PHP is `7.1.0` and MySQL is `5.5.0`.  Required Python modules include the `timezone`, `urlopen`, `pandas`, `numpy`, and `pymysql` modules.
 
 4. These instructions assume you already know the basics of hosting a website.  The specifics of that will depend on your hosting arrangements.  Copy the contents of the 'www' directory to your web hosting folder.  It is recommended that you don't expose your PsychoStats web folder to the public web until you have completed the install process.
 

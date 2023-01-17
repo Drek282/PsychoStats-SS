@@ -38,7 +38,6 @@ if ($cancel) {
 $form = $cms->new_form();
 $form->default_modifier('trim');
 $form->field('team_profiles');
-$form->field('team_aliases');
 $form->field('users');
 
 // process the form if submitted
@@ -74,7 +73,6 @@ if ($submit) {
 	// default all options to keep
 	$form->input(array(
 		'team_profiles'	=> true,
-		'team_aliases'	=> true,
 		'users'			=> true
 	));
 }

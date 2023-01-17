@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <theme>
-	<name>default_fiori-bb</name>
+	<theme_name>default_fiori-bb</theme_name>
 	<parent>default</parent>
 	<version>0.0</version>
 	<title>Fiori Scoresheet Baseball Theme</title>

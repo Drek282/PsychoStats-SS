@@ -29,6 +29,9 @@ $cms->theme->page_title('PsychoStats - Team Registration');
 
 $validfields = array('submit','cancel','ref');
 $cms->theme->assign_request_vars($validfields, true);
+
+// Set global season variable to default if undeclared.
+$season_c ??= $ps->get_season_c();
 		
 switch ($ps->conf['main']['team_id']) {
 	case 'team_id': $team_id_label = $cms->trans("Team #"); break;
@@ -73,7 +76,7 @@ $lastupdate	= $ps->get_lastupdate();
 $form->default_modifier('trim');
 $form->field('team_id', 'blank');
 $form->field('username', 'blank');
-$form->field('name', 'blank');
+$form->field('owner_name', 'blank');
 $form->field('email', 'email,email_match');
 $form->field('email2', 'email');
 $form->field('password', 'blank,password_match');
@@ -87,7 +90,17 @@ if ($submit) {
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
 	if ($ps->conf['main']['registration'] == 'closed') {
-		$form->error('fatal', $cms->trans("Team registration is currently disabled!"));
+		$cms->full_page_err('awards', array(
+			'message_title'	=> $cms->trans("Teams Cannot Be Registered"),
+			'message'	=> $cms->trans("Team registration is currently disabled."),
+			'lastupdate'	=> $ps->get_lastupdate(),
+			'division'		=> null,
+			'wildcard'		=> null,
+			'season_c'		=> null,
+			'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+			'cookieconsent'	=> $cookieconsent,
+		));
+		exit();
 	}
 
 	$u =& $cms->new_user();
@@ -97,10 +110,15 @@ if ($submit) {
 	// lookup the worldid/team_id ... 
 	if ($input['team_id'] != '') {
 		$team = $ps->get_team_profile($id, 'team_id');
+		$on_match = "/" . $team['owner_name'] . "/";
 		if (!$team) {
 			$form->error('team_id', $cms->trans("The %s does not exist!", $team_id_label));
 		} elseif ($team['userid']) {
 			$form->error('team_id', $cms->trans("This team is already registered!"));
+
+		// owner name must match name in database, but it will not be updated now or displayed
+		} elseif (!preg_match($on_match, $input['owner_name'])) {
+			$form->error('owner_name', $cms->trans("Owner name does not match team owner name."));
 		} elseif ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email']) && $input['email'] == '') {
 			$form->error('email', $cms->trans("An email address must be entered for new users"));
 		}
@@ -114,12 +132,12 @@ if ($submit) {
 	if ($valid) {
 		$userinfo = $input;
 		// email and name is saved to profile, not user
-		unset($userinfo['team_id'], $userinfo['password2'], $userinfo['name'], $userinfo['email'], $userinfo['email2']);
+		unset($userinfo['team_id'], $userinfo['password2'], $userinfo['owner_name'], $userinfo['email'], $userinfo['email2']);
 
 		$userinfo['userid'] = $u->next_userid();
 		$userinfo['password'] = $u->hash($userinfo['password']);
 		$userinfo['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $u->hash(psss_generate_pw()) : null;
-		$userinfo['tpw_timestamp'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? time() : 0;
+		$userinfo['tpw_timestamp'] = time();
 		$userinfo['accesslevel'] = $u->acl_user();
 		$userinfo['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 		$userinfo['confirmed'] = $ps->conf['main']['registration'] == 'open' ? 1 : 0;
@@ -128,7 +146,7 @@ if ($submit) {
 		$ok = $u->insert_user($userinfo);
 		if ($ok) {
 			$ok = $ps->db->update($ps->t_team_profile, 
-				array( 'userid' => $userinfo['userid'], 'name' => $input['name'] ? $input['name'] : null, 'email' => $input['email'] ? $input['email'] : null), 
+				array( 'userid' => $userinfo['userid'], 'email' => $input['email'] ? $input['email'] : null), 
 				'team_id', $id
 			);
 			if (!$ok) $form->error('fatal', $cms->trans("Error updating team profile: " . $ps->db->errstr));
@@ -140,7 +158,7 @@ if ($submit) {
 			$ps->db->commit();
 
 			// load this team
-			$team = $ps->get_team(array('team_id' 	=> $id,));
+			$team = $ps->get_team(array('season_c' => $season_c, 'team_id' => $id));
 
 			$cms->theme->assign(array(
 				'team'	=> $team,

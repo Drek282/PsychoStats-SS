@@ -46,13 +46,6 @@
 	<label class="for" for="team_profiles2"><input id="team_profiles2" name="team_profiles" value="1" {if  $form.team_profiles}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
 </div>
 
-<div{if $errors.team_aliases} class="err"{/if}>
-	<p class="err" id="err-team_aliases">{$errors.team_aliases|escape}</p>
-	<label><#Team Aliases?#></label>
-	<label class="for" for="team_aliases1"><input id="team_aliases1" name="team_aliases" value="0" {if !$form.team_aliases}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
-	<label class="for" for="team_aliases2"><input id="team_aliases2" name="team_aliases" value="1" {if  $form.team_aliases}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
-</div>
-
 <div{if $errors.users} class="err"{/if}>
 	<p class="err" id="err-users">{$errors.users|escape}</p>
 	<label><#Non-Admin Users?#></label>

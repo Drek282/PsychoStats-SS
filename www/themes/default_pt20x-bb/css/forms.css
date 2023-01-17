@@ -88,6 +88,13 @@
 {
 	margin-left: 2em;
 }
+#ps-container .ps-form form fieldset div.inline-notes div.closed p
+{
+	color: red;
+	text-align: center;
+	font-weight: bold;
+	padding-bottom: 10px;
+}
 
 #ps-container .ps-form form div label small, 
 #ps-container .ps-form form div label {

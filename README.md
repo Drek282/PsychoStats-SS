@@ -16,7 +16,9 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 ## **Stuff that Remains Untested**
 
-* Nothing that I know of.
+* Tracking teams by anything other than TEAM_ID.
+* Primary team name selection mode.
+* Automatic deletion of user accounts on owner change.
 
 
 ## **Future Plans**
@@ -27,7 +29,6 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Add user upload functionality for icon images.
 * Fix CSRF protection.
 * Add a configurable Help page with basic information on how to use the stats, how registration works, how the search works, glossary of terms, etc.
-* Add a player roster page with the basic player stats available from Scoresheet on it.  This will be the Scoresheet player stats, not their MLB stats.
 
 
 ## **Credits**

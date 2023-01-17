@@ -2,8 +2,8 @@
 $dbtype = 'mysql';
 $dbhost = 'localhost';
 $dbport = '';
-$dbname = 'psychostats3_1';
-$dbuser = 'ps3';
+$dbname = 'psss';
+$dbuser = 'psychostats';
 $dbpass = '';
 $dbtblprefix = 'psss_';
 $site_url = '';

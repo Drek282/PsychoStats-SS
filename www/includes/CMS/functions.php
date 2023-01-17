@@ -248,6 +248,32 @@ if (!function_exists('psss_table_team_link')) {
 	}
 }
 
+if (!function_exists('psss_table_team_roster_link')) {
+	/**
+	Called from the dynamic table class when creating a table that has a team <a> link.
+	@param: $team contains stats for the current team. But mainly the $id is only needed.
+	*/
+	function psss_table_team_roster_link($season, $team) {
+		global $ps;
+		$team['team_id'] ??= null;
+		$url = psss_url_wrapper(array( '_base' => 'roster.php', 'id' => $team['team_id'], 'season' => $season  ));
+		return "<a class='team' href='$url'>" . $season . "</a>";
+	}
+}
+
+if (!function_exists('psss_table_br_search_link')) {
+	/**
+	Called from the dynamic table class when creating a table that has a team <a> link.
+	@param: $team contains stats for the current team. But mainly the $id is only needed.
+	*/
+	function psss_table_br_search_link($player_name) {
+		global $ps;
+		if (preg_match('/AAA/', $player_name)) return $player_name;
+		$url = 'https://www.baseball-reference.com/search/search.fcgi?search=' . $player_name;
+		return "<a class='team' href='$url' target='_blank' rel='noopener noreferrer'>" . $player_name . "</a>";
+	}
+}
+
 if (!function_exists('psss_table_division_link')) {
 	/**
 	Called from the dynamic table class when creating a table that has a division <a> link.

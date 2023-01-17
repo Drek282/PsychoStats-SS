@@ -1,8 +1,8 @@
 <div class="ps-team-profile">
-	{if $team.name}
+	{if $team.owner_name}
 	<div class="row">
 		<label><#Owner Name#>:</label>
-		<p>{$team.name|escape}</p>
+		<p>{$team.owner_name|escape}</p>
 	</div>
 	{/if}
 	{if $team.website}

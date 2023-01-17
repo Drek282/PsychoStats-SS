@@ -5,18 +5,20 @@
 <div class="ps-column-content">
 <dl id="ps-admin-menu">
 	<dt class="folder first"><#Manage Your Stats#></dt>
-		<dd class="sources{if $page == 'sources'} sel{/if}"><a href="{url _base='sources.php'}"><b><#Leage Page URL#></b></a></dd>
-		<dd class="award-gold{if $page == 'awards'} sel{/if}"><a href="{url _base='awards.php'}"><#Awards#></a></dd>
-		<dd class="images{if $page == 'icons'} sel{/if}"><a href="{url _base='icons.php'}"><#Icons#> (<#mini avatars#>)</a></dd>
-		<dd class="page{if $page == 'reset'} sel{/if}"><a href="{url _base='reset.php'}"><em><#Reset All Stats!#></em></a></dd>
+		<dd class="sources{if $page == 'sources'} sel{/if}"><a href="sources.php"><b><#Leage Page URL#></b></a></dd>
+		<dd class="award-gold{if $page == 'awards'} sel{/if}"><a href="awards.php"><#Awards#></a></dd>
+		<dd class="images{if $page == 'icons'} sel{/if}"><a href="icons.php"><#Icons#> (<#mini avatars#>)</a></dd>
+		<dd class="page{if $page == 'reset'} sel{/if}"><a href="reset.php"><em><#Reset All Stats!#></em></a></dd>
 	<dt class="folder first"><#Email Notifications#></dt>
-		<dd class="email{if $page == 'email_test'} sel{/if}"><a href="{url _base='email_test.php'}"><#Test Email Notifications#></a></dd>
+		<dd class="email{if $page == 'email_test'} sel{/if}"><a href="email_test.php"><#Test Email Notifications#></a></dd>
 	<dt class="folder first"><#Team Management#></dt>
-		<dd class="user-green{if $page == 'teams'} sel{/if}"><a href="{url _base='teams.php'}"><#All Teams#></a></dd>
+		<dd class="user-green{if $page == 'teams'} sel{/if}"><a href="teams.php"><#All Teams#></a></dd>
 	<dt class="folder first"><#User Management#></dt>
-		<dd class="user-red{if $page == 'users'} sel{/if}"><a href="{url _base='users.php'}"><#All Users#></a></dd>
+		<dd class="user-red{if $page == 'users'} sel{/if}"><a href="users.php"><#All Users#></a></dd>
+	<dt class="folder first"><#Help Management#></dt>
+		<dd class="help{if $page == 'help'} sel{/if}"><a href="help.php"><#Help Entries#></a></dd>
 	<dt class="folder first"><#Error Logs#></dt>
-		<dd class="error{if $page == 'errlogs'} sel{/if}"><a href="{url _base='errlogs.php'}"><#View Error Logs#></a></dd>
+		<dd class="error{if $page == 'errlogs'} sel{/if}"><a href="errlogs.php"><#View Error Logs#></a></dd>
 </dl>
 </div>
 </div>

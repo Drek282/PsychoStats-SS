@@ -141,17 +141,36 @@
 <div class="ps-column-sep"><p><#* this table only includes data from displayed seasons#></p></div>
 </div>
 
+{if $conf.theme.permissions.show_team_profile and psss_user_logged_in()}
+<div id="ps-id-ownername" class="ps-column-frame{if $shades.s_ownername} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Owners History#></span></a></div>
+<div id="s-teamowner" class="ps-column-content">
+<p class="hl firstrow">
+	<label><#Name#></label>
+	<span><b><#Last Seen#></b></span>
+</p>
+{foreach from=$team.ids_owner_name item='i'}
+<p{cycle values=", class='even'"}>
+	<label class="name">{$i.owner_name|escape}</label>
+	<span>{$i.lastseen}</span>
+</p>
+{/foreach}
+</div>
+<div class="ps-column-sep"><p><#* this list may not include every historical team owner#></p></div>
+</div>
+{/if}
+
 <div id="ps-id-teamname" class="ps-column-frame{if $shades.s_teamname} s-closed{/if}">
 <div class="ps-column-header"><a href="" onclick="return false"><span><#Team Names History#></span></a></div>
 <div id="s-teamname" class="ps-column-content">
 <p class="hl firstrow">
 	<label><#Name#></label>
-	<span><b><#Used#></b></span>
+	<span><b><#Last Used#></b></span>
 </p>
 {foreach from=$team.ids_team_name item='i'}
 <p{cycle values=", class='even'"}>
 	<label class="name">{$i.team_name|escape}</label>
-	<span>{$i.totaluses|commify}</span>
+	<span>{$i.lastseen}</span>
 </p>
 {/foreach}
 </div>
@@ -166,7 +185,7 @@
 	<!--#ADVANCED#-->
 	<a href="advanced"></a>
 	<div class="ps-table-frame">
-	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Overall Team Records#></span></a></div>
+	<div class="ps-frame-header"><a href="" onclick="return false"><span><#Overall Team Records and Player Rosters#></span></a></div>
 	<div id="s-teamadvanced" class="ps-table-inner{if $shades.s_teamadvanced} s-closed{/if}">
 	{$advanced_table}
 	<div class="ps-table-footer">{if $advancedpager}{$advancedpager}{/if}</div>

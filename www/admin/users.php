@@ -57,7 +57,7 @@ if (($delete or $confirm) and is_array($sel) and count($sel)) {
 		if (is_numeric($id) and $id != $cms->user->userid()) {
 			if ($delete) {
 				if ($cms->user->delete_user($id)) {
-					$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'discord' => null, 'twitch' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $id);
+					$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'email' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $id);
 					$total_processed++;
 				}
 			} else { // confirm
@@ -126,10 +126,11 @@ $uobj =& $cms->new_user();	// start a user object
 
 // delete stale users
 $users = $uobj->get_user_list(true, $_order);
+
 foreach ($users as $u) {
 	if (((time() - $u['tpw_timestamp']) > 172800) && (!$u['email_confirmed'] || !$u['confirmed'])) {
 		$cms->user->delete_user($u['userid']);
-		$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'discord' => null, 'twitch' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $u['userid']);
+		$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'email' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $u['userid']);
 	}
 }
 unset($users);

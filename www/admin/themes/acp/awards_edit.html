@@ -49,10 +49,10 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	</p>
 </div>
 
-<div{if $errors.name} class="err"{/if}>
-	<p class="err">{$errors.name|escape}</p>
+<div{if $errors.award_name} class="err"{/if}>
+	<p class="err">{$errors.award_name|escape}</p>
 	<label><#Award Name#>:</label>
-	<input name="name" value="{$form.name|escape}" type="text" class="field medium">
+	<input name="award_name" value="{$form.award_name|escape}" type="text" class="field medium">
 	<p class="small">
 		<#The award name is a short, generic description of what the overall award is. It should not include
 		any specific team information.#>

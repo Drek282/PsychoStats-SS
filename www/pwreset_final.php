@@ -27,7 +27,7 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Email Confirmation');
 
-$validfields = array('userid','tpw','submit','cancel');
+$validfields = array('username','tpw','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 		
 switch ($ps->conf['main']['team_id']) {
@@ -65,17 +65,13 @@ if (empty($results)) {
 }
 unset ($results);
 
-// If you are on this page $cookieconsent is assumed to be true.
-$cms->session->options['cookieconsent'] = true;
-$cookieconsent = $cms->session->options['cookieconsent'];
-
 // Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
 $lastupdate	= $ps->get_lastupdate();
 
 $form->default_modifier('trim');
-$form->field('userid', 'blank');
+$form->field('username', 'blank');
 $form->field('tpw', 'blank');
 $form->field('password', 'blank,password_match');
 $form->field('password2', 'blank');
@@ -86,7 +82,7 @@ if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 $u = & $cms->new_user();
 
 // load the userinfo
-$userinfo = $u->load_user($userid);
+$userinfo = $u->load_user($username, 'username');
 if (!$userinfo) {
 	$message = $cms->trans("The user does not exist!");
 }
@@ -101,8 +97,8 @@ if ($submit and !isset($message)) {
 	$input = $form->values();
 	$valid = !$form->has_errors();
 
-	$userinfo = array_merge($userinfo, $ps->get_team_profile($userid, 'userid'));
-	$id = $userid;
+	$userinfo = array_merge($userinfo, $ps->get_team_profile($userinfo['userid'], 'userid'));
+	$id = $userinfo['userid'];
 	$userinfo['password'] = $u->hash($input['password']);
 
 	// temp password check

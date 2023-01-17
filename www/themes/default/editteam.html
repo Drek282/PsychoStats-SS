@@ -27,12 +27,12 @@ flags_url = "{$conf.theme.flags_url}";
 	<span class="nomodify">{$team.team_name|escape}</span>
 </div>
 
-<div{if $errors.name} class="err"{/if}>
-	<p class="err" id="err-name">{$errors.name|escape}</p>
+<div{if $errors.owner_name} class="err"{/if}>
+	<p class="err" id="err-ownername">{$errors.owner_name|escape}</p>
 	<label><#Owner Name#>:</label>
-	<input name="name" value="{$form.name|escape}" type="text" class="field">
+	<input name="owner_name" value="{$team.owner_name|escape}" type="text" class="field">
 	<p class="small">
-		<#This name should match the name you play Scoresheet Baseball under.#>
+		<#You cannot change this name, but you can add to it, if it is incomplete.#>
 	</p>
 </div>
 
@@ -117,6 +117,7 @@ flags_url = "{$conf.theme.flags_url}";
 </div>
 {/if} 
 
+{if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
 <div{if $errors.email} class="err"{/if}>
 	<p class="err" id="err-email">{$errors.email|escape}</p>
 	<label><#New Email#>:</label>
@@ -128,6 +129,7 @@ flags_url = "{$conf.theme.flags_url}";
 	<label><#Retype Email#>:</label>
 	<input name="email2" type="text" class="field">
 </div>
+{/if}
 
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>

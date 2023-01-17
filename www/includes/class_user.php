@@ -72,16 +72,15 @@ function PsychoUser(&$session, &$db) {
 function load($userid, $key='userid') {
 
 	// Load the user with associated profile
-	$cmd = "SELECT u.*,p.team_id,p.name FROM " . $this->db->table('user') . " u, " . $this->db->table('team_profile') . " p WHERE u.$key=$userid AND p.$key=$userid";
-
+	$cmd = "SELECT u.*,p.team_id,p.email FROM " . $this->db->table('user') . " u, " . $this->db->table('team_profile') . " p WHERE p.$key=$userid AND u.userid=p.userid ";
 	$u = $this->db->fetch_row(1, $cmd);
+	
+	if (isset($u['team_id'])) $u['owner_name'] = implode($this->db->fetch_list("SELECT owner_name FROM " . $this->db->table('team_ids_names') . " WHERE team_id=" . $u['team_id'] . " ORDER BY lastseen DESC LIMIT 1"));
 
-	// If $u is empty there is no associated team profile, just load the user and assign 0 as team_id.
+	// If $u is empty there is no associated user, just load the user and assign 0 as team_id.
 	if (empty($u)) {
 		$cmd = "SELECT * FROM " . $this->db->table('user') . " WHERE $key=$userid";
 		$u = $this->db->fetch_row(1, $cmd);
-		$u['team_id'] = '';
-		$u['name'] = '';
 	}
 
 
@@ -103,6 +102,10 @@ function load($userid, $key='userid') {
 			'accesslevel'	=> PU_ACL_USER,
 		));
 	}
+
+	$u['team_id'] ??= '';
+	$u['owner_name'] ??= '';
+	$u['email'] ??= '';
 
 	return $this->loaded;	
 }
@@ -481,14 +484,14 @@ function & init_form(&$form) {
 function to_form_input() {
 	$this->info['userid'] ??= null;
 	$this->info['username'] ??= null;
-	$this->info['name'] ??= null;
+	$this->info['owner_name'] ??= null;
 	$this->info['team_id'] ??= null;
 	$this->info['accesslevel'] ??= null;
 	$this->info['confirmed'] ??= null;
 	return array(
 		'userid'	=> $this->info['userid'],
 		'username'	=> $this->info['username'],
-		'name'		=> $this->info['name'],
+		'owner_name'		=> $this->info['owner_name'],
 		'team_id'	=> $this->info['team_id'],
 //		'password'	=> $this->info['password'],	// hashed, so it's useless in a form
 		'accesslevel'	=> $this->info['accesslevel'],

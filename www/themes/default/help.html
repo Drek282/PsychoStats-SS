@@ -78,7 +78,7 @@
 	</div>
 {foreach from=$awards item='a'}
 	<div class="award{if $a.negative}-neg{/if}{if $team_id and $a.topteamid == $team_id} selected-team{/if}">
-		<h1>{$a.award_name}</h1>
+		<h1>{$a.name}</h1>
 		<h2>{award_phrase award=$a}</h2>
 		<p>{award_phrase award=$a desc=1}</p>
 		{if $a.1.team_id}

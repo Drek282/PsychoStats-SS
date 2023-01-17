@@ -6,11 +6,11 @@ import configparser
 import os
 import re
 import sys
-import html2text
 import pandas as pd
 import numpy as np
 import pymysql
 import requests
+import html
 
 
 
@@ -81,7 +81,7 @@ def grp_check (check_loop, league_url):
 
         # Load the league page into a variable.
         with urlopen(league_url) as f:
-            raw_lp_dump = html2text.html2text(f.read().decode())
+            raw_lp_dump = f.read().decode()
 
         # Check to see if the game results have been published.
         if re.search(my_regex, raw_lp_dump):
@@ -161,17 +161,17 @@ def get_league_c (season_url):
 
     # Load the scoresheets page into a variable.
     with urlopen(season_url_g) as f:
-        raw_sp_dump = html2text.html2text(f.read().decode())
+        raw_sp_dump = f.read().decode()
     
     # Remove empty lines.
-    raw_sp_dump = re.sub(r'^( +|)\n', '', raw_sp_dump, 10000, re.MULTILINE)
+    raw_sp_dump = re.sub(r'^ *?\n', '', raw_sp_dump, 10000, re.MULTILINE)
 
     # Get second to last line of raw_sp_dump
     rsp_lines = raw_sp_dump.splitlines()
-    c_line = rsp_lines[-2]
+    c_line = rsp_lines[-6]
     
     # Get the team number from the championship line.
-    league_c = re.search(r'([1-2][0-9]|[1-9])', c_line, 1).group(0)
+    league_c = re.search(r'([1-2][0-9]|[1-9])', c_line, 1).group()
 
     return league_c
 
@@ -187,72 +187,47 @@ def set_divt_status (working_stats_adv_dfo):
                 working_stats_adv_dfo.loc[index, 'GB'] = 'dt'
                 break
 
-# Generate the psss_team_ids_name table.
-def generate_psss_team_ids_name (season, league_name, working_stats_com_dfo):
+# Generate the psss_team_ids_names table.
+def generate_psss_team_ids_names (season, league_name, working_stats_com_dfo):
 
     # Globals
-    global season_c
-    global now_utc_ts
+    global pagedate
     
-    # Team id names file name.
-    cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='team_ids_name_fname'")
-    data = cursor.fetchone()
-    if data['value']:
-        team_ids_name_fname = data['value'] + league_name + '.csv'
-    else:
-        print(
-            '''
-            FATAL:  You must configure a def names file name.  This should have been done for you
-                    when you installed PsychoStats for Scoresheet Baseball.
-
-                    There is a good chance your PsychoStats installation is seriously broken.
-                    Please consult the README.md file and try again.
-
-                    This script will exit.
-            '''
-            )
-        print()
-
-        # Log entry.
-        error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,def names file name not configured."
-
-        # Generate the error log and exit.
-        generate_psss_error_log()
-        sys.exit()
-    
-    # Replace with the database table name for the advanced stats.
-    #DB_TABLE_TEAM_IDS_NAME='psss_team_ids_name'
-    
-    # Get season time in the appropriate format.
-    if (season == season_c):
-        tdtd = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now_utc_ts))
-    else:
-        tdtd = str(season) + "-01-01 00:00:00"
+    # Get page time in the appropriate format.
+    tdtd = time.strftime('%Y-%m-%d', time.localtime(pagedate))
     
     # Generate the team ids names table.
-    team_ids_name_dfo = working_stats_com_dfo.loc[:, ['Team','Team_Name']]
-    team_ids_name_dfo[['totaluses', 'firstseen', 'lastseen']] = pd.DataFrame([[1, tdtd, tdtd]], index=team_ids_name_dfo.index)
+    team_ids_names_dfo = working_stats_com_dfo.loc[:, ['Team','Team_Name']]
+    team_ids_names_dfo[['firstseen', 'lastseen']] = pd.DataFrame([[tdtd, tdtd]], index=team_ids_names_dfo.index)
     
     ## Column Headers:
-    #  1 Team ID, 2 Team Name, 3 Total Uses, 4 First Seen, 5 Last Seen
+    #  1 Team ID, 2 Team Name, 3 Owner Name, 4 First Seen, 5 Last Seen
     
     # Iterate through ids names dataframe.
-    for index, row in team_ids_name_dfo.iterrows():
+    for index, row in team_ids_names_dfo.iterrows():
         # Build and execute the SQL.
-        query = "SELECT * FROM psss_team_ids_name WHERE team_id='" + str(row['Team']) + "' AND team_name=\"" + row['Team_Name'] + "\""
+        query = "SELECT * FROM psss_team_ids_names WHERE team_id='" + str(row['Team']) + "' AND team_name=\"" + row['Team_Name'] + "\""
         cursor.execute(query)
         data = cursor.fetchone()
         # Does team id and team name exist in the db?
         if data:
-            # Update lastseen if it is newer.
-            query = "UPDATE psss_team_ids_name i SET i.lastseen= IF('" + str(row['lastseen']) + "' > i.lastseen, '" + str(row['lastseen']) + "', i.lastseen) WHERE i.team_id='" + str(row['Team']) + "' AND i.team_name=\"" + row['Team_Name'] + "\""
+            # Update firstseen if it is older.
+            query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(row['firstseen']) + "' < i.firstseen, '" + str(row['firstseen']) + "', i.firstseen) WHERE i.team_id='" + str(row['Team']) + "' AND i.team_name=\"" + row['Team_Name'] + "\""
             cursor.execute(query)
-            # TODO:  If first seen year and  last seen year don't match
-            # total uses = first seen year minus last seen year +1
+            # Update lastseen if it is newer.
+            query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(row['lastseen']) + "' > i.lastseen, '" + str(row['lastseen']) + "', i.lastseen) WHERE i.team_id='" + str(row['Team']) + "' AND i.team_name=\"" + row['Team_Name'] + "\""
+            cursor.execute(query)
         else:
+            # Get MAX(id)
+            query = "SELECT MAX(id) id FROM psss_team_ids_names"
+            cursor.execute(query)
+            data = cursor.fetchone()
+            if data['id']:
+                id = int(data['id']) + 1
+            else:
+                id = 1
             # Add new name to db.
-            query = "INSERT IGNORE INTO psss_team_ids_name VALUES ('" + str(row['Team']) + "', \"" + row['Team_Name'] + "\", '1', '" + str(row['firstseen']) + "', '" + str(row['lastseen']) + "')"
+            query = "INSERT IGNORE INTO psss_team_ids_names VALUES ('" + str(id) + "', '" + str(row['Team']) + "', \"" + row['Team_Name'] + "\", '', '" + str(row['firstseen']) + "', '" + str(row['lastseen']) + "')"
             cursor.execute(query)
 
 # Generate additional PSSS tables.
@@ -290,12 +265,351 @@ def generate_psss_tables (league_name, working_stats_com_dfo):
         data = cursor.fetchone()
         # Add new team to db if it isn't already there.
         if not data:
-            query = "INSERT INTO psss_team_profile VALUES ('" + str(row['Team']) + "', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1)"
+            query = "INSERT INTO psss_team_profile VALUES ('" + str(row['Team']) + "', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 1)"
             cursor.execute(query)
     
     ## Column Headers:
     #  1 Team ID, 2 userid, 3 Owner Name, 4 email, 5 youtube, 6 website, 7 icon, 8 country code, 9 logo, 10 name locked
 
+
+
+#############################################################################
+#### #### #### ####    ***  Process team rosters. ***    #### #### #### #####
+################################################@############################
+def generate_psss_team_rosters (season, season_url, season_dir):
+
+    # debug
+    #print(season)
+
+    # Globals
+    global pagedate
+    global error_no
+    global error_log
+    
+    # Get page time in the appropriate format.
+    tdtd = time.strftime('%Y-%m-%d', time.localtime(pagedate))
+
+    # Set the season_url Scoresheets URL.
+    season_url_s = re.sub(r'.htm', '_S.htm', season_url, 1)
+
+    # Check to see if player stats page exists.
+    request = requests.get(season_url_s)
+    if not request.status_code == 200:
+        print(
+            '''
+            WARNING:  The player stats page for this season does not exist.
+
+                    There will be no team rosters available for this season.
+            '''
+            )
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,The season scoresheets page at URL:  " + season_url_s + "  does not exist.\n"
+        
+        return
+    
+    # Load the player stats page into a variable.
+    with urlopen(season_url_s) as f:
+        raw_ps_dump = f.read().decode()
+
+    # Get the list of teams from the player stats page.
+    my_regex = r"(<a href='#(:?.|\n)+)(:?\n\n</div>\n\n<div class='wrapper'>\n\n<pre>\n\n<a name=')"
+    team_list = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(1)
+    team_list = list(filter(None, team_list.split("\n")))
+
+    # Get the number of teams in the league.
+    nteams = len(team_list)
+        
+    # Declare cg_fix dict
+    cg_fix = {}
+
+    ## Process rosters.
+    for team in range (1, nteams + 1):
+
+        # debug
+        #print(team)
+
+        # Get owner name.
+        my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? |)" + str(team) + "(:?.|\n)+?\n\n<u><span class='heading'>([A-Za-z'-]+ [A-Za-z'-]+) +W  L.+$"
+        owner_name = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(3)
+
+        # Add owner names to psss_team_ids_names.
+        add_name = True
+        query = "SELECT * FROM psss_team_ids_names WHERE team_id='" + str(team) + "' AND owner_name LIKE \"" + owner_name + "%\""
+        cursor.execute(query)
+        data = cursor.fetchone()
+        # Check that the owner_name match is for the MAX(lastseen)
+        if data:
+            query = "SELECT owner_name, MAX(lastseen) lastseen FROM psss_team_ids_names WHERE team_id='" + str(team) + "'"
+            cursor.execute(query)
+            owner_check = cursor.fetchone()
+            if (data['owner_name'] != owner_check['owner_name']):
+                # Update firstseen if it is older.
+                query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(tdtd) + "' < i.firstseen, '" + str(tdtd) + "', i.firstseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
+                cursor.execute(query)
+                # Update lastseen if it is newer.
+                query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(tdtd) + "' > i.lastseen, '" + str(tdtd) + "', i.lastseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
+                cursor.execute(query)
+                data = {}
+                owner_check = {}
+                add_name = False
+            else:
+                owner_check = {}
+        # Does team id and owner name exist in the db?
+        if data:
+            # Update firstseen if it is older.
+            query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(tdtd) + "' < i.firstseen, '" + str(tdtd) + "', i.firstseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
+            cursor.execute(query)
+            # Update lastseen if it is newer.
+            query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(tdtd) + "' > i.lastseen, '" + str(tdtd) + "', i.lastseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
+            cursor.execute(query)
+        else:
+            ## Delete any user account associated with the team_id
+            # Get any userid associated with the team_id
+            query = "SELECT userid FROM psss_team_profile WHERE team_id='" + str(team) + "'"
+            cursor.execute(query)
+            data = cursor.fetchone()
+            if data:
+                # If the user is an admin don't delte the user.
+                query = "SELECT accesslevel FROM psss_user WHERE userid='" + str(data['userid']) + "'"
+                cursor.execute(query)
+                admin_check = cursor.fetchone()
+                if (admin_check and admin_check['accesslevel'] != 99):
+                    query = "DELETE FROM psss_user WHERE team_id='" + str(data['userid']) + "'"
+                    cursor.execute(query)
+                admin_check = {}
+                # Reset psss_team_profile to defaults for the team_id.
+                query = "UPDATE psss_team_profile SET userid=DEFAULT, email=DEFAULT, youtube=DEFAULT, website=DEFAULT, icon=DEFAULT, cc=DEFAULT, logo=DEFAULT, namelocked=1 WHERE team_id='" + str(team) + "'"
+                cursor.execute(query)
+
+            # Add new name to db.
+            if add_name:
+                # Get MAX(id)
+                query = "SELECT MAX(id) id FROM psss_team_ids_names"
+                cursor.execute(query)
+                data = cursor.fetchone()
+                if data['id']:
+                    id = int(data['id']) + 1
+                else:
+                    id = 1
+                query = "INSERT IGNORE INTO psss_team_ids_names VALUES ('" + str(id) + "', '" + str(team) + "', '', \"" + owner_name + "\", '" + str(tdtd) + "', '" + str(tdtd) + "')"
+                cursor.execute(query)
+
+
+        ## Process position player stats.
+        # Remove raw_ps_dump prefix to search string and create the raw_rpo variable.
+        my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>.+?</span></u>$"
+        header_line = re.search(my_regex, raw_ps_dump, re.MULTILINE).group()
+        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        raw_rpo = my_list[1]
+
+        # Set Player_Name label in header line and remove html.
+        my_regex =  r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? *)(:?[1-9]|[1-2][0-9]) .+? +?(G   AB  R   H   )"
+        header_line = re.sub(my_regex, 'Player_Name \g<3>', header_line, 1)
+    
+        # Remove html at end of header line.
+        my_regex =  r"</span></u>$"
+        header_line = re.sub(my_regex, '', header_line, 1, re.MULTILINE)
+        raw_rpo = header_line + raw_rpo
+
+        # Empty the list.
+        my_list = list()
+    
+        # Remove raw_rpo suffix from search string.
+        my_regex =  r"^<u><span class='heading'>.+?</span></u>$"
+        my_list = re.split(my_regex, raw_rpo, 1, re.MULTILINE)
+        raw_rpo = my_list[0]
+
+        # Empty the list.
+        my_list = list()
+
+        # Delete lines that start with "    season".
+        raw_rpo = re.sub(r'^  season.+?\n', '', raw_rpo, 200, re.MULTILINE)
+
+        # Delete empty lines.
+        raw_rpo = re.sub(r'^ *?\n', '', raw_rpo, 200, re.MULTILINE)
+
+        # Replace commas with # as a placeholder.
+        raw_rpo = re.sub(r',', '#', raw_rpo, 200, re.MULTILINE)
+
+        # Delete single quotes.
+        raw_rpo = re.sub(r"'", '', raw_rpo, 200, re.MULTILINE)
+
+        # Insert spaces into stats where there is a 1.000+.
+        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
+        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
+        raw_rpo = re.sub(r'([0-9])(1\.000)', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
+        raw_rpo = re.sub(r'---(1\.000)', '0 \g<1>', raw_rpo, 2000, re.MULTILINE)
+        
+        # Replace spaces with commas in raw_rpo.
+        raw_rpo = re.sub(r"( +)", ',', raw_rpo, 800)
+
+        # Create the raw_rpo temp stats file name with path.
+        rpo_tmp_fname = os.path.join(season_dir, 'rpo_tmp.csv')
+
+        # Output raw_rpo_tmp to CSV file.
+        f = open(rpo_tmp_fname, 'w')
+        f.write(raw_rpo)
+        f.close()
+
+        # Read the csv files into DataFrame objects.
+        rpo_dfo = pd.read_csv(rpo_tmp_fname)
+
+        # Remove rpo_tmp file.
+        os.remove(rpo_tmp_fname)
+
+        # Replace - with 0.
+        rpo_dfo = rpo_dfo.replace('-', 0)
+
+        # Replace --- with 0.
+        rpo_dfo = rpo_dfo.replace('---', 0)
+
+        # Replace ---- with 0.
+        rpo_dfo = rpo_dfo.replace('----', 0)
+
+        # Calculate wOBA.
+        rpo_dfo['wOBA'] = round((0.69 * rpo_dfo['BB'] + 0.89 * (rpo_dfo['H'] - rpo_dfo['D'] - rpo_dfo['T'] - rpo_dfo['HR']) + 1.27 * rpo_dfo['D'] + 1.62 * rpo_dfo['T'] + 2.10 * rpo_dfo['HR']) / (rpo_dfo['AB'] + rpo_dfo['BB'] + rpo_dfo['SF']), 3)
+
+        # Reorder the columns.
+        rpo_dfo = rpo_dfo.loc[:, ['Player_Name','G','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','OPS','wOBA','SH','F','SF','GDP','SB','CS','OP','E','PB']]
+
+        # Replace NaN with 0.
+        rpo_dfo = rpo_dfo.fillna(0)
+
+        ## Create or modify the psss_team_rpo data table.
+        # Iterate through rpo_dfo.
+        for index, row in rpo_dfo.iterrows():
+
+            # Replace # placeholder in Player_Name with ,.
+            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], 4)
+
+            # Get the rpo team data from the database.
+            query = "SELECT * FROM psss_team_rpo WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+            cursor.execute(query)
+            data = cursor.fetchone()
+
+            # Is the row empty?
+            if data:
+                # Update database.
+                query = "UPDATE psss_team_rpo SET po_games_played='" + str(row['G']) + "', po_at_bats='" + str(row['AB']) + "', po_runs='" + str(row['R']) + "', po_hits='" + str(row['H']) + "', po_doubles='" + str(row['D']) + "', po_triples='" + str(row['T']) + "', po_home_runs='" + str(row['HR']) + "', po_rbis='" + str(row['RBI']) + "', po_walks='" + str(row['BB']) + "', po_strikeouts='" + str(row['K']) + "', po_batting_average='" + str(row['BA']) + "', po_on_base_average='" + str(row['OBA']) + "', po_slugging_average='" + str(row['SlgA']) + "', po_ops='" + str(row['OPS']) + "', po_woba='" + str(row['wOBA']) + "', po_sacrifice_hits='" + str(row['SH']) + "', po_sacrifice_fails='" + str(row['F']) + "', po_sacrifice_flies='" + str(row['SF']) + "', po_gidps='" + str(row['GDP']) + "', po_stolen_bases='" + str(row['SB']) + "', po_caught_stealing='" + str(row['CS']) + "', po_outstanding_plays='" + str(row['OP']) + "', po_fielding_errors='" + str(row['E']) + "', po_passed_balls='" + str(row['PB']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+                cursor.execute(query)
+            else:
+                # Add new entry to db.
+                query = "INSERT INTO psss_team_rpo VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['G']) + "', '" + str(row['AB']) + "', '" + str(row['R']) + "', '" + str(row['H']) + "', '" + str(row['D']) + "', '" + str(row['T']) + "', '" + str(row['HR']) + "', '" + str(row['RBI']) + "', '" + str(row['BB']) + "', '" + str(row['K']) + "', '" + str(row['BA']) + "', '" + str(row['OBA']) + "', '" + str(row['SlgA']) + "', '" + str(row['OPS']) + "', '" + str(row['wOBA']) + "', '" + str(row['SH']) + "', '" + str(row['F']) + "', '" + str(row['SF']) + "', '" + str(row['GDP']) + "', '" + str(row['SB']) + "', '" + str(row['CS']) + "', '" + str(row['OP']) + "', '" + str(row['E']) + "', '" + str(row['PB']) + "')"
+                cursor.execute(query)
+        
+        # Clean up.
+        rpo_dfo = pd.DataFrame()
+
+
+        ## Process pitcher stats.
+        # Remove raw_ps_dump prefix to search string and create the raw_rpi variable.
+        my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:?.|\n)+?\n\n(<u><span class='heading'>.+?</span></u>)$"
+        header_line = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(2)
+        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        raw_rpi = my_list[3]
+
+        # Set Player_Name label in header line and remove html.
+        my_regex =  r"^<u><span class='heading'>.+? +?(W  L  pct.  ERA   )"
+        header_line = re.sub(my_regex, 'Player_Name \g<1>', header_line, 1)
+    
+        # Remove html at end of header line.
+        my_regex =  r"</span></u>$"
+        header_line = re.sub(my_regex, '', header_line, 1, re.MULTILINE)
+        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        raw_rpi = header_line + raw_rpi
+
+        # Empty the list.
+        my_list = list()
+    
+        # Remove raw_rpi suffix from search string.
+        if (team != nteams):
+            my_regex =  r"^<a name='.+?</span></u>$"
+        else:
+            my_regex =  r"^</pre>$"
+        my_list = re.split(my_regex, raw_rpi, 1, re.MULTILINE)
+        raw_rpi = my_list[0]
+
+        # Empty the list.
+        my_list = list()
+
+        # Delete lines that start with "    season".
+        raw_rpi = re.sub(r'^  season.+?\n', '', raw_rpi, 200, re.MULTILINE)
+
+        # Delete empty lines.
+        raw_rpi = re.sub(r'^ *?\n', '', raw_rpi, 200, re.MULTILINE)
+
+        # Replace commas with # as a placeholder.
+        raw_rpi = re.sub(r',', '#', raw_rpi, 200, re.MULTILINE)
+
+        # Delete single quotes.
+        raw_rpi = re.sub(r"'", '', raw_rpi, 200, re.MULTILINE)
+
+        # Insert spaces into stats where there is a 1.000+.
+        raw_rpi = re.sub(r'([0-9])(1\.000)', '\g<1> \g<2>', raw_rpi, 2000, re.MULTILINE)
+        raw_rpi = re.sub(r'-(1\.000)', '0 \g<1>', raw_rpi, 2000, re.MULTILINE)
+        
+        # Replace spaces with commas in raw_rpi.
+        raw_rpi = re.sub(r"( +)", ',', raw_rpi, 800)
+
+        # Create the raw_rpi temp stats file name with path.
+        rpi_tmp_fname = os.path.join(season_dir, 'rpi_tmp.csv')
+
+        # Output raw_rpi_tmp to CSV file.
+        f = open(rpi_tmp_fname, 'w')
+        f.write(raw_rpi)
+        f.close()
+
+        # Read the csv files into DataFrame objects.
+        rpi_dfo = pd.read_csv(rpi_tmp_fname)
+
+        # Remove rpo_tmp file.
+        os.remove(rpi_tmp_fname)
+
+        # Replace - with 0.
+        rpi_dfo = rpi_dfo.replace('-', 0)
+
+        # Replace --- with 0.
+        rpi_dfo = rpi_dfo.replace('---', 0)
+
+        # Replace ---- with 0.
+        rpi_dfo = rpi_dfo.replace('----', 0)
+
+        # Replace NaN with 0.
+        rpi_dfo = rpi_dfo.fillna(0)
+
+
+        ## Create or modify the psss_team_rpo data table.
+        # Iterate through rpo_dfo.
+        for index, row in rpi_dfo.iterrows():
+
+            # Replace # placeholder in Player_Name with ,.
+            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], 4)
+
+            # Get CG number for "Pitcher, AAA".
+            if (row['Player_Name'] == 'Pitcher, AAA'):
+                cg_fix[team] = row['CG']
+
+            # Get the rpo team data from the database.
+            query = "SELECT * FROM psss_team_rpi WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+            cursor.execute(query)
+            data = cursor.fetchone()
+
+            # Is the row empty?
+            if data:
+                # Update database.
+                query = "UPDATE psss_team_rpi d SET pi_wins='" + str(row['W']) + "', pi_losses='" + str(row['L']) + "', pi_win_percent='" + str(row['pct.']) + "', pi_era='" + str(row['ERA']) + "', pi_games_played='" + str(row['G']) + "', pi_games_started='" + str(row['GS']) + "', pi_complete_games='" + str(row['CG']) + "', pi_shutouts='" + str(row['ShO']) + "', pi_run_support='" + str(row['RS']) + "', pi_saves='" + str(row['Sv']) + "', pi_innings_pitched='" + str(row['IP']) + "', pi_runs_against='" + str(row['R']) + "', pi_earned_runs_against='" + str(row['ER']) + "', pi_hits_surrendered='" + str(row['H']) + "', pi_opp_batting_average='" + str(row['BA']) + "', pi_opp_walks='" + str(row['BB']) + "', pi_whip='" + str(row['WHIP']) + "', pi_strikeouts='" + str(row['K']) + "', pi_wild_pitches='" + str(row['WP']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+                cursor.execute(query)
+            else:
+                # Add new entry to db.
+                query = "INSERT INTO psss_team_rpi VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['W']) + "', '" + str(row['L']) + "', '" + str(row['pct.']) + "', '" + str(row['ERA']) + "', '" + str(row['G']) + "', '" + str(row['GS']) + "', '" + str(row['CG']) + "', '" + str(row['ShO']) + "', '" + str(row['RS']) + "', '" + str(row['Sv']) + "', '" + str(row['IP']) + "', '" + str(row['R']) + "', '" + str(row['ER']) + "', '" + str(row['H']) + "', '" + str(row['BA']) + "', '" + str(row['BB']) + "', '" + str(row['WHIP']) + "', '" + str(row['K']) + "', '" + str(row['WP']) + "')"
+                cursor.execute(query)
+        
+        # Clean up.
+        rpo_dfi = pd.DataFrame()
+
+    return cg_fix
 
 
 
@@ -332,7 +646,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     ### Convert league page into CSV file.
     
     # Check to see if the season has started.
-    my_regex =  r"(^.+Standings, Pitching +W   L   .+_)"
+    my_regex =  r"^<a name='standings' id='standings'>.+?</span></u>$"
     if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
         print("WARNING:  There is no data for the current season.  The season has probably not started or the first week results have not yet been published.")
         print()
@@ -342,28 +656,32 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,There is no data for the current season.  The season has probably not started or the first week results have not yet been published.\n"
 
         return
-
+    
+    # Generate the first header line.
+    header_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group()
+    header_line = re.sub(r"<a name='standings' id='standings'></a>", '', header_line, 1)
+    
     # Remove raw_lp_dump prefix to search string.
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
-    raw_lp_dump = my_list[1] + my_list[2]
+    raw_lp_dump = header_line + my_list[1]
 
     # Empty the list.
     my_list = list()
     
-    # Remove raw_lp_dump suffix to search string.
-    my_regex =  r"(^(?:| +)(?:[1-9]|[1-2][0-9])  (?:[A-Z].+ [A-Z].+) +(?:[0-9]|1[0-9])-(?:[0-9]|1[0-9]):  .+,)"
+    # Remove raw_lp_dump suffix from search string.
+    my_regex =  r"^<a name='scores' id='scores'>.+?$"
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
     raw_lp_dump = my_list[0]
 
     # Empty the list.
     my_list = list()
     
-    # Remove whitespace at start of lines.
-    my_regex =  r"(^ +)"
+    # Remove html and whitespace at start of lines.
+    my_regex =  r"<span class='.+?'> *"
     raw_lp_dump = re.sub(my_regex, '', raw_lp_dump, 200, re.MULTILINE)
     
-    # Remove whitespace at end of lines.
-    my_regex =  r"( +$)"
+    # Remove html at end of lines.
+    my_regex =  r"</span>"
     raw_lp_dump = re.sub(my_regex, '', raw_lp_dump, 200, re.MULTILINE)
 
     # Convert league_name to lower case.
@@ -405,104 +723,104 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     f.close()
     
     # Create defensive stats variable.
-    my_regex =  r"(^_AB    R    H  .+_$)"
+    my_regex =  r"^<u>AB    R    H  .+?</u>$"
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
     working_stats_def_pre = my_list[0]
-
-    # Delete empty lines.
-    working_stats_def_pre = os.linesep.join([s for s in working_stats_def_pre.splitlines() if s])
 
     # Empty the list.
     my_list = list()
     
+    # Generate the first header line.
+    header_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group()
+    
     # Create offensive stats variable.
-    my_regex =  r"(^_AB    R    H  .+_$)"
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
-    working_stats_off = my_list[1] + my_list[2]
+    working_stats_off = header_line + my_list[1]
 
     # Delete empty lines.
-    working_stats_off = os.linesep.join([s for s in working_stats_off.splitlines() if s])
+    working_stats_off = re.sub(r'^ *?\n', '', working_stats_off, 200, re.MULTILINE)
 
     # Empty the list.
     my_list = list()
 
     # Split off the wildcard standings if they exist.
-    my_regex = r"(^_Wild Card Race  .+_$)"
+    my_regex = r"^<u>Wild Card Race  .+?</u>$"
     if re.search(my_regex, working_stats_def_pre, re.MULTILINE):
+        header_line = re.search(my_regex, working_stats_def_pre, re.MULTILINE).group()
         my_list = re.split(my_regex, working_stats_def_pre, 1, re.MULTILINE)
         working_stats_def = my_list[0]
-        working_stats_wc = my_list[1] + my_list[2]
+        working_stats_wc = header_line + my_list[1]
     else:
         working_stats_def = working_stats_def_pre
         working_stats_wc = str()
     
     # Clean up.
     my_list = list()
+    header_line = str()
     working_stats_def_pre = str()
     
     # Split working_stats_def into division standings.
-    my_regex = r"(^_.+ Standings, Pitching  +.+_$)"
+    #my_regex = r"^<u>.+? Standings, Pitching  +.+?</u>$"
+    my_regex = r" *?\n *?\n"
     my_list = re.split(my_regex, working_stats_def, 9, re.MULTILINE)
+
+
     # Remove empty keys.
-    my_list = [ek for ek in my_list if ek]
+    #my_list = [ek for ek in my_list if ek]
+    my_regex = re.compile(r'^ *?$')
+    my_list = [i for i in my_list if not my_regex.match(i)]
 
     # Empty working_stats_def.
     working_stats_def = str()
 
     # Iterate through division keys and create a division field.
     div = str()
+    my_regex = r"^<u>[A-Za-z]+ Standings, Pitching  +.+?</u>\n"
     for i in range(len(my_list)):
+
         if re.match(my_regex, my_list[i], re.MULTILINE):
             div = my_list[i].split()[0]
             div = div[1:]
-
-            continue
+            div = re.sub(r'u>', '', div, 1, re.MULTILINE)
         
-        # Delete first line.
-        my_list[i] = my_list[i][1:]
+        # Generate the header line.
+        hl_regex = r"^<u>(:?[A-Za-z]+ |)Standings, Pitching  +.+?</u>\n"
+        header_line = re.search(hl_regex, my_list[i], re.MULTILINE).group()
+
+        # Delete the header line.
+        my_list[i] = re.sub(header_line, '', my_list[i], 1, re.MULTILINE)
 
         # Append division field to every line.
         if div:
             my_list[i] = my_list[i].replace("\n", " " + div + "\n")
         else:
             my_list[i] = my_list[i].replace("\n", " na\n")
+
+        # Add the last division name to the last field.
+        if div:
+            my_list[i] = my_list[i] + " " + div
+        else:
+            my_list[i] = my_list[i] + " na"
     
     # Recreate the working_stats_def string.
     working_stats_def = "\n".join(my_list)
-
-    # Add the last division name to the last field.
-    if div:
-        working_stats_def = working_stats_def + " " + div
-    else:
-        working_stats_def = working_stats_def + " na"
+    working_stats_def = header_line + working_stats_def
 
     # Clean up.
+    header_line = str()
+    hl_regex = str()
     my_list = list()
 
-    ## Clean up working_stats_def.
-    if div:
-        # Set the header line.
-        my_regex =  r"(\A_[A-Z].+ Standings, Pitching )"
-        working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, 1)
-        my_regex =  r"(_$)"
-        working_stats_def = re.sub(my_regex, ' Division', working_stats_def, 1, re.MULTILINE)
-        # Remove internal header lines.
-        my_regex =  r"(_.+_)"
-        working_stats_def = re.sub(my_regex, '', working_stats_def)
-    else:
-        # Set the header line.
-        my_regex =  r"(\AStandings, Pitching )"
-        working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, 1)
-        my_regex =  r"(_ na$)"
-        working_stats_def = re.sub(my_regex, ' Division', working_stats_def, 1, re.MULTILINE)
+    # Set the header line for working_stats_def.
+    my_regex =  r"^<u>(:?[A-Za-z]+ |)Standings, Pitching "
+    working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, 1)
+    my_regex =  r"</u>$"
+    working_stats_def = re.sub(my_regex, ' Division', working_stats_def, 1, re.MULTILINE)
 
-    # Remove empty lines.
-    working_stats_def = os.linesep.join([s for s in working_stats_def.splitlines() if s])
-
-    # Set the header line for working_stats_off and remove empty lines.
-    my_regex =  r"(\A_)"
+    # Set the header line for working_stats_off.
+    my_regex =  r"^<u>"
     working_stats_off = re.sub(my_regex, 'Team ', working_stats_off, 1)
-    my_regex =  r"(_$)"
+    my_regex =  r"</u>$"
     working_stats_off = re.sub(my_regex, '', working_stats_off, 1, re.MULTILINE)
     working_stats_off = os.linesep.join([s for s in working_stats_off.splitlines() if s])
 
@@ -511,9 +829,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     # Set the header line for working_stats_wc and remove empty lines.
     if working_stats_wc:
-        my_regex =  r"(\A_Wild Card Race )"
+        my_regex =  r"^<u>Wild Card Race "
         working_stats_wc = re.sub(my_regex, 'Team ', working_stats_wc, 1)
-        my_regex =  r"(_$)"
+        my_regex =  r"</u>$"
         working_stats_wc = re.sub(my_regex, '', working_stats_wc, 1, re.MULTILINE)
         working_stats_wc = os.linesep.join([s for s in working_stats_wc.splitlines() if s])
     
@@ -528,6 +846,8 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Fix the header line in team_names_def.
     my_regex =  r"(^.+$)"
     team_names_def = re.sub(my_regex, 'Team Team_Name', team_names_def, 1, re.MULTILINE)
+    # Replace html special characters in team_names_def.
+    team_names_def = html.unescape(team_names_def)
     # working_stats_wc
     if working_stats_wc:
         my_regex =  r"^(([1-9]|[1-9][0-9])  )(.+)(  +( |1)( |[1-9])[0-9] ( |1)( |[1-9])[0-9]  \.[0-9][0-9][0-9] .+)$"
@@ -700,7 +1020,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     ### Process the CSV files.
 
     ## Initial processing, working_stats_def_dfo.
-    # Read the csv file into a DataFrame objects.
+    # Read the csv files into DataFrame objects.
     working_stats_def_dfo = pd.read_csv(def_stats_fname)
     team_names_def_dfo = pd.read_csv(def_names_fname)
     # Cleanup names file.
@@ -851,7 +1171,11 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         generate_psss_tables(league_name, working_stats_com_dfo)
     
     # Generate the team ids names table.
-    generate_psss_team_ids_name(season, league_name, working_stats_com_dfo)
+    generate_psss_team_ids_names(season, league_name, working_stats_com_dfo)
+    
+    # Generate team roster tables.
+    cg_fix = {}
+    cg_fix = generate_psss_team_rosters(season, season_url, season_dir)
 
 
     #### Output to database.
@@ -881,6 +1205,15 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     ## Create or modify the psss_team_def data table.
     # Iterate through working_stats_def_dfo.
     for index, row in working_stats_def_dfo.iterrows():
+
+        # Fix the CG stat
+        if cg_fix is not None:
+            if row['Team'] not in cg_fix:
+                cg_fix[row['Team']] = 0
+            row['CG'] = row['CG'] - cg_fix[row['Team']]
+        else:
+            row['CG'] = 0
+
         # Get the adv team data from the database.
         query = "SELECT * FROM psss_team_def WHERE season='" + str(row['Season']) + "' AND team_id='" + str(row['Team']) + "'"
         cursor.execute(query)
@@ -1091,12 +1424,11 @@ if not request.status_code == 200:
 
 # Load the league page into a variable.
 with urlopen(league_url) as f:
-    raw_lp_dump = html2text.html2text(f.read().decode())
+    raw_lp_dump = f.read().decode()
 
 ## Check to see if the page and url are correct.
-head_rlp_dump = raw_lp_dump.partition('\n')[0]
-my_regex = r".+(" + re.escape(league_name) + r").+"
-if not re.match(my_regex, head_rlp_dump):
+my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+(" + re.escape(league_name) + r").+?</h1>$"
+if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
 
     print(
         '''
@@ -1150,8 +1482,10 @@ else:
     single_season = 2011
 
 # Get the list of available seasons from the league page.
-my_regex = r"^\[(2[0-9][0-9][0-9])\]\(.+$"
-seasons_h = re.findall(my_regex, raw_lp_dump, re.MULTILINE)
+my_regex = r"^Past seasons: +(.+)?</a><br>$"
+seasons_h_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+my_regex = r"/(2[0-9][0-9][0-9])/"
+seasons_h = re.findall(my_regex, seasons_h_line)
 
 # Remove all members of list dating earlier than single_season.
 for i in range(len(seasons_h)):
@@ -1165,7 +1499,7 @@ data = cursor.fetchone()
 if data:
     cursor.execute("DELETE FROM psss_user WHERE accesslevel<'99';")
     cursor.execute("DELETE FROM psss_team_adv WHERE season<'" + str(single_season) + "';")
-    cursor.execute("DELETE FROM psss_team_ids_name WHERE lastseen<'" + str(single_season) + "-01-01 00:00:00';")
+    cursor.execute("DELETE FROM psss_team_ids_names WHERE lastseen<'" + str(single_season) + "-01-01';")
     cursor.execute("DELETE FROM psss_team_def WHERE season<'" + str(single_season) + "';")
     cursor.execute("DELETE FROM psss_team_off WHERE season<'" + str(single_season) + "';")
     cursor.execute("DELETE FROM psss_seasons_h WHERE season_h<'" + str(single_season) + "';")
@@ -1184,8 +1518,8 @@ if data:
     error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Single Season Mode: Team data and users for previous seasons have been deleted and team profiles reset to defaults.\n"
 
 # Get the date on the league page.
-my_regex = r"^.+ ((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))$"
-pagedate = re.match(my_regex, head_rlp_dump).group(1)
+my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
+pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
 
 # Convert league page date to epoch time.
 pattern = '%m-%d-%y'
@@ -1273,16 +1607,15 @@ for season_h in list(seasons_h):
 
     # Load the league page into a variable.
     with urlopen(season_url) as f:
-        raw_lp_dump = html2text.html2text(f.read().decode())
+        raw_lp_dump = f.read().decode()
     
     # Log entry.
     error_no += 1
     error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Initializing data processing for season:  " + season_h + "\n"
 
     # Get the date on the league page.
-    head_rlp_dump = raw_lp_dump.partition('\n')[0]
-    my_regex = r"^.+ ((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))$"
-    pagedate = re.match(my_regex, head_rlp_dump).group(1)
+    my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
+    pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
 
     # Convert league page date to epoch time.
     pattern = '%m-%d-%y'

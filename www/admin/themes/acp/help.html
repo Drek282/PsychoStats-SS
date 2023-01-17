@@ -15,8 +15,8 @@
 <div class="ps-table-frame no-ani">
 	<div class="ps-table-header">
 		<div class="filter">
-			<form action="{url _base='awards_edit.php'}" method="post">
-				<input type="submit" value="<#New Award#>" class="btn left">
+			<form action="{url _base='help_edit.php'}" method="post">
+				<input type="submit" value="<#New Help Entry#>" class="btn left">
 				{include file='ajax.html' float='left' size='small-snake'}
 			</form>
 			<form action="{url}" method="get">
@@ -30,26 +30,26 @@
 		{$pager}
 	</div>
 	<div class="ps-table-inner">
-		<table id='aw-table' class='ps-table ps-awards-table'>
+		<table id='aw-table' class='ps-table ps-help-table'>
 		<tr class='hdr'>
 			<th class="active"><p><span class="asc"><#Order#></span></p></th>
-			<th><p><span class="asc"><#Award Name#></span></p></th>
-			<th><p><span class="asc"><abbr title="<#Is award enabled?#>">?</abbr></span></p></th>
+			<th><p><span class="asc"><#Help Title#></span></p></th>
+			<th><p><span class="asc"><abbr title="<#Is help entry enabled?#>">?</abbr></span></p></th>
 		</tr>
-{foreach from=$awards item='a'}
+{foreach from=$help item='h'}
 		<tr{cycle values=", class='even'"}>
 			<td class="idx">{strip}
-<a {if !$a.up}style="display: none"{/if} class="up" href="{url move='up' id=$a.id}"><img src="{theme->url}/img/icons/arrow_up.png" alt="Move Up"></a>
-<a {if !$a.down}style="display: none"{/if} class="dn" href="{url move='down' id=$a.id}"><img src="{theme->url}/img/icons/arrow_down.png" alt="Move Down"></a>
+<a {if !$h.up}style="display: none"{/if} class="up" href="{url move='up' id=$h.id}"><img src="{theme->url}/img/icons/arrow_up.png" alt="Move Up"></a>
+<a {if !$h.down}style="display: none"{/if} class="dn" href="{url move='down' id=$h.id}"><img src="{theme->url}/img/icons/arrow_down.png" alt="Move Down"></a>
 			{/strip}</td>
-			<td class="item"><a href="{url _base='awards_edit.php' id=$a.id}">{$a.award_name|escape}</a><span class='sub'>{$a.description|escape}</span></td>
-			<td><img src="{theme->url}/img/icons/{if $a.enabled}tick{else}cross{/if}.png" alt="{if $a.enabled}Enabled{else}Disabled{/if}"></td>
+			<td class="item"><a href="{url _base='help_edit.php' id=$h.id}">{$h.title|escape}</a><span class='sub'>{$h.content}</span></td>
+			<td><img src="{theme->url}/img/icons/{if $h.enabled}tick{else}cross{/if}.png" alt="{if $h.enabled}Enabled{else}Disabled{/if}"></td>
 		</tr>
 {foreachelse}
 		<tr><td colspan="6" class="no-data">
-			<#No Awards Defined#>
+			<#No Help Entries Defined#>
 			<br>
-			<a href="{url _base='awards_edit.php'}"><#Click here to add an award#></a>
+			<a href="{url _base='help_edit.php'}"><#Click here to add a help entry#></a>
 		</td></tr>
 {/foreach}
 

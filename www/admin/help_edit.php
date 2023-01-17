@@ -6,7 +6,7 @@
  *	Copyright 2008 Jason Morriss
  *
  *	PsychoStats is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
+ *	it under the terms of the GNU General Public Licenhelpse as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
  *
@@ -18,13 +18,13 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id: awards_edit.php 420 2008-04-27 15:24:49Z lifo $
+ *	Version: $Id: help_edit.php $
  */
 define("PSYCHOSTATS_PAGE", true);
 define("PSYCHOSTATS_ADMIN_PAGE", true);
 include("../includes/common.php");
 include("./common.php");
-$cms->theme->assign('page', 'awards');
+$cms->theme->assign('page', 'help');
 
 $validfields = array('ref','id','del','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
@@ -33,44 +33,37 @@ $message = '';
 $cms->theme->assign_by_ref('message', $message);
 
 if ($cancel) {
-	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'awards.php' )));
+	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'help.php' )));
 }
 
-// load the matching award if an ID was given
-$award = array();
+// load the matching help if an ID was given
+$help = array();
 if (is_numeric($id)) {
-	$award = $ps->db->fetch_row(1, "SELECT * FROM $ps->t_config_awards WHERE id=" . $ps->db->escape($id));
-	if (!$award['id']) {
-		$data = array('message' => $cms->trans("Invalid award ID Specified"));
+	$help = $ps->db->fetch_row(1, "SELECT * FROM $ps->t_config_help WHERE id=" . $ps->db->escape($id));
+	if (!$help['id']) {
+		$data = array('message' => $cms->trans("Invalid help ID Specified"));
 		$cms->full_page_err(basename(__FILE__, '.php'), $data);
 		exit();		
 	}
 } elseif (!empty($id)) {
-	$data = array('message' => $cms->trans("Invalid award ID Specified"));
+	$data = array('message' => $cms->trans("Invalid help ID Specified"));
 	$cms->full_page_err(basename(__FILE__, '.php'), $data);
 	exit();		
 }
 
 // delete it, if asked to
-if ($del and $award['id'] == $id) {
-	$ps->db->delete($ps->t_config_awards, 'id', $id);
-	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'awards.php' )));
+if ($del and $help['id'] == $id) {
+	$ps->db->delete($ps->t_config_help, 'id', $id);
+	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'help.php' )));
 }
 
 // create the form variables
 $form = $cms->new_form();
 $form->default_modifier('trim');
 $form->field('enabled');
-$form->field('negative');
-$form->field('award_name','blank');
-$form->field('phrase','blank');
-$form->field('groupname');
-$form->field('expr','blank');
-$form->field('order');
-$form->field('where');
-$form->field('limit','numeric');
-$form->field('format');
-$form->field('description');
+$form->field('title','blank');
+$form->field('img');
+$form->field('content','blank');
 
 // process the form if submitted
 $valid = true;
@@ -81,31 +74,28 @@ if ($submit) {
 	// protect against CSRF attacks
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
-	// lets keep the description plain... no html.
-	$input['description'] = psss_strip_tags($input['description']);
-
 	$valid = ($valid and !$form->has_errors());
 	if ($valid) {
 		$ok = false;
 		if ($id) {
-			$ok = $ps->db->update($ps->t_config_awards, $input, 'id', $id);
+			$ok = $ps->db->update($ps->t_config_help, $input, 'id', $id);
 		} else {
-			$input['id'] = $ps->db->next_id($ps->t_config_awards);
-			$ok = $ps->db->insert($ps->t_config_awards, $input);
+			$input['id'] = $ps->db->next_id($ps->t_config_help);
+			$ok = $ps->db->insert($ps->t_config_help, $input);
 		}
 		if (!$ok) {
 			$form->error('fatal', "Error updating database: " . $ps->db->errstr);
 		} else {
-			previouspage(psss_url_wrapper('awards.php'));
+			previouspage(psss_url_wrapper('help.php'));
 		}
 	}
 
 } else {
 	// fill in defaults
 	if ($id) {
-		$form->input($award);
+		$form->input($help);
 	} else {
-		// new awards should default to being enabled
+		// new help should default to being enabled
 		$form->input['enabled'] = 1;
 		$form->input['limit'] = 5;
 		$form->input['order'] = 'desc';
@@ -114,7 +104,7 @@ if ($submit) {
 }
 
 $cms->crumb('Manage', psss_url_wrapper('manage.php'));
-$cms->crumb('Awards', psss_url_wrapper('awards.php'));
+$cms->crumb('Awards', psss_url_wrapper('help.php'));
 $cms->crumb('Edit');
 
 // save a new form key in the users session cookie
@@ -124,7 +114,7 @@ if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->
 $tokens ??= null;
 $cms->theme->assign(array(
 	'errors'	=> $form->errors(),
-	'award'		=> $award,
+	'help'		=> $help,
 	'form'		=> $form->values(),
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'tokens'	=> $tokens,
@@ -134,7 +124,7 @@ $cms->theme->assign(array(
 $basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->theme->add_js('js/forms.js');
-$cms->theme->add_js('js/awards.js');
+$cms->theme->add_js('js/help.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer', '');
 
 ?>

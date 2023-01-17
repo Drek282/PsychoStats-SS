@@ -26,9 +26,9 @@
 <div id="gallery">
 {foreach from=$themes item='t'}
 	<div class="theme">
-		<h3 title="<#Click to select theme#>"><a href="{url t=$t.name}">{$t.title|escape}</a></h3>
-		{if $t.image}<div class="preview"><a href="{url t=$t.name}"><img src="themes/{$t.name}/img/{$t.image|escape}" alt="Preview" title="<#Click to select theme#>"></a></div>{/if}
-		{if $t.name == $theme}<p class="inuse"><span class="inuse"><#You are using this theme#></span></p>{/if}
+		<h3 title="<#Click to select theme#>"><a href="{url t=$t.theme_name}">{$t.title|escape}</a></h3>
+		{if $t.image}<div class="preview"><a href="{url t=$t.theme_name}"><img src="themes/{$t.theme_name}/img/{$t.image|escape}" alt="Preview" title="<#Click to select theme#>"></a></div>{/if}
+		{if $t.theme_name == $theme}<p class="inuse"><span class="inuse"><#You are using this theme#></span></p>{/if}
 		<p><label>Version:</label> <span class="version">{$t.version|escape}</span></p>
 		<p><label>Author:</label> <span class="author">{$t.author|escape}</span></p>
 		<p><label>Website:</label> <span class="website"><a href="{$t.website|escape}">{$t.website|escape}</a><span></p>

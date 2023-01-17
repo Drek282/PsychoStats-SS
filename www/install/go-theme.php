@@ -142,7 +142,7 @@ if ($compiledir == $defaultdir) {
 //}
 
 $cms->theme->assign(array(
-	'web_user'		=> function_exists('posix_getpwuid') ? posix_getpwuid( posix_getuid() ) : array( 'name' => get_current_user() ),
+	'web_user'		=> function_exists('posix_getpwuid') ? posix_getpwuid( posix_getuid() ) : array( 'username' => get_current_user() ),
 	'orig_compiledir'	=> $orig_compiledir,
 	'is_locked'		=> $is_locked,
 	'system_default_dir'	=> $defaultdir,

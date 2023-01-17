@@ -34,7 +34,7 @@ $cms->theme->assign_by_ref('message', $message);
 
 if (!is_numeric($start) or $start < 0) $start = 0;
 if (!is_numeric($limit) or $limit < 0) $limit = 1000;
-$sort = 'name';
+$sort = 'theme_name';
 $order = 'asc';
 
 $_order = array(
@@ -137,7 +137,7 @@ if ($id and in_array($action, array('default','disable','enable','uninstall'))) 
 				$ps->conf['main']['theme'] = $t->xml_name();
 				// always make sure the new default theme is enabled
 				if (!$t->enabled()) {
-					$ps->db->update($ps->t_config_themes, array( 'enabled' => 1 ), 'name', $t->xml_name());
+					$ps->db->update($ps->t_config_themes, array( 'enabled' => 1 ), 'theme_name', $t->xml_name());
 				}
 			} else {
 				$res = 'failure';
@@ -189,8 +189,8 @@ foreach ($list as $t) {
 	if ($t['parent']) {
 		$themes[ $t['parent'] ]['children'][] = $t;
 	} else {
-		$themes[ $t['name'] ] = $t;
-		$themes[ $t['name'] ]['children'] = array();
+		$themes[ $t['theme_name'] ] = $t;
+		$themes[ $t['theme_name'] ]['children'] = array();
 	}
 }
 

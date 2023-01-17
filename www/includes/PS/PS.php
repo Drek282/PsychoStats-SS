@@ -175,6 +175,7 @@ function __construct(&$db) {
 	$this->t_awards_teams		= $this->tblprefix . 'awards_teams';
 	$this->t_config 		= $this->tblprefix . 'config';
 	$this->t_config_awards 		= $this->tblprefix . 'config_awards';
+	$this->t_config_help 		= $this->tblprefix . 'config_help';
 	$this->t_config_sources 	= $this->tblprefix . 'config_sources';
 	$this->t_config_themes 		= $this->tblprefix . 'config_themes';
 	$this->t_errlog 		= $this->tblprefix . 'errlog';
@@ -184,8 +185,9 @@ function __construct(&$db) {
 	$this->t_team_wc 			= $this->tblprefix . 'team_wc';
 	$this->t_team 			= $this->tblprefix . 'team';
 	$this->t_team_aliases 		= $this->tblprefix . 'team_aliases';
-	$this->t_team_data 		= $this->tblprefix . 'team_data';
-	$this->t_team_ids_team_name 		= $this->tblprefix . 'team_ids_name';
+	$this->t_team_rpi 		= $this->tblprefix . 'team_rpi';
+	$this->t_team_rpo 		= $this->tblprefix . 'team_rpo';
+	$this->t_team_ids_names 		= $this->tblprefix . 'team_ids_names';
 	$this->t_team_ids_team_id 	= $this->tblprefix . 'team_adv';
 	$this->t_team_profile 		= $this->tblprefix . 'team_profile';
 	$this->t_plugins 		= $this->tblprefix . 'plugins';
@@ -279,7 +281,7 @@ function search_teams($search_id, $criteria) {
 	
 	// loop through each field and add it to the 'where' clause.
 	// Search team, profile and ids
-	foreach (array('adv.team_id', 'adv.divisionname', 'names.team_name', 'prof.email', 'prof.name') as $field) {
+	foreach (array('adv.team_id', 'adv.divisionname', 'names.team_name', 'names.owner_name', 'prof.email') as $field) {
 		foreach ($tokens as $t) {
 			$token = $this->token_to_sql($t, $criteria['mode']);
             $inner[] = "$field LIKE '$token'";
@@ -300,7 +302,7 @@ function search_teams($search_id, $criteria) {
 	// NOTE: SQL_CALC_FOUND_ROWS is MYSQL specific and would need to be
 	// changed for other databases.
 	$cmd  = "SELECT SQL_CALC_FOUND_ROWS DISTINCT adv.team_id " .
-		"FROM $this->t_team_ids_team_name names, $this->t_team_adv adv, $this->t_team_profile prof " .
+		"FROM $this->t_team_ids_names names, $this->t_team_adv adv, $this->t_team_profile prof " .
 		"WHERE adv.team_id=names.team_id AND adv.team_id=prof.team_id ";
 	
 	$cmd .= "AND ($where) ";
@@ -486,19 +488,19 @@ function get_team_profile($team_id, $key = 'team_id') {
 
 	$team = $this->db->fetch_row(1, $cmd);
 
-	$team['team_name'] = implode($this->db->fetch_list("SELECT team_name FROM $this->t_team_ids_team_name WHERE team_id=" . $team['team_id'] . " ORDER BY lastseen DESC LIMIT 1"));
+	if (!empty($team)) {
+		$team['owner_name'] = implode($this->db->fetch_list("SELECT owner_name FROM $this->t_team_ids_names WHERE team_id=" . $team['team_id'] . " AND team_name='' ORDER BY lastseen DESC LIMIT 1"));
+	
+		$team['team_name'] = implode($this->db->fetch_list("SELECT team_name FROM $this->t_team_ids_names WHERE team_id=" . $team['team_id'] . " AND owner_name='' ORDER BY lastseen DESC LIMIT 1"));
+	}
 
 	return $team ? $team : false;
 }
 
 // $args can be a team ID, or an array of arguments
 function get_team($args = array(), $minimal = false) {
-	if (!is_array($args)) {
-		$id = $args;
-		$args = array( 'team_id' => $id );
-	}
 	$args += array(
-		'season'		=> null,
+		'season_c'		=> null,
 		'team_id'		=> 0,
 		'minimal'	=> false, // if true, overrides all 'load...' options to false (or use $minimal parameter)
 		'loadadvanced'	=> 1,
@@ -527,16 +529,19 @@ function get_team($args = array(), $minimal = false) {
 		'idlimit'	=> 10,
 	);
 	$team = array();
-	$id = $this->db->escape($args['team_id']);
+	$id = $args['team_id'];
 	if (!is_numeric($id)) $id = 0;
 
 	if ($minimal) $args['minimal'] = true;
+	$season_c = $args['season_c'];
 
 	// Load overall team information
-	$cmd  = "SELECT wc.*,names.*,team.*,adv.*,def.*,off.*,prof.* FROM ($this->t_team_ids_team_name names, $this->t_team team, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off, $this->t_team_profile prof) ";
+	$cmd  = "SELECT wc.*,names.*,team.*,adv.*,def.*,off.*,prof.* FROM ($this->t_team_ids_names names, $this->t_team team, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off, $this->t_team_profile prof) ";
 	$cmd .= "LEFT JOIN $this->t_team_wc wc ON wc.team_id=team.team_id ";
 	$cmd .= "WHERE team.team_id='$id' AND team.team_id=adv.team_id AND team.team_id=def.team_id AND team.team_id=off.team_id AND team.team_id=prof.team_id ";
+	$cmd .= "AND adv.season='$season_c' AND def.season='$season_c' AND off.season='$season_c' ";
 	$cmd .= "LIMIT 1 ";
+
 	$team = $this->db->fetch_row(1, $cmd);
 
 	// Load team division information
@@ -647,17 +652,33 @@ function get_team($args = array(), $minimal = false) {
 	$team['games_back'] = $this->get_playoff_status($team['games_played'], $team['games_back']);
 	$team['games_back_wc'] = $this->get_playoff_status($team['games_played'], $team['games_back_wc']);
 
-	// Load team identities.
+	// Load team names.
 	if (!$args['minimal']) {
 		$loadlist = array();
 		if ($args['loadnames']) $loadlist[] = 'team_name';
 		if ($loadlist) {
 			foreach ($loadlist as $v) {
-				$tbl = $this->{'t_team_ids_' . $v};
-				$cmd  = "SELECT $v,totaluses,lastseen FROM $tbl WHERE team_id='$id' ";
+				$tbl = $this->{'t_team_ids_names'};
+				$cmd  = "SELECT $v,lastseen FROM $tbl WHERE team_id='$id' AND owner_name='' ";
 				$cmd .= $this->getsortorder($args, 'id');
 				$team['ids_' . $v] = $this->db->fetch_rows(1, $cmd);
-				$team[$v] = $team['ids_'.$v][0][$v];
+				$team[$v] = $team['ids_' . $v][0][$v];
+#				print "<pre>"; print_r($team['ids_'.$v]); print "</pre>";
+			}
+		}
+	}
+
+	// Load owner names.
+	if (!$args['minimal']) {
+		$loadlist = array();
+		if ($args['loadnames']) $loadlist[] = 'owner_name';
+		if ($loadlist) {
+			foreach ($loadlist as $v) {
+				$tbl = $this->{'t_team_ids_names'};
+				$cmd  = "SELECT $v,lastseen FROM $tbl WHERE team_id='$id' AND team_name='' ";
+				$cmd .= $this->getsortorder($args, 'id');
+				$team['ids_' . $v] = $this->db->fetch_rows(1, $cmd);
+				$team[$v] = $team['ids_' . $v][0][$v];
 #				print "<pre>"; print_r($team['ids_'.$v]); print "</pre>";
 			}
 		}
@@ -727,7 +748,7 @@ function get_division($args = array(), $minimal = false) {
 	$values .= $this->_values($fields, $types);
 
 	$cmd  = "SELECT $values ";
-	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_team_name names, $this->t_team_def def, $this->t_team_off off ";
+	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_names names, $this->t_team_def def, $this->t_team_off off ";
 	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=" . $args['season'] . " ";
 	$args['where'] ??= null;
 	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
@@ -839,7 +860,6 @@ function get_division($args = array(), $minimal = false) {
 	// unset a bunch of unnecessary crap
 	unset($division['team_id']);
 	unset($division['team_name']);
-	unset($division['totaluses']);
 	unset($division['firstseen']);
 	unset($division['lastseen']);
 	unset($division['games_back']);
@@ -865,7 +885,7 @@ function get_tc_count($type, $limit) {
 	$values = "name.*,adv.team_id team_n,adv.divisionname,adv.games_back";
 
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id=name.team_id ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id=name.team_id ";
 	$cmd .= "HAVING games_back='$type' OR games_back='dtlc'";
 
 	$results = array();
@@ -900,7 +920,7 @@ function get_award($args = array()) {
 		'enabled'		=> 1,
 		'idx'			=> 0,
 		'negative'		=> 0,
-		'name'			=> '',
+		'award_name'			=> '',
 		'groupname'		=> '',
 		'phrase'		=> '',
 		'expr'			=> '',
@@ -936,7 +956,7 @@ function get_award($args = array()) {
 	$cmd  = "SELECT $expr awardvalue,$values FROM $this->t_team_adv adv ";
 	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND adv.season = def.season ";
 	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND adv.season = off.season ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id ";
     
     // to get rid of duplicate team listings
 	$cmd  .= "GROUP BY team_n, season_n ";
@@ -949,7 +969,7 @@ function get_award($args = array()) {
 	$award = array(
 		'idx'			=> $args['idx'],
 		'negative'		=> $args['negative'],
-		'name'			=> $args['name'],
+		'award_name'	=> $args['award_name'],
 		'phrase'		=> $args['phrase'],
 		'format'		=> $args['format'],
 		'description'	=> $args['description'],
@@ -1036,7 +1056,7 @@ function get_team_list($args = array()) {
 	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND def.season=" . $args['season'] . " ";
 	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND off.season=" . $args['season'] . " ";
 	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 	
@@ -1140,7 +1160,7 @@ function get_basic_team_list($args = array()) {
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
 	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
 	$cmd .= "LEFT JOIN $this->t_user user ON prof.userid = user.userid ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 
@@ -1173,7 +1193,7 @@ function get_basic_team_list($args = array()) {
 	}
 
 	// Set divisionname if it has not been set.
-	$list[0]['divisionname'] ??= 'na';
+	if ($list) $list[0]['divisionname'] ??= 'na';
 
 	return $list;
 }
@@ -1243,7 +1263,7 @@ function get_wc_list($args = array()) {
 		$values = $args['fields'];
 	}
 
-	$cmd  = "SELECT $values FROM ($this->t_team team, $this->t_team_wc wc, $this->t_team_ids_team_name name, $this->t_team_profile prof, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off) ";
+	$cmd  = "SELECT $values FROM ($this->t_team team, $this->t_team_wc wc, $this->t_team_ids_names name, $this->t_team_profile prof, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off) ";
     // not currently functional
 /*	if ($args['joinccinfo']) {
 		$cmd .= "LEFT JOIN $this->t_geoip_cc c ON c.cc=pp.cc ";
@@ -1321,6 +1341,56 @@ function get_wc_list($args = array()) {
 	return $list;
 }
 
+function get_team_roster($args = array(), $minimal = false) {
+	if (!is_array($args)) {
+		$id = $args;
+		$args = array( 'team_id' => $id );
+	}
+	$args += array(
+		'season'		=> null,
+		'team_id'		=> 0,
+		'loadpitcher'	=> 1,
+		'loadposition'	=> 1,
+		'loadcounts'	=> 1,
+		'pitchersort'	=> 'pi_innings_pitched',
+		'pitcherorder'	=> 'desc',
+		'pitcherstart'	=> 0,
+		'pitcherlimit'	=> 24,
+		'positionsort'	=> 'po_at_bats',
+		'positionorder'	=> 'desc',
+		'positionstart'	=> 0,
+		'positionlimit'	=> 24,
+	);
+	$roster = array();
+	$id = $args['team_id'];
+	if (!is_numeric($id)) $id = 0;
+
+	$season = $args['season'];
+
+	if ($args['loadcounts']) {
+		$roster['totalpitcher'] 	= $this->db->count($this->t_team_rpi, '*', "team_id='$id' AND season='$season'");
+		$roster['totalposition'] 	= $this->db->count($this->t_team_rpo, '*', "team_id='$id' AND season='$season'");
+	}
+
+	// Load pitcher stats for the team.
+	if ($args['loadpitcher']) {
+		$cmd  = "SELECT * FROM $this->t_team_rpi ";
+		$cmd .= "WHERE team_id='$id' AND season='$season' ";
+		$cmd .= $this->getsortorder($args, 'pitcher');
+		$roster['pitcher'] = $this->db->fetch_rows(1, $cmd);
+	}
+
+	// Load offensive stats for the team.
+	if ($args['loadposition']) {
+		$cmd  = "SELECT * FROM $this->t_team_rpo ";
+		$cmd .= "WHERE team_id='$id' AND season='$season' ";
+		$cmd .= $this->getsortorder($args, 'position');
+		$roster['position'] = $this->db->fetch_rows(1, $cmd);
+	}
+	
+	return $roster;
+}
+
 // returns some basic summarized stats from the table
 function get_sum($args = array(), $table = null) {
 	if ($table === null) $table = $this->t_team_adv;	// best table to summarize from
@@ -1351,7 +1421,7 @@ function get_total_teams($args = array()) {
 		$cmd  = "SELECT count(*) FROM $this->t_team_adv adv ";
 		$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
 		$cmd .= "LEFT JOIN $this->t_user user ON prof.userid = user.userid ";
-		$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_team_name GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+		$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
     
     	// to get rid of duplicate team listings
 		$cmd  .= "GROUP BY name.team_id ";
@@ -1420,58 +1490,6 @@ function delete_team_profile($team_id) {
 	list($userid) = $this->db->fetch_row(0,"SELECT userid FROM $this->t_team_profile WHERE team_id=$_id");
 	$this->db->delete($this->t_team_profile, 'team_id', $team_id);
 	$cms->user->delete_user($userid);
-}
-
-// deletes a team and all of his stats. If $keep_profile is true than their profile is saved.
-function delete_team($team_id, $keep_profile = TRUE) { 
-	$_team_id = $this->db->escape($team_id, true);
-	// get team team_id and userid 
-	list($team_id,$userid) = $this->db->fetch_row(0,"SELECT p.team_id,userid FROM $this->t_team_adv p
-		LEFT JOIN $this->t_team_profile pp ON pp.team_id=p.team_id
-		WHERE p.team_id=$_team_id"
-	);
-
-	// remove historical data related to this team ID
-	$tables = array( 't_team_data' );
-	foreach ($tables as $table) {
-		$t = $this->$table;
-		$ids = $this->db->fetch_list("SELECT dataid FROM $t WHERE team_id=$_team_id");
-		while (count($ids)) {
-			// limit how many we delete at a time, so we're sure the query is never too large
-			$list = array_splice($ids, 0, 100);
-			$this->db->query("DELETE FROM " . $t . $this->tblsuffix . " WHERE dataid IN (" . join(', ', $list) . ")");
-		}
-		$this->db->delete($t, 'team_id', $team_id);
-	}
-
-	// remove simple data related to this team ID
-	$tables = array( 't_team_ids', 't_team_adv' );
-	foreach ($tables as $table) {
-		// don't use $_team_id, since delete() will escape it
-		$this->db->delete($this->$table, 'team_id', $team_id);
-	}
-
-	// delete the team profile if specified
-	if (!$keep_profile) {
-		$this->delete_team_profile($team_id);
-	}
-
-	// remove team from any awards they are ranked in
-	// this will probably be the slowest part of a team deletion
-	if ($this->db->count($this->t_awards_teams, '*', "team_id=$_team_id")) {
-		$this->db->delete($this->t_awards_teams, 'team_id', $team_id);
-		// fix awards that had this team as #1
-		$awardids = $this->db->fetch_list("SELECT id FROM $this->t_awards WHERE topteam_id=$_team_id");
-		foreach ($awardids as $id) {
-			list($topteam_id, $topteamvalue) = $this->db->fetch_list("SELECT team_id, value FROM $this->t_awards_teams WHERE awardid=$id ORDER BY idx LIMIT 1");
-			$this->db->update($this->t_awards, array( 'topteam_id' => $topteam_id, 'topteamvalue' => $topteamvalue ), 'id', $id);
-		}
-	}
-
-	// and finally; delete the main team record
-	$this->db->delete($this->t_team_adv, 'team_id', $team_id);
-
-	return true;
 }
 
 function getsortorder($args, $prefix='') {
@@ -2126,23 +2144,22 @@ function reset_stats($keep = array()) {
 	);
 	$errors = array();
     
-	$empty_mod = array( 't_team_data' );
 	$empty = array( 
 		't_errlog',
 		't_team',
 		't_team_adv', 
 		't_team_def', 
 		't_team_off', 
-		't_team_wc', 
-//		't_team_aliases', 't_team_bans',
-		't_team_data',
-		't_team_ids_team_name',
+		't_team_wc',
+		't_team_ids_names',
 //		't_team_profile', 
 //		't_plugins',
 		't_search_results',
 		't_state', 
 //		't_user',
 		't_seasons_h',
+		't_team_rpi',
+		't_team_rpo',
 	);
 
 	// delete most of everything
@@ -2156,7 +2173,6 @@ function reset_stats($keep = array()) {
 	// delete optional data ...
 	$empty_extra = array();
 	if (!$keep['team_profiles']) $empty_extra[] = 't_team_profile';
-	if (!$keep['team_aliases']) $empty_extra[] = 't_team_aliases';
 	foreach ($empty_extra as $t) {
 		$tbl = $this->$t;
 		if (!$this->db->truncate($tbl) and !preg_match("/exist/", $this->db->errstr)) {
@@ -2212,6 +2228,8 @@ function division_teams_table_mod(&$table) {}
 function team_advanced_table_mod(&$table) {}
 function team_defence_table_mod(&$table) {}
 function team_offence_table_mod(&$table) {}
+function team_pitcher_table_mod(&$table) {}
+function team_position_table_mod(&$table) {}
 function division_advanced_table_mod(&$table) {}
 function division_defence_table_mod(&$table) {}
 function division_offence_table_mod(&$table) {}

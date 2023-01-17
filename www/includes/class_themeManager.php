@@ -92,7 +92,7 @@ function load_theme($url, $skip_file = false) {
 	$ok = false;
 	if (!$this->error() and $this->xml) {
 		$ok = $this->validate_theme($skip_file);
-		if ($ok and file_exists(catfile($this->template_dir, $this->xml['name']))) {
+		if ($ok and file_exists(catfile($this->template_dir, $this->xml['theme_name']))) {
 			$this->xml['theme_exists'] = true;
 		}
 	}
@@ -103,10 +103,10 @@ function load_theme($url, $skip_file = false) {
 // loads the specified theme from the database, not an xml file
 function load_theme_db($name) {
 	$ok = true;
-	$t = $this->db->fetch_row(1, "SELECT * FROM {$this->ps->t_config_themes} WHERE name=" . $this->db->escape($name, true));
+	$t = $this->db->fetch_row(1, "SELECT * FROM {$this->ps->t_config_themes} WHERE theme_name=" . $this->db->escape($name, true));
 	if ($t) {
 		$this->xml = $t;
-		$this->xml_name($t['name']);
+		$this->xml_name($t['theme_name']);
 		$this->xml_parent($t['parent']);
 		$this->xml_version($t['version']);
 		$this->xml_title($t['title']);
@@ -162,7 +162,7 @@ function install() {
 	if ($ok) {
 		$created = array();
 		// loop through each file in the archive and save it to our local theme directory.
-		// every file in the zip must have the theme 'name' as the root directory, or ignore it.
+		// every file in the zip must have the theme 'theme_name' as the root directory, or ignore it.
 		while ($zip_entry = zip_read($this->zip)) {
 			zip_entry_open($this->zip, $zip_entry);
 			$name = zip_entry_name($zip_entry);
@@ -259,7 +259,7 @@ function delete_db($name = null) {
 		$name = $this->xml_name();
 	}
 	if (!$name) return false;
-	$ok = $this->db->delete($this->ps->t_config_themes, 'name', $name);
+	$ok = $this->db->delete($this->ps->t_config_themes, 'theme_name', $name);
 	if (!$ok) {
 		$this->error($this->db->errstr);
 	}
@@ -269,9 +269,9 @@ function delete_db($name = null) {
 // saves the theme to the database.
 function save_db() {
 	if (!$this->theme_xml()) return false;
-	$exists = $this->db->fetch_row(1, "SELECT * FROM {$this->ps->t_config_themes} WHERE name LIKE " . $this->db->escape($this->xml_name(), true));
+	$exists = $this->db->fetch_row(1, "SELECT * FROM {$this->ps->t_config_themes} WHERE theme_name LIKE " . $this->db->escape($this->xml_name(), true));
 	$set = array();
-	$set['name']		= $this->xml_name();
+	$set['theme_name']		= $this->xml_name();
 	$set['parent']		= $this->xml_parent() ? $this->xml_parent() : null;
 	$set['enabled'] 	= $exists ? ($exists['enabled']?1:0) : 1;
 	$set['version']		= $this->xml_version();
@@ -283,7 +283,7 @@ function save_db() {
 	$set['description']	= $this->xml_description();
 
 	if ($exists) {
-		$ok = $this->db->update($this->ps->t_config_themes, $set, 'name', $set['name']);
+		$ok = $this->db->update($this->ps->t_config_themes, $set, 'theme_name', $set['theme_name']);
 	} else {
 		$ok = $this->db->insert($this->ps->t_config_themes, $set);
 	}
@@ -296,7 +296,7 @@ function save_db() {
 
 // enables or disables the theme
 function toggle($enabled) {
-	$ok = $this->db->update($this->ps->t_config_themes, array( 'enabled' => $enabled ), 'name', $this->xml_name());
+	$ok = $this->db->update($this->ps->t_config_themes, array( 'enabled' => $enabled ), 'theme_name', $this->xml_name());
 	return $ok;
 }
 
@@ -380,13 +380,13 @@ function validate_theme($skip_file = false) {
 	// make sure the name exists
 	if ($this->xml_name() == '') {
 		$this->error($cms->trans("No name defined"), PSTHEME_ERR_VALUE);
-		$this->invalid('name', $cms->trans("A name must be defined"));
+		$this->invalid('theme_name', $cms->trans("A name must be defined"));
 	}
 
 	// make sure the name is valid
 	if ($this->xml_name() != '' and !$this->re_match('/^[\w\d_\.-]+$/', $this->xml_name())) {
 		$this->error($cms->trans("Invalid name defined"), PSTHEME_ERR_VALUE);
-		$this->invalid('name', $cms->trans("Invalid characters found in name"));
+		$this->invalid('theme_name', $cms->trans("Invalid characters found in name"));
 	}
 
 	if (!$skip_file) {
@@ -429,7 +429,7 @@ function validate_theme($skip_file = false) {
 
 	// if there's a parent defined make sure we have the appropriate parent already installed
 	if (!$this->error() and $this->xml_parent()) {
-		list($exists) = $this->db->fetch_list("SELECT 1 FROM {$this->ps->t_config_themes} WHERE name LIKE " . $this->db->escape($this->xml_parent(), true));
+		list($exists) = $this->db->fetch_list("SELECT 1 FROM {$this->ps->t_config_themes} WHERE theme_name LIKE " . $this->db->escape($this->xml_parent(), true));
 		if (!$exists) {
 			$this->error("Child theme '" . $this->xml_name() . "' requires the parent '" . $this->xml_parent() . "' to be installed.", PSTHEME_ERR_VALUE);
 			$this->invalid('parent', "Child theme '" . $this->xml_name() . "' requires the parent '" . $this->xml_parent() . "' to be installed.");
@@ -449,7 +449,7 @@ function re_match($regex, $str) {
 
 // readonly accessor functions for loaded XML theme values
 function theme_xml() 		{ return $this->xml ? $this->xml : ''; }
-function xml_name() 		{ return $this->xml ? trim($this->xml['name']) : ''; }
+function xml_name() 		{ return $this->xml ? trim($this->xml['theme_name']) : ''; }
 function xml_parent() 		{ return $this->xml ? trim($this->xml['parent']) : ''; }
 function xml_website() 		{ return $this->xml ? trim($this->xml['website']) : ''; }
 function xml_version() 		{ return $this->xml ? trim($this->xml['version']) : ''; }
@@ -471,7 +471,7 @@ function theme_dirs($dir = null) {
 	if (!$dh) return false;
 	while (($file = readdir($dh)) !== false) {
 		if (!is_dir(catfile($dir, $file)) or substr($file,0,1) == '.') continue;	// ignore non-directories and special
-		@list($installed) = $this->db->fetch_list("SELECT 1 FROM {$this->ps->t_config_themes} WHERE name LIKE " . $this->db->escape($file, true));
+		@list($installed) = $this->db->fetch_list("SELECT 1 FROM {$this->ps->t_config_themes} WHERE theme_name LIKE " . $this->db->escape($file, true));
 		$xml = catfile($dir, $file, 'theme.xml');
 		if ($installed or !file_exists($xml)) continue;		// ignore installed themes, or directories w/o a theme.xml
 		$t = new PsychoThemeManager($this->ps, $this->template_dir);

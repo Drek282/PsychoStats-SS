@@ -21,7 +21,7 @@
 {else}
 <p>
 	<#Thank you for registering your team#>
-	<a href="{url _base='team.php' id=$team.team_id}"><b>{$team.name|escape}</b></a>{if $team.rank} (rank {$team.rank|commify}){/if}
+	<a href="{url _base='team.php' id=$team.team_id}"><b>{$team.owner_name|escape}</b></a>{if $team.rank} (rank {$team.rank|commify}){/if}
 {if $conf.main.site_name}
 	<#on#> <b><a href="{if $conf.main.site_url}{$conf.main.site_url|escape}{else}{url _base='index.php'}{/if}">{$conf.main.site_name|escape}</a></b>!
 {/if}

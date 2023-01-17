@@ -11,7 +11,7 @@ CREATE TABLE `psss_team_adv` (
   `pythag` decimal(4,3) NOT NULL default '0.000',
   `pythag_plus` decimal(4,3) NOT NULL default '0.000',
   PRIMARY KEY  (`season`,`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE `psss_team_def` (
   `season` smallint unsigned default NULL,
@@ -38,7 +38,7 @@ CREATE TABLE `psss_team_def` (
   `opp_caught_stealing` smallint unsigned NOT NULL default '0',
   `team_drat` decimal(4,2) NOT NULL default '0.00',
   PRIMARY KEY  (`season`,`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE `psss_team_off` (
   `season` smallint unsigned default NULL,
@@ -68,21 +68,78 @@ CREATE TABLE `psss_team_off` (
   `left_on_base_percent` decimal(3,2) NOT NULL default '0.00',
   `team_srat` decimal(4,2) NOT NULL default '0.00',
   PRIMARY KEY  (`season`,`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE `psss_team_wc` (
   `season` smallint unsigned default NULL,
   `team_id` smallint unsigned NOT NULL default '0',
   `games_back_wc` varchar(64) default NULL,
   PRIMARY KEY  (`season`,`team_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+
+CREATE TABLE `psss_team_rpi` (
+  `season` smallint unsigned default NULL,
+  `team_id` smallint unsigned NOT NULL default '0',
+  `player_name` varchar(128) NOT NULL default '',
+  `pi_wins` smallint unsigned NOT NULL default '0',
+  `pi_losses` smallint unsigned NOT NULL default '0',
+  `pi_win_percent` decimal(4,3) NOT NULL default '0.000',
+  `pi_era` decimal(10,2) NOT NULL default '0.00',
+  `pi_games_played` smallint unsigned NOT NULL default '0',
+  `pi_games_started` smallint unsigned NOT NULL default '0',
+  `pi_complete_games` smallint unsigned NOT NULL default '0',
+  `pi_shutouts` smallint unsigned NOT NULL default '0',
+  `pi_run_support` decimal(3,1) unsigned NOT NULL default '0.0',
+  `pi_saves` smallint unsigned NOT NULL default '0',
+  `pi_innings_pitched` decimal(5,1) NOT NULL default '0.0',
+  `pi_runs_against` smallint unsigned NOT NULL default '0',
+  `pi_earned_runs_against` smallint unsigned NOT NULL default '0',
+  `pi_hits_surrendered` smallint unsigned NOT NULL default '0',
+  `pi_opp_batting_average` decimal(4,3) NOT NULL default '0.000',
+  `pi_opp_walks` smallint unsigned NOT NULL default '0',
+  `pi_whip` decimal(4,2) NOT NULL default '0.00',
+  `pi_strikeouts` smallint unsigned NOT NULL default '0',
+  `pi_wild_pitches` smallint unsigned NOT NULL default '0',
+  PRIMARY KEY  (`season`,`team_id`,`player_name`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+
+CREATE TABLE `psss_team_rpo` (
+  `season` smallint unsigned default NULL,
+  `team_id` smallint unsigned NOT NULL default '0',
+  `player_name` varchar(128) NOT NULL default '',
+  `po_games_played` smallint unsigned NOT NULL default '0',
+  `po_at_bats` smallint unsigned NOT NULL default '0',
+  `po_runs` smallint unsigned NOT NULL default '0',
+  `po_hits` smallint unsigned NOT NULL default '0',
+  `po_doubles` smallint unsigned NOT NULL default '0',
+  `po_triples` smallint unsigned NOT NULL default '0',
+  `po_home_runs` smallint unsigned NOT NULL default '0',
+  `po_rbis` smallint unsigned NOT NULL default '0',
+  `po_walks` smallint unsigned NOT NULL default '0',
+  `po_strikeouts` smallint unsigned NOT NULL default '0',
+  `po_batting_average` decimal(4,3) NOT NULL default '0.000',
+  `po_on_base_average` decimal(4,3) NOT NULL default '0.000',
+  `po_slugging_average` decimal(4,3) NOT NULL default '0.000',
+  `po_ops` decimal(4,3) NOT NULL default '0.000',
+  `po_woba` decimal(4,3) NOT NULL default '0.000',
+  `po_sacrifice_hits` smallint unsigned NOT NULL default '0',
+  `po_sacrifice_fails` smallint unsigned NOT NULL default '0',
+  `po_sacrifice_flies` smallint unsigned NOT NULL default '0',
+  `po_gidps` smallint unsigned NOT NULL default '0',
+  `po_stolen_bases` smallint unsigned NOT NULL,
+  `po_caught_stealing` smallint unsigned NOT NULL default '0',
+  `po_outstanding_plays` smallint unsigned NOT NULL default '0',
+  `po_fielding_errors` smallint unsigned NOT NULL default '0',
+  `po_passed_balls` smallint unsigned NOT NULL default '0',
+  PRIMARY KEY  (`season`,`team_id`,`player_name`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- Moved from defaults.sql.
 INSERT INTO `psss_config` (`id`, `conftype`, `section`, `var`, `value`, `label`, `type`, `locked`, `verifycodes`, `options`, `help`) 
   VALUES 
     (1,'main',NULL,'meta_keywords','PsychoStats Team Statistics Scoresheet Baseball','Site HTML Meta Key Words','text',0,'','','These are the HTML meta key words for your PsychoStats.  They are used by search engines to provide search results.');
 
-INSERT INTO `psss_config_awards` (`id`, `enabled`, `idx`, `negative`, `name`, `groupname`, `phrase`, `expr`, `order`, `where`, `limit`, `format`, `description`)
+INSERT INTO `psss_config_awards` (`id`, `enabled`, `idx`, `negative`, `award_name`, `groupname`, `phrase`, `expr`, `order`, `where`, `limit`, `format`, `description`)
   VALUES
     (1, 1, 10, 0, 'Highest Single Season Team Win %', '', '{$team.link} has the highest historical single season win % at {$award.topteamvalue} in {$award.awardseason}', '{$win_percent}', 'desc', '{$games_played} > 81', 5, '', 'This Hall of Fame award is for the team with the highest single season winning percentage in league history.'),
     (2, 1, 20, 0, 'Highest Single Season Average Runs Scored per Game', '', '{$team.link} has the highest historical single season average runs scored per game at {$award.value} in {$award.awardseason}', '{$run_support}', 'desc', '{$games_played} > 81', 5, '%.1f', 'This Hall of Fame award is for the team that has scored the highest average runs per game over a single season in league history.'),

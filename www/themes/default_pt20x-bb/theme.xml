@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <theme>
-	<name>default_pt20x-bb</name>
+	<theme_name>default_pt20x-bb</theme_name>
 	<parent>default</parent>
 	<version>0.0</version>
 	<title>PT20X Scoresheet Baseball Theme</title>

@@ -415,23 +415,23 @@ function theme($new = null, $in_db = true) {
 		// load the theme from the database
 		if (!$this->loaded_themes[$new] and $in_db) {
 			$loaded = true;
-			$t = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE name=%s and enabled <> 0", 
+			$t = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE theme_name=%s and enabled <> 0", 
 				$this->cms->db->table('config_themes'),
 				$this->cms->db->escape($new, true)
 			));
 			if (!$t) {
-				trigger_error("<b>PsychoTheme:</b> Attempt to set \$theme to an invalid name '<b>$new</b>'. " . 
-					"Theme not installed or enabled, please check your theme configuration.", 
-					E_USER_WARNING
-				);
-				return $this->theme;
+				$new = 'default';
+				$t = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE theme_name=%s and enabled <> 0", 
+					$this->cms->db->table('config_themes'),
+					$this->cms->db->escape($new, true)
+				));
 			}
 			$this->loaded_themes[$new] = $t;
             $this->loaded_themes[$t['parent']] = $this->loaded_themes[$t['parent']] ?? null;
 			if ($t['parent'] and !$this->loaded_themes[$t['parent']]) { 
 				// load the parent theme ...
 				// the parent theme doesn't have to be enabled
-				$p = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE name=%s", 
+				$p = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE theme_name=%s", 
 					$this->cms->db->table('config_themes'),
 					$this->cms->db->escape($t['parent'], true)
 				));
@@ -447,7 +447,7 @@ function theme($new = null, $in_db = true) {
 		if (!$this->loaded_themes[$new] and !$in_db) {
 			$loaded = true;
 			$this->loaded_themes[$new] = array(
-				'name' => $new,
+				'theme_name' => $new,
 				'parent' => null,
 				'enabled' => 1, 
 				'title' => $new,
@@ -519,7 +519,7 @@ function is_theme($theme, $is_enabled = false) {
 	foreach ((array)$this->template_dir as $path) {
 		if (is_dir($path . DIRECTORY_SEPARATOR . $theme)) {
 			if ($is_enabled) {
-				list($ok) = $this->cms->db->fetch_list("SELECT 1 FROM " . $this->cms->db->table("config_themes") . " WHERE name LIKE " . $this->cms->db->escape($theme, true) . " AND enabled <> 0");
+				list($ok) = $this->cms->db->fetch_list("SELECT 1 FROM " . $this->cms->db->table("config_themes") . " WHERE theme_name LIKE " . $this->cms->db->escape($theme, true) . " AND enabled <> 0");
 				if (!$ok) return false;
 			}
 			return $path . DIRECTORY_SEPARATOR . $theme;
@@ -589,7 +589,7 @@ function get_language_list($theme = null) {
 }
 
 function get_theme_list() {
-	$list = $this->cms->db->fetch_rows(1, "SELECT * FROM " . $this->cms->db->table('config_themes') . " WHERE enabled <> 0 ORDER BY title,name");
+	$list = $this->cms->db->fetch_rows(1, "SELECT * FROM " . $this->cms->db->table('config_themes') . " WHERE enabled <> 0 ORDER BY title,theme_name");
 	return $list;
 }
 

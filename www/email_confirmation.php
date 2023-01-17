@@ -81,7 +81,7 @@ if ($valid) {
 		$ps->db->commit();
 
 		// load this team
-		$team = $ps->get_team(array('team_id' 	=> $userinfo['team_id'],));
+		$team = $ps->get_team_profile($userinfo['userid'], 'userid');
 
 		// Setup the Admin CP link for the notification email.
 		$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";

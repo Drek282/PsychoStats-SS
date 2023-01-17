@@ -2,6 +2,21 @@
 
 
 Version 0.0.3b (in progress)
+* [Added] Team rosters to team page.
+* [Changed] Made problematic "name" columns more specific.
+* [Added] User accounts are now linked to owner names.
+* [Changed] User accounts linked to owner name will now automatically be deleted in the Python backend when the owner name changes, unless they are the last remaining admin account.  In that case the account will be unlinked from the team.
+* [Fixed] Error when admin has not installed theme indicated in current session cookie.
+* [Changed] Home link title now shows the site name instead of site url.
+* [Fixed] New year broke current season variable.
+* [Fixed] "All Teams" management menu errors when data tables are empty.
+* [Tweaked] Simplified Management Menu link url's in Admin CP.
+* [Removed] Requirement for html2text module for Python backend.
+* [Improved] Regular expressions in Python backend now make use of html tags.
+* [Removed] Missed code related to team aliases.
+* [Changed] firstseen and lastseen SQL columns from datetime to date for team and owner names tables.
+* [Removed] totaluses SQL column from team and owner names tables.
+* [Changed] MySQL engine changed from MYISAM to INNODB.
 
 Version 0.0.2b (12/29/2022)
 * [Fixed] Cleaned up a significant number of html errors and warnings.

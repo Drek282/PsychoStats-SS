@@ -56,7 +56,8 @@ if ($id) {
 	if ($team and $team['team_id'] == null) { // no matching profile; lets create one (all teams should have one, regardless)
 		$_id = $ps->db->escape($id, true);
 		list($uid) = $ps->db->fetch_list("SELECT team_id FROM $ps->t_team WHERE team_id=$_id");
-		list($name) = $ps->db->fetch_list("SELECT team_name FROM $ps->t_team_ids_name WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
+		list($team_name) = $ps->db->fetch_list("SELECT team_name FROM $ps->t_team_ids_name WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
+		list($owner_name) = $ps->db->fetch_list("SELECT owner_name FROM $ps->t_team_ids_name WHERE team_id=$_id ORDER BY lastseen DESC LIMIT 1");
 		$team['team_id'] = $uid;
 	}
 
@@ -102,7 +103,7 @@ if ($cms->user->is_admin() and $del and $id and $team['team_id'] == $id) {
 // create the form variables
 $form = $cms->new_form();
 $form->default_modifier('trim');
-$form->field('name');
+$form->field('owner_name');
 $form->field('youtube');
 $form->field('website');
 $form->field('icon');
@@ -130,6 +131,13 @@ if ($submit) {
 	$valid = !$form->has_errors();
 	// protect against CSRF attacks
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
+
+	// can only complete an owner name, not change it
+	$match = "/" . $team['owner_name'] . "/";
+	if (!empty($input['owner_name']) and !preg_match($match, $input['owner_name'])) {
+		$form->error('owner_name', $cms->trans("You can only add to an incomplete name."));
+        $form->set('owner_name', $team['owner_name']);
+	}
 
 	// force a protocol prefix on the website url (http://)
 	if (!empty($input['website']) and !preg_match('|^\w+://|', $input['website'])) {
@@ -228,7 +236,12 @@ if ($submit) {
 		// update team record (even if the user failed to insert above)
 		if ($id) {
 			if ($input['email'] == '') unset($input['email']);
+			$owner_name = $input['owner_name'];
+			unset($input['owner_name']);
 			$ok = $ps->db->update($ps->t_team_profile, $input, 'team_id', $team['team_id']);
+			$cmd  = "UPDATE $ps->t_team_ids_names SET owner_name = '$owner_name' ";
+			$cmd .= "WHERE team_id='" . $team['team_id'] . "' AND owner_name='" . $team['owner_name'] . "'";
+			if ($ok) $ok = $ps->db->query($cmd);
 		}
 
 		// update user record if something was changed

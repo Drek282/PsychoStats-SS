@@ -27,20 +27,35 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<label class="for" for="confirmed1"><input id="confirmed1" name="confirmed" value="1" {if  $form.confirmed}checked="" {/if}type="radio" class="radio"> Yes</label>
 	<label class="for" for="confirmed2"><input id="confirmed2" name="confirmed" value="0" {if !$form.confirmed}checked="" {/if}type="radio" class="radio"> No</label>
 </div>
+
+{if $id}
 <div class="notes">
 	<h4><#User Name#></h4>
 	<p><#Cannot be modified.#></p>
 </div>
-
 <div>
 	<label><#User Name#>:</label>
 	<span class="nomodify">{$u.username|escape}</span>
+	<input name="username" value="{$u.username|escape}" type="hidden">
 </div>
+{else}
+<div{if $errors.username} class="err"{/if}>
+	<p class="err" id="err-username">{$errors.username|escape}</p>
+	<label><#Username#>:</label>
+	<input name="username" value="{$form.username|escape}" type="text" class="field">
+	<p class="small">
+		<#This is the user name the user will use to log into the account.#>
+	</p>
+</div>
+{/if}
 
-<div{if $errors.name} class="err"{/if}>
-	<p class="err" id="err-name">{$errors.name|escape}</p>
+<div{if $errors.owner_name} class="err"{/if}>
+	<p class="err" id="err-ownername">{$errors.owner_name|escape}</p>
 	<label><#Owner Name#>:</label>
-	<input value="{$u.name}" name="name" class="field" autocomplete="off">
+	<input value="{if $u.owner_name}{$u.owner_name|escape}{else}{$form.owner_name|escape}{/if}" name="owner_name" class="field" autocomplete="off">
+	<p class="small">
+		<#The owner name must match the owner of the given team #.#>
+	</p>
 </div>
 
 <div{if $errors.accesslevel} class="err"{/if}>
@@ -54,19 +69,51 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<p class="small"><strong><#IMPORTANT#>:</strong>  <#You must set the "Access Level" to at least "User" or the user will not be able to log in with this account.#></p>
 </div>
 
+{if $u.team_id}
+<div class="notes">
+	<h4><#Team Number#></h4>
+	<p><#Once set cannot be modified.#></p>
+</div>
+<div>
+	<label><#Team Number#>:</label>
+	<span class="nomodify">{$u.team_id}</span>
+	<input name="team_id" value="{$u.team_id}" type="hidden">
+</div>
+{else}
 <div{if $errors.team_id} class="err"{/if}>
 	<p class="err" id="err-team_ic">{$errors.team_id|escape}</p>
 	<label><#Team Number#>:</label>
-	<input value="{$u.team_id}" name="team_id" class="field" autocomplete="off">
+	<input value="{$form.team_id}" name="team_id" class="field" autocomplete="off">
+	<p class="small">
+		<#The team # must match the team belonging to the given owner name.#>
+	</p>
+</div>
+{/if}
+
+{if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
+<div{if $errors.email} class="err"{/if}>
+	<p class="err" id="err-email">{$errors.email|escape}</p>
+	<label><#New Email#>:</label>
+	<input value="{$email}" name="email" type="text" class="field">
 </div>
 
+<div{if $errors.email2} class="err"{/if}>
+	<p class="err" id="err-email2">{$errors.email2|escape}</p>
+	<label><#Retype Email#>:</label>
+	<input value="{$email}" name="email2" type="text" class="field">
+	<p class="small">
+		<#Only enter an email address if you wish to change it.#>
+	</p>
+</div>
+{/if}
+
 {if $id}
+<br><br><br>
 <div class="notes">
 	<h4><#Change Password?#></h4>
 	<p><#Only enter a password if you want to change it from the current password.#></p>
 </div>
 {/if}
-
 <div{if $errors.password} class="err"{/if}>
 	<p class="err" id="err-password">{$errors.password|escape}</p>
 	<label><#New Password#>:</label>
@@ -78,6 +125,10 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<label><#Retype Password#>:</label>
 	<input name="password2" type="password" class="field" autocomplete="off">
 	<p class="small"><strong><#IMPORTANT#>:</strong>  <#If you use a password manager that fills in passwords automatically, or your browser does the same thing, make sure the passwords fields are blank or you will change the password for your user.#></p>
+</div>
+
+<div>
+	<p class="small"><strong><#IMPORTANT#>:</strong>  <#You cannot delete the last admin account.  If you choose the delete option the last admin account will be unlinked from any team account and that team's profile set to defaults.#></p>
 </div>
 
 </fieldset>

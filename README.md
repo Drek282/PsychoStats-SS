@@ -19,6 +19,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Tracking teams by anything other than TEAM_ID.
 * Primary team name selection mode.
 * Automatic deletion of user accounts on owner change.
+* First stats in a new season.
 
 
 ## **Future Plans**
@@ -29,6 +30,7 @@ This also open source software.  The code can be modified by anyone who wishes t
 * Add user upload functionality for icon images.
 * Fix CSRF protection.
 * Add a configurable Help page with basic information on how to use the stats, how registration works, how the search works, glossary of terms, etc.
+* Change single season mode so it doesn't delete old season data until new season begins.
 
 
 ## **Credits**

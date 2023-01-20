@@ -133,14 +133,22 @@ def generate_psss_error_log ():
             cursor.execute(query)
 
 # Set the GB league championship status.
-def get_league_c (season_url):
+def get_league_c (season_url, raw_lp_dump):
 
     # Globals
     global error_no
     global error_log
 
-    # Set the season_url Scoresheets URL.
-    season_url_g = re.sub(r'.htm', '_G.htm', season_url, 1)
+    # Get the scoresheets url name (doesn't always match league name in current url).
+    my_regex = r"^<a href='(.+?_G.htm)?' target=_blank>"
+    surl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+
+    # Split the league url.
+    lu_list = season_url.split("/")
+
+    # Build the scoresheets url.
+    lu_list[6] = surl_name
+    season_url_g = "/".join(lu_list)
 
     # Check to see if scoresheets page exists.
     request = requests.get(season_url_g)
@@ -289,8 +297,16 @@ def generate_psss_team_rosters (season, season_url, season_dir):
     # Get page time in the appropriate format.
     tdtd = time.strftime('%Y-%m-%d', time.localtime(pagedate))
 
-    # Set the season_url Scoresheets URL.
-    season_url_s = re.sub(r'.htm', '_S.htm', season_url, 1)
+    # Get the player stats url name (doesn't always match league name in current url).
+    my_regex = r"^<a href='(.+?_S.htm)?' target=_blank>"
+    surl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+
+    # Split the league url.
+    lu_list = season_url.split("/")
+
+    # Build the scoresheets url.
+    lu_list[6] = surl_name
+    season_url_s = "/".join(lu_list)
 
     # Check to see if player stats page exists.
     request = requests.get(season_url_s)
@@ -663,26 +679,26 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     # Remove raw_lp_dump prefix to search string.
     my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
-    raw_lp_dump = header_line + my_list[1]
+    raw_lp_dump_mod = header_line + my_list[1]
 
     # Empty the list.
     my_list = list()
     
     # Remove raw_lp_dump suffix from search string.
     my_regex =  r"^<a name='scores' id='scores'>.+?$"
-    my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
-    raw_lp_dump = my_list[0]
+    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
+    raw_lp_dump_mod = my_list[0]
 
     # Empty the list.
     my_list = list()
     
     # Remove html and whitespace at start of lines.
     my_regex =  r"<span class='.+?'> *"
-    raw_lp_dump = re.sub(my_regex, '', raw_lp_dump, 200, re.MULTILINE)
+    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, 200, re.MULTILINE)
     
     # Remove html at end of lines.
     my_regex =  r"</span>"
-    raw_lp_dump = re.sub(my_regex, '', raw_lp_dump, 200, re.MULTILINE)
+    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, 200, re.MULTILINE)
 
     # Convert league_name to lower case.
     league_name = league_name.lower()
@@ -719,22 +735,22 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     # Save the raw stats to file.
     f = open(raw_stats_fname, 'w')
-    f.write(raw_lp_dump)
+    f.write(raw_lp_dump_mod)
     f.close()
     
     # Create defensive stats variable.
     my_regex =  r"^<u>AB    R    H  .+?</u>$"
-    my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
     working_stats_def_pre = my_list[0]
 
     # Empty the list.
     my_list = list()
     
     # Generate the first header line.
-    header_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group()
+    header_line = re.search(my_regex, raw_lp_dump_mod, re.MULTILINE).group()
     
     # Create offensive stats variable.
-    my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
     working_stats_off = header_line + my_list[1]
 
     # Delete empty lines.
@@ -1087,7 +1103,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Set league championship status for historical seasons.
     league_c = 0
     if ((season != season_c) or season_c_skipped):
-        league_c = get_league_c(season_url)
+        league_c = get_league_c(season_url, raw_lp_dump)
 
     ## Column Headers:
     #  1 Season, 2 Team Number, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 RDiff, 10 Pythag, 11 Pythag+
@@ -1580,10 +1596,17 @@ for season_h in list(seasons_h):
 
         continue
 
-    # Build the season url.
+    # Get the league url name (doesn't always match league name in current url).
+    my_regex = r"</a> <a href='/archive/" + str(season_h) + "/FOR_WWW/(.+.htm)?' target=_blank>" + str(season_h) + "</a>"
+    lurl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+
+    # Split the league url.
     lu_list = league_url.split("/")
+
+    # Build the historical season url.
     lu_list.insert(3, 'archive')
     lu_list.insert(4, season_h)
+    lu_list[6] = lurl_name
     season_url = "/".join(lu_list)
 
     # Check to see if league page exists.

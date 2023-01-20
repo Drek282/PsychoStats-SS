@@ -4,6 +4,7 @@
 Version 0.0.4b (in progress)
 * [Added] Owner email to team profile.
 * [Improved] Leagues where the league name has changed can now be fully processed.
+* [Improved] In single season mode past season data is not deleted until there is data for the current season.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

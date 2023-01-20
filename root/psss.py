@@ -662,8 +662,11 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     ### Convert league page into CSV file.
     
     # Check to see if the season has started.
+    global season_ns
     my_regex =  r"^<a name='standings' id='standings'>.+?</span></u>$"
     if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
+        season_ns = True
+
         print("WARNING:  There is no data for the current season.  The season has probably not started or the first week results have not yet been published.")
         print()
 
@@ -672,6 +675,8 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,There is no data for the current season.  The season has probably not started or the first week results have not yet been published.\n"
 
         return
+    else:
+        season_ns = False
     
     # Generate the first header line.
     header_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group()
@@ -1483,55 +1488,11 @@ else:
 if check_loop != 0:
     grp_check(check_loop, league_url)
 
-# Check for single season mode
-cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='single_season'")
-data = cursor.fetchone()
-if data:
-    single_season = int(data['value'])
-else:
-    single_season = 0
-
-# If single_season is 1, set it to season_c.
-if (single_season == 1):
-    single_season = int(season_c)
-else:
-    single_season = 2011
-
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"
 seasons_h_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
 my_regex = r"/(2[0-9][0-9][0-9])/"
 seasons_h = re.findall(my_regex, seasons_h_line)
-
-# Remove all members of list dating earlier than single_season.
-for i in range(len(seasons_h)):
-    if (int(seasons_h[i]) < single_season):
-        seasons_h.pop(i)
-
-# If there are seasons in the database earlier than single_season delete that season data,
-# truncate the team_ids_name and team_profile tables, and remove non-admin users.
-cursor.execute("SELECT season FROM psss_team_adv WHERE season<'" + str(single_season) + "' LIMIT 1")
-data = cursor.fetchone()
-if data:
-    cursor.execute("DELETE FROM psss_user WHERE accesslevel<'99';")
-    cursor.execute("DELETE FROM psss_team_adv WHERE season<'" + str(single_season) + "';")
-    cursor.execute("DELETE FROM psss_team_ids_names WHERE lastseen<'" + str(single_season) + "-01-01';")
-    cursor.execute("DELETE FROM psss_team_def WHERE season<'" + str(single_season) + "';")
-    cursor.execute("DELETE FROM psss_team_off WHERE season<'" + str(single_season) + "';")
-    cursor.execute("DELETE FROM psss_seasons_h WHERE season_h<'" + str(single_season) + "';")
-    cursor.execute("TRUNCATE psss_team_wc")
-    psss_db.commit()
-
-    # Set the team_profile table to defaults.
-    cursor.execute("SELECT team_id FROM psss_team_profile")
-    data_prof = cursor.fetchall()
-    for row in data_prof:
-        for key,value in row.items():
-            cursor.execute("UPDATE psss_team_profile SET userid=DEFAULT, name=DEFAULT, email=DEFAULT, discord=DEFAULT, twitch=DEFAULT, youtube=DEFAULT, website=DEFAULT, icon=DEFAULT, cc=DEFAULT, logo=DEFAULT WHERE team_id='" + str(value) +"'")
-
-    # Log entry.
-    error_no += 1
-    error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Single Season Mode: Team data and users for previous seasons have been deleted and team profiles reset to defaults.\n"
 
 # Get the date on the league page.
 my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
@@ -1573,6 +1534,54 @@ if (seasons_h[0] != season_c):
     process_data (league_url, season_c, league_name, raw_lp_dump)
 else:
     season_c_skipped = 1
+
+# Check for single season mode
+cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='single_season'")
+data = cursor.fetchone()
+if data:
+    single_season = int(data['value'])
+else:
+    single_season = 0
+
+# If single_season is 1 and season_ns is not true, set it to season_c.
+if (single_season == 1 and not season_ns):
+    single_season = int(season_c)
+elif (single_season == 1 and season_ns):
+    single_season = int(seasons_h[0])
+else:
+    single_season = 2011
+
+# Remove duplicate list item.
+if (seasons_h[0] == seasons_h[1]):
+    seasons_h.pop(1)
+
+# Remove all members of list dating earlier than single_season.
+seasons_h = [i for i in seasons_h if not int(i) < single_season]
+
+# If there are seasons in the database earlier than single_season delete that season data,
+# truncate the team_ids_name and team_profile tables, and remove non-admin users.
+cursor.execute("SELECT season FROM psss_team_adv WHERE season<'" + str(single_season) + "' LIMIT 1")
+data = cursor.fetchone()
+if data:
+    cursor.execute("DELETE FROM psss_user WHERE accesslevel<'99';")
+    cursor.execute("DELETE FROM psss_team_adv WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_team_ids_names WHERE lastseen<'" + str(single_season) + "-01-01';")
+    cursor.execute("DELETE FROM psss_team_def WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_team_off WHERE season<'" + str(single_season) + "';")
+    cursor.execute("DELETE FROM psss_seasons_h WHERE season_h<'" + str(single_season) + "';")
+    cursor.execute("TRUNCATE psss_team_wc")
+    psss_db.commit()
+
+    # Set the team_profile table to defaults.
+    cursor.execute("SELECT team_id FROM psss_team_profile")
+    data_prof = cursor.fetchall()
+    for row in data_prof:
+        for key,value in row.items():
+            cursor.execute("UPDATE psss_team_profile SET userid=DEFAULT, name=DEFAULT, email=DEFAULT, discord=DEFAULT, twitch=DEFAULT, youtube=DEFAULT, website=DEFAULT, icon=DEFAULT, cc=DEFAULT, logo=DEFAULT WHERE team_id='" + str(value) +"'")
+
+    # Log entry.
+    error_no += 1
+    error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Single Season Mode: Team data and users for previous seasons have been deleted and team profiles reset to defaults.\n"
 
 
 

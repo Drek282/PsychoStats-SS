@@ -1606,8 +1606,8 @@ for season_h in list(seasons_h):
         continue
 
     # Get the league url name (doesn't always match league name in current url).
-    my_regex = r"</a> <a href='/archive/" + str(season_h) + "/FOR_WWW/(.+.htm)?' target=_blank>" + str(season_h) + "</a>"
-    lurl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+    my_regex = r"</a> <a href='/archive/" + str(season_h) + "/(:?FOR_|C)WWW/(.+.htm)?' target=_blank>" + str(season_h) + "</a>"
+    lurl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(2)
 
     # Split the league url.
     lu_list = league_url.split("/")

@@ -110,3 +110,8 @@ INSERT INTO `psss_config_themes` (`theme_name`, `parent`, `enabled`, `version`, 
     VALUES 
         ('default',NULL,1,'1.0','Default Theme','Stormtrooper','','themes/default/theme.xml','default.webp','Default PsychoStats theme.'),
         ('default-blue','default',1,'1.0','Default Theme - blue skin','Stormtrooper','','themes/default-blue/theme.xml','blue.webp','blue skin for default theme.');
+
+INSERT INTO `psss_config_help` (`id`, `enabled`, `idx`, `title`, `content`, `img`, `weight`)
+    VALUES
+        (1, 1, 0, 'What is PsychoStats?', '<p>PsychoStats was software originally developed in the late 1990\'s by Jason Morriss, a.k.a. Stormtrooper, to display stats from Counter-Strike and other Half-Life games and mods.</p>\r\n\r\n<p>PsychoStats has two parts, a backend script takes data from a source, such as multiplayer game server logs, and outputs it to an SQL database, and a front end written in PHP which takes the data from the database, organizes it into pages, and displays it in sortable tables on a website.</p>', '', 0),
+        (2, 1, 0, 'What is PsychoStats for Scoresheet Baseball?', '<p>PsychoStats for Scoresheet Baseball scrapes league data from the official Scoresheet league pages, organizes it and displays it in sortable tables on a web page.  It is intended to make access to that data fast, user friendly, and to allow for easy comparisons between teams and seasons.  It\'s primary focus is team statistics, although team rosters with individual player stats are also included.</p>', '', 0);

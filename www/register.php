@@ -134,12 +134,18 @@ if ($submit) {
 		// email and name is saved to profile, not user
 		unset($userinfo['team_id'], $userinfo['password2'], $userinfo['owner_name'], $userinfo['email'], $userinfo['email2']);
 
+		if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+			$userinfo['temp_password'] = $u->hash(psss_generate_pw());
+			$userinfo['email_confirmed'] = 0;
+			$userinfo['tpw_timestamp'] = time();
+		} else {
+			$userinfo['temp_password'] = null;
+			$userinfo['email_confirmed'] = 1;
+			$userinfo['tpw_timestamp'] = 0;
+		}
 		$userinfo['userid'] = $u->next_userid();
 		$userinfo['password'] = $u->hash($userinfo['password']);
-		$userinfo['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $u->hash(psss_generate_pw()) : null;
-		$userinfo['tpw_timestamp'] = time();
 		$userinfo['accesslevel'] = $u->acl_user();
-		$userinfo['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 		$userinfo['confirmed'] = $ps->conf['main']['registration'] == 'open' ? 1 : 0;
 
 		$ps->db->begin();

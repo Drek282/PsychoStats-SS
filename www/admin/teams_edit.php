@@ -169,10 +169,17 @@ if ($submit) {
 		$inserted = false;
 		if (!$team_user->userid() and $u['username'] != '') {
 			$inserted = true;
+
+			if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+				$u['temp_password'] = $team_user->hash(psss_generate_pw());
+				$u['email_confirmed'] = 0;
+				$u['tpw_timestamp'] = time();
+			} else {
+				$u['temp_password'] = null;
+				$u['email_confirmed'] = 1;
+				$u['tpw_timestamp'] = 0;
+			}
 			$u['userid'] = $team_user->next_userid();	// assign an ID
-			$u['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $team_user->hash(psss_generate_pw()) : null;
-			$u['tpw_timestamp'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? time() : 0;
-			$u['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 			$input['userid'] = $u['userid'];		// point the team_profile to this userid
 			$ok = $team_user->insert_user($u);
 			if (!$ok) {

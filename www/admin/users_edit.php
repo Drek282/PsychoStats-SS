@@ -239,10 +239,16 @@ if ($submit) {
 				break;
 			}
 
+			if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
+				$input['temp_password'] = $team_user->hash(psss_generate_pw());
+				$input['email_confirmed'] = 0;
+				$input['tpw_timestamp'] = time();
+			} else {
+				$input['temp_password'] = null;
+				$input['email_confirmed'] = 1;
+				$input['tpw_timestamp'] = 0;
+			}
 			$input['userid'] = $u->next_userid();
-			$input['temp_password'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? $u->hash(psss_generate_pw()) : null;
-			$input['tpw_timestamp'] = time();
-			$input['email_confirmed'] = ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) ? 0 : 1;
 			// if user is being added in Admin CP, confirmed status is assumed
 			$input['confirmed'] = true;
 

@@ -166,10 +166,10 @@ $atable->columns(array(
 	'season'			=> array( 'label' => $cms->trans("Roster"), 'tooltip' => $cms->trans("Click on the season to view the player roster"), 'callback' => 'psss_table_team_roster_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
-	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'remove_zero_point' ),
+	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'negpos500' ),
 	'games_back'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Playoff status and how many games behind division leader"), 'callback' => 'standings' ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation"), 'callback' => 'remove_zero_point' ),
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation"), 'callback' => 'negpos500' ),
 	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag"), 'callback' => 'negpos' )
 ));
 $atable->column_attr('season', 'class', 'first');
@@ -306,6 +306,10 @@ function standings($val) {
 
 function negpos($val) {
 	return neg_pos($val);
+}
+
+function negpos500($val) {
+	return neg_pos_500($val);
 }
 
 function dash_if_empty($val) {

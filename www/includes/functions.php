@@ -248,6 +248,16 @@ function neg_pos($val) {
 	return $output;
 }
 
+function neg_pos_500($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	if ($val < 0.5) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
+}
+
 function rank_change($args = array()) {
 	global $cms, $ps;
 	if (!is_array($args)) $args['team'] = array( 'team' => $args );

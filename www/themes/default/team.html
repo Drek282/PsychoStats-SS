@@ -63,7 +63,7 @@
 </p>
 <p>
 	<label><#Win %#></label>
-	<span>{$team.win_percent|remove_zero_point}</span>
+	<span>{$team.win_percent|negpos500}</span>
 </p>
 <p class="hl">
 	<label><#Games Back#></label>
@@ -85,7 +85,7 @@
 </p>
 <p>
 	<label><#Pythag#></label>
-	<span>{$team.pythag|remove_zero_point}</span>
+	<span>{$team.pythag|negpos500}</span>
 </p>
 <p>
 	<label><#Pythag+#></label>
@@ -111,7 +111,7 @@
 {/if}
 <p>
 	<label><#Win Percentage#></label>
-	<span>{if $team.hist_wp}{$team.hist_wp|remove_zero_point}{else}-{/if}</span>
+	<span>{if $team.hist_wp}{$team.hist_wp|negpos500}{else}-{/if}</span>
 </p>
 <p>
 	<label><#Runs Against#></label>

@@ -145,11 +145,11 @@ $table->columns(array(
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
-	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
+	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'negpos500' ),
 	'games_back_wc'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Wildcard status and how many games out of wild card playoff position") ),
-	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings") ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
-	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
+	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation"), 'callback' => 'negpos500' ),
+	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag"), 'callback' => 'negpos' )
 ));
 $table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
@@ -191,16 +191,21 @@ function rankchange($val, $team) {
 	return rank_change($team);
 }
 
-/*function win_percentchange($val, $team) {
-	return win_percent_change($team);
-}
-
-function team_win_percent($val, $team) {
-	return $val . " " . win_percent_change($team);
-}*/
-
 function team_rank($val, $team) {
 	return rank_change($team) . " " . $val;
+}
+
+function negpos($val) {
+	return neg_pos($val);
+}
+
+function negpos500($val) {
+	return neg_pos_500($val);
+}
+
+function remove_zero_point($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
 }
 
 ?>

@@ -142,7 +142,7 @@ $dtable->columns(array(
 	'player_name'				=> array( 'label' => $cms->trans("Player Name"), 'callback' => 'psss_table_br_search_link', 'tooltip' => $cms->trans("Click name to search Baseball Reference") ),
 	'pi_wins'					=> array( 'label' => $cms->trans("W"), 'tooltip' => $cms->trans("Wins") ),
 	'pi_losses'					=> array( 'label' => $cms->trans("L"), 'tooltip' => $cms->trans("Losses") ),
-	'pi_win_percent'			=> array( 'label' => $cms->trans("W%"), 'tooltip' => $cms->trans("Win %"), 'callback' => 'remove_zero_point' ),
+	'pi_win_percent'			=> array( 'label' => $cms->trans("W%"), 'tooltip' => $cms->trans("Win %"), 'callback' => 'negpos500' ),
 	'pi_era'					=> array( 'label' => $cms->trans("ERA"), 'tooltip' => $cms->trans("Earned Runs Against Average per 9 Innings") ),
 	'pi_games_played'			=> array( 'label' => $cms->trans("G"), 'tooltip' => $cms->trans("Games Played") ),
 	'pi_games_started'			=> array( 'label' => $cms->trans("GS"), 'tooltip' => $cms->trans("Games Started") ),
@@ -244,6 +244,10 @@ if ($team['team_id']) {
 
 function dash_if_empty($val) {
 	return !empty($val) ? $val : '-';
+}
+
+function negpos500($val) {
+	return neg_pos_500($val);
 }
 
 function dash_if_zero($val) {

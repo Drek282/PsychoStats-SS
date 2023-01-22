@@ -139,7 +139,7 @@ $table->attr('class', 'ps-table ps-division-table');
 $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
 	'divisionname'		=> array( 'label' => $cms->trans("Division Name"), 'callback' => 'psss_table_division_link' ),
-	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'tooltip' => $cms->trans("Division Average"), 'callback' => 'remove_zero_point' ),
+	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'tooltip' => $cms->trans("Division Average"), 'callback' => 'negpos500' ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("Division Average (Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
 	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Division Average Runs Against per 9 Innings") ),
 	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Division Average Total Runs Scored per Game"), 'callback' => 'one_decimal_zero' ),
@@ -184,6 +184,10 @@ function psss_table_division_link2($name, $division) {
 
 function negpos($val) {
 	return neg_pos($val);
+}
+
+function negpos500($val) {
+	return neg_pos_500($val);
 }
 
 function remove_zero_point($val) {

@@ -10,14 +10,14 @@
  * Smarty PS3 rankchange function plugin
  *
  * Type:     function<br>
- * Name:     negpos<br>
- * Purpose:  returns a different css class for below 0 or higher
+ * Name:     negpos500<br>
+ * Purpose:  returns a different css class for below .500 or higher
  * @param string
  * @return string
  */
-function smarty_function_negpos($val, &$smarty)
+function smarty_function_negpos500($val, &$smarty)
 {
-	return neg_pos($val);
+	return neg_pos_500($val);
 }
 
 ?>

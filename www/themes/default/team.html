@@ -63,12 +63,12 @@
 </p>
 <p>
 	<label><#Win %#></label>
-	<span>{$team.win_percent}</span>
+	<span>{$team.win_percent|remove_zero_point}</span>
 </p>
 <p class="hl">
 	<label><#Games Back#></label>
 	{if $team.games_back=='-'}<span>Playoff Position</span>
-	{else}<span>{$team.games_back}</span>
+	{else}<span>{$team.games_back|standings}</span>
 	{/if}
 </p>
 {if $team.games_back_wc}
@@ -81,15 +81,15 @@
 {/if}
 <p>
 	<label><#Run Differential#></label>
-	<span>{$team.team_rdiff}</span>
+	<span>{$team.team_rdiff|negpos}</span>
 </p>
 <p>
 	<label><#Pythag#></label>
-	<span>{$team.pythag}</span>
+	<span>{$team.pythag|remove_zero_point}</span>
 </p>
 <p>
 	<label><#Pythag+#></label>
-	<span>{$team.pythag_plus}</span>
+	<span>{$team.pythag_plus|negpos}</span>
 </p>
 </div>
 </div>
@@ -111,7 +111,7 @@
 {/if}
 <p>
 	<label><#Win Percentage#></label>
-	<span>{if $team.hist_wp}{$team.hist_wp}{else}-{/if}</span>
+	<span>{if $team.hist_wp}{$team.hist_wp|remove_zero_point}{else}-{/if}</span>
 </p>
 <p>
 	<label><#Runs Against#></label>
@@ -123,11 +123,11 @@
 </p>
 <p>
 	<label><#Run Differential#></label>
-	<span>{if $team.hist_rdiff}{$team.hist_rdiff}{else}-{/if}</span>
+	<span>{if $team.hist_rdiff}{$team.hist_rdiff|negpos}{else}-{/if}</span>
 </p>
 <p>
 	<label><#Pythag+#></label>
-	<span>{if $team.hist_pythag_plus}{$team.hist_pythag_plus}{else}-{/if}</span>
+	<span>{if $team.hist_pythag_plus}{$team.hist_pythag_plus|negpos}{else}-{/if}</span>
 </p>
 {*
 {if $team.totalawards}

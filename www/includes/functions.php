@@ -210,6 +210,44 @@ function dual_bar($args = array()) {
 	return $out;
 }
 
+function gb_status($val) {
+	global $cms, $ps;
+	$img_path = '/img/icons';
+	$template_path = catfile($ps->conf['theme']['template_dir'], $cms->theme->theme(), $img_path);
+	if (!@is_dir($template_path) and $cms->theme->is_child()) {
+		$img_path = $cms->theme->url($cms->theme->is_child()) . $img_path;
+	} else {
+		$img_path = $cms->theme->url() . $img_path;
+	}
+	switch ($val) {
+		case 'dt':
+			$output = sprintf("<img src='%s/dt.webp' alt='Division Title' title='Division Title'>", $img_path);
+			break;
+	
+		case 'lc':
+			$output = sprintf("<img src='%s/lc.webp' alt='League Champion' title='League Champion'>", $img_path);
+			break;
+	
+		case 'dtlc':
+			$output = sprintf("<img src='%s/dtlc.webp' alt='Division Title and League Champion' title='Division Title and League Champion'>", $img_path);
+			break;
+	
+		default:
+			$output = sprintf("$val");
+			break;
+	}
+	return $output;
+}
+
+function neg_pos($val) {
+	if ($val < 0) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
+}
+
 function rank_change($args = array()) {
 	global $cms, $ps;
 	if (!is_array($args)) $args['team'] = array( 'team' => $args );
@@ -267,67 +305,6 @@ function rank_change($args = array()) {
 #			$output = "<abbr title='$alt'>$output</abbr>";
 #		}
 		$output = "<span class='rankchange-$dir'>$output</span>";
-	}
-	return $output;
-}
-
-function win_percent_change($args = array()) {
-	global $cms, $ps;
-	if (!is_array($args)) $args['team'] = array( 'team' => $args );
-	$args += array(
-		'team'		=> NULL,
-		'win_percent'		=> 0,
-		'prevwin_percent'	=> 0,
-		'imgfmt'	=> "win_percent_%s.gif",
-		'difffmt'	=> "%.02f",
-		'attr'		=> "",
-		'acronym'	=> true,
-		'textonly'	=> false,
-	);
-
-	$output = "";
-	$win_percent = $prevwin_percent = 0;
-	if (is_array($args['team'])) {
-		$win_percent = $args['team']['win_percent'];
-		$prevwin_percent = $args['team']['prevwin_percent'];
-	} else {
-		$win_percent = $args['win_percent'];
-		$prevwin_percent = $args['prevwin_percent'];
-	}
-
-	$alt = $cms->trans("no change");
-	$dir = "same";
-	$diff = sprintf($args['difffmt'], $win_percent - $prevwin_percent);
-
-	if ($prevwin_percent == 0) {
-		# no change
-	} elseif ($diff > 0) {
-		$dir = "up";
-		$alt = $cms->trans("Diff") . ": +$diff";
-	} elseif ($diff < 0) {
-		$dir = "down";
-		$alt = $cms->trans("Diff") . ": $diff";
-	}
-
-	if ($args['textonly']) {
-		$output = sprintf("<span class='win_percentchange-$dir'>%s%s</span>",
-			$diff > 0 ? '+' : '',
-			$prevwin_percent == 0 ? '' : $diff
-		);
-	} else {
-		$img = '/img/icons/' . sprintf($args['imgfmt'], $dir);
-		$path = catfile($ps->conf['theme']['template_dir'], $cms->theme->theme(), $img);
-		if (!@file_exists($path) and $cms->theme->is_child()) {
-			$img = $cms->theme->url($cms->theme->is_child()) . $img;
-		} else {
-			$img = $cms->theme->url() . $img;
-		}
-
-		$output = sprintf("<img src='%s' alt='%s' title='%s' %s/>", $img, $alt, $alt, $args['attr']);
-#		if ($args['acronym']) {
-#			$output = "<abbr title='$alt'>$output</abbr>";
-#		}
-		$output = "<span class='win_percentchange-$dir'>$output</span>";
 	}
 	return $output;
 }

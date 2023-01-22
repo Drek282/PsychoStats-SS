@@ -201,6 +201,13 @@ div.ps-team-profile #map {
 	text-align: center;
 	line-height: 1.5em;
 }
+/*	styles for negpos callback */
+span.neg {
+	color: #ea3225;
+}
+span.pos {
+	color: #ace685;
+}
 .ps-table tr { background-color: #282619; }
 .ps-table tr.even { background-color: #474133; }
 .ps-table td.noborder { border: none; }

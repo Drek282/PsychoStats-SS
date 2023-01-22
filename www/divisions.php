@@ -139,14 +139,14 @@ $table->attr('class', 'ps-table ps-division-table');
 $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
 	'divisionname'		=> array( 'label' => $cms->trans("Division Name"), 'callback' => 'psss_table_division_link' ),
-	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'tooltip' => $cms->trans("Division Average") ),
-	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("Division Average (Total Runs Scored - Total Runs Against) / 9 Innings") ),
+	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'tooltip' => $cms->trans("Division Average"), 'callback' => 'remove_zero_point' ),
+	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("Division Average (Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
 	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Division Average Runs Against per 9 Innings") ),
-	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Division Average Total Runs Scored per Game") ),
+	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Division Average Total Runs Scored per Game"), 'callback' => 'one_decimal_zero' ),
 	'team_whip'			=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("Division Average (Hits + Walks)/Inning Pitched") ),
-	'ops'		=> array( 'label' => $cms->trans("OPS"), 'tooltip' => $cms->trans("Division Average On Base Plus Slugging") ),
-	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Division Average Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings") ),
-	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Division Average Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed") ),
+	'ops'		=> array( 'label' => $cms->trans("OPS"), 'tooltip' => $cms->trans("Division Average On Base Plus Slugging"), 'callback' => 'remove_zero_point' ),
+	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Division Average Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings"), 'callback' => 'remove_zero_point' ),
+	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Division Average Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed"), 'callback' => 'remove_zero_point' ),
 ));
 $table->column_attr('divisionname', 'class', 'left');
 $table->column_attr('team_srat', 'class', 'right');
@@ -180,6 +180,20 @@ $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 function psss_table_division_link2($name, $division) {
 	return psss_table_division_link($name, $division, false, false);
+}
+
+function negpos($val) {
+	return neg_pos($val);
+}
+
+function remove_zero_point($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
+}
+
+function one_decimal_zero($val) {
+	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
+	return $val;
 }
 
 

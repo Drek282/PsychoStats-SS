@@ -213,7 +213,7 @@ $table->columns(array(
 	'total_runs_against'			=> array( 'label' => $cms->trans("TRA"), 'tooltip' => $cms->trans("Team Total Runs Scored Against") ),
 	'total_earned_runs_against'			=> array( 'label' => $cms->trans("TERA"), 'tooltip' => $cms->trans("Team Total Earned Runs Scored Against") ),
 	'hits_surrendered'			=> array( 'label' => $cms->trans("Hits"), 'tooltip' => $cms->trans("Team Total Hits Against") ),
-	'opp_batting_average'			=> array( 'label' => $cms->trans("BAA"), 'tooltip' => $cms->trans("Team Batting Average Against") ),
+	'opp_batting_average'			=> array( 'label' => $cms->trans("BAA"), 'tooltip' => $cms->trans("Team Batting Average Against"), 'callback' => 'remove_zero_point' ),
 	'opp_walks'			=> array( 'label' => $cms->trans("BBA"), 'tooltip' => $cms->trans("Team Total Walks Allowed") ),
 	'team_whip'			=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("Team Average (Hits + Walks)/Inning Pitched") ),
 	'opp_strikeouts'			=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Team Total Strikeouts by Pitchers") ),
@@ -224,7 +224,7 @@ $table->columns(array(
 	'passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Team Total Passed Balls") ),
 	'opp_stolen_bases'			=> array( 'label' => $cms->trans("OSB"), 'tooltip' => $cms->trans("Team Total Stolen Bases Allowed") ),
 	'opp_caught_stealing'			=> array( 'label' => $cms->trans("OCS"), 'tooltip' => $cms->trans("Team Total Opponents Caught Stealing") ),
-	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings") )
+	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings"), 'callback' => 'remove_zero_point' )
 ));
 $table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
@@ -270,21 +270,10 @@ $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 function dash_if_empty($val) {
 	return !empty($val) ? $val : '-';
 }
-/*
-function rankchange($val, $team) {
-	return rank_change($team);
-}
 
-function win_percentchange($val, $team) {
-	return win_percent_change($team);
+function remove_zero_point($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
 }
-
-function team_win_percent($val, $team) {
-	return $val . " " . win_percent_change($team);
-}
-
-function team_rank($val, $team) {
-	return rank_change($team) . " " . $val;
-}*/
 
 ?>

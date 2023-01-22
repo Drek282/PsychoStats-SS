@@ -142,19 +142,19 @@ $dtable->columns(array(
 	'player_name'				=> array( 'label' => $cms->trans("Player Name"), 'callback' => 'psss_table_br_search_link', 'tooltip' => $cms->trans("Click name to search Baseball Reference") ),
 	'pi_wins'					=> array( 'label' => $cms->trans("W"), 'tooltip' => $cms->trans("Wins") ),
 	'pi_losses'					=> array( 'label' => $cms->trans("L"), 'tooltip' => $cms->trans("Losses") ),
-	'pi_win_percent'			=> array( 'label' => $cms->trans("W%"), 'tooltip' => $cms->trans("Win %") ),
+	'pi_win_percent'			=> array( 'label' => $cms->trans("W%"), 'tooltip' => $cms->trans("Win %"), 'callback' => 'remove_zero_point' ),
 	'pi_era'					=> array( 'label' => $cms->trans("ERA"), 'tooltip' => $cms->trans("Earned Runs Against Average per 9 Innings") ),
 	'pi_games_played'			=> array( 'label' => $cms->trans("G"), 'tooltip' => $cms->trans("Games Played") ),
 	'pi_games_started'			=> array( 'label' => $cms->trans("GS"), 'tooltip' => $cms->trans("Games Started") ),
 	'pi_complete_games'			=> array( 'label' => $cms->trans("CG"), 'tooltip' => $cms->trans("Complete Games") ),
 	'pi_shutouts'				=> array( 'label' => $cms->trans("ShO"), 'tooltip' => $cms->trans("Shutouts") ),
-	'pi_run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Run Support") ),
+	'pi_run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Run Support"), 'callback' => 'dash_if_zero' ),
 	'pi_saves'					=> array( 'label' => $cms->trans("Sv") ),
 	'pi_innings_pitched'		=> array( 'label' => $cms->trans("IP"), 'tooltip' => $cms->trans("Innings Pitched") ),
 	'pi_runs_against'			=> array( 'label' => $cms->trans("R"), 'tooltip' => $cms->trans("Runs Scored Against") ),
 	'pi_earned_runs_against'	=> array( 'label' => $cms->trans("ER"), 'tooltip' => $cms->trans("Earned Runs Scored Against") ),
 	'pi_hits_surrendered'		=> array( 'label' => $cms->trans("H"), 'tooltip' => $cms->trans("Hits Surrendered") ),
-	'pi_opp_batting_average'	=> array( 'label' => $cms->trans("BA"), 'tooltip' => $cms->trans("Batting Average Against") ),
+	'pi_opp_batting_average'	=> array( 'label' => $cms->trans("BA"), 'tooltip' => $cms->trans("Batting Average Against"), 'callback' => 'remove_zero_point' ),
 	'pi_opp_walks'				=> array( 'label' => $cms->trans("BB"), 'tooltip' => $cms->trans("Walks Surrendered") ),
 	'pi_whip'					=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("(Hits + Walks)/Inning Pitched") ),
 	'pi_strikeouts'				=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Strikeouts") ),
@@ -184,11 +184,11 @@ $otable->columns(array(
 	'po_rbis'					=> array( 'label' => $cms->trans("RBI"), 'tooltip' => $cms->trans("RBI&#39;s") ),
 	'po_walks'					=> array( 'label' => $cms->trans("BB"), 'tooltip' => $cms->trans("Base on Balls") ),
 	'po_strikeouts'				=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Strikeouts") ),
-	'po_batting_average'		=> array( 'label' => $cms->trans("BA"), 'tooltip' => $cms->trans("Batting Average") ),
-	'po_on_base_average'		=> array( 'label' => $cms->trans("OBA"), 'tooltip' => $cms->trans("On Base Average") ),
-	'po_slugging_average'		=> array( 'label' => $cms->trans("SlgA"), 'tooltip' => $cms->trans("Slugging Average") ),
-	'po_ops'					=> array( 'label' => $cms->trans("OPS"), 'tooltip' => $cms->trans("On Base Plus Slugging Average") ),
-	'po_woba'					=> array( 'label' => $cms->trans("wOBA"), 'tooltip' => $cms->trans("Weighted On Base Average:\n—does not include HBP and IBB data") ),
+	'po_batting_average'		=> array( 'label' => $cms->trans("BA"), 'tooltip' => $cms->trans("Batting Average"), 'callback' => 'remove_zero_point' ),
+	'po_on_base_average'		=> array( 'label' => $cms->trans("OBA"), 'tooltip' => $cms->trans("On Base Average"), 'callback' => 'remove_zero_point' ),
+	'po_slugging_average'		=> array( 'label' => $cms->trans("SlgA"), 'tooltip' => $cms->trans("Slugging Average"), 'callback' => 'remove_zero_point' ),
+	'po_ops'					=> array( 'label' => $cms->trans("OPS"), 'tooltip' => $cms->trans("On Base Plus Slugging Average"), 'callback' => 'remove_zero_point' ),
+	'po_woba'					=> array( 'label' => $cms->trans("wOBA"), 'tooltip' => $cms->trans("Weighted On Base Average:\n—does not include HBP and IBB data"), 'callback' => 'remove_zero_point' ),
 	'po_sacrifice_hits'			=> array( 'label' => $cms->trans("SH"), 'tooltip' => $cms->trans("Sacrifice Hits") ),
 	'po_sacrifice_fails'		=> array( 'label' => $cms->trans("F"), 'tooltip' => $cms->trans("Failed Sacrifice Attempts") ),
 	'po_sacrifice_flies'		=> array( 'label' => $cms->trans("SF"), 'tooltip' => $cms->trans("Sacrifice Flies") ),
@@ -197,7 +197,7 @@ $otable->columns(array(
 	'po_caught_stealing'		=> array( 'label' => $cms->trans("CS"), 'tooltip' => $cms->trans("Caught Stealing") ),
 	'po_outstanding_plays'		=> array( 'label' => $cms->trans("OP"), 'tooltip' => $cms->trans("Outstanding Plays") ),
 	'po_fielding_errors'		=> array( 'label' => $cms->trans("E"), 'tooltip' => $cms->trans("Fielding Errors") ),
-	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls") )
+	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_zero' )
 ));
 $otable->column_attr('player_name', 'class', 'left');
 $otable->column_attr('po_passed_balls', 'class', 'right');
@@ -244,6 +244,15 @@ if ($team['team_id']) {
 
 function dash_if_empty($val) {
 	return !empty($val) ? $val : '-';
+}
+
+function dash_if_zero($val) {
+	return ($val == 0) ? '-' : $val;
+}
+
+function remove_zero_point($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
 }
 
 ?>

@@ -31,11 +31,11 @@
 </p>
 <p>
 	<label><#Win %#></label>
-	<span>{$division.win_percent}</span>
+	<span>{$division.win_percent|remove_zero_point}</span>
 </p>
 <p>
 	<label><#Run Differential#></label>
-	<span>{$division.team_rdiff}</span>
+	<span>{$division.team_rdiff|negpos}</span>
 </p>
 </div>
 </div>
@@ -57,15 +57,15 @@
 </p>
 <p>
 	<label><#OPS#></label>
-	<span>{$division.ops}</span>
+	<span>{$division.ops|remove_zero_point}</span>
 </p>
 <p>
 	<label><#Defensive Rating#></label>
-	<span>{$division.team_drat}</span>
+	<span>{$division.team_drat|remove_zero_point}</span>
 </p>
 <p>
 	<label><#Speed Rating#></label>
-	<span>{$division.team_srat}</span>
+	<span>{$division.team_srat|remove_zero_point}</span>
 </p>
 </div>
 </div>

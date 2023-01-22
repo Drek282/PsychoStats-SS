@@ -184,11 +184,11 @@ $table->columns(array(
 	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'nosort' => true, 'callback' => 'psss_table_division_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
-	'win_percent'			=> array( 'label' => $cms->trans("Win %") ),
-	'games_back'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Playoff status and how many games behind division leader\n—\"dtlc\" icookiendicates division title and league champion\n—\"lc\" indicates league champion\n—\"dt\" indicates division title") ),
-	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings"), 'sort2' => 'win_percent' ),
-	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation") ),
-	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag") )
+	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'remove_zero_point' ),
+	'games_back'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Playoff status and how many games behind division leader"), 'callback' => 'standings' ),
+	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings"), 'sort2' => 'win_percent', 'callback' => 'negpos' ),
+	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation"), 'callback' => 'remove_zero_point' ),
+	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag"), 'callback' => 'negpos' )
 ));
 $table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
@@ -245,16 +245,21 @@ function rankchange($val, $team) {
 	return rank_change($team);
 }
 
-/*function win_percentchange($val, $team) {
-	return win_percent_change($team);
+function negpos($val) {
+	return neg_pos($val);
 }
 
-function team_win_percent($val, $team) {
-	return $val . " " . win_percent_change($team);
-}*/
+function standings($val) {
+	return gb_status($val);
+}
 
 function team_rank($val, $team) {
 	return rank_change($team) . " " . $val;
+}
+
+function remove_zero_point($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
 }
 
 ?>

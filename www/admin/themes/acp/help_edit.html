@@ -37,6 +37,23 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 	</p>
 </div>
 
+{if !$msg_not_writable}
+<div id="icon-upload">
+<form action="{url}" method="post" enctype="multipart/form-data">
+	<h4><#Upload New Icon#></h4>
+	<p>
+		<input name="upload" type="submit" value="<#Upload from file#>" class="up-btn">
+		<input name="file" type="file" size="40">
+	</p>
+	<p>
+		<input name="upload" type="submit" value="<#Upload from URL#>" class="up-btn">
+		<input name="url" type="text" size="40" value="{$form.url|escape:'spaces_url'}">
+	</p>
+</form>
+</div>
+{/if}
+{$msg_not_writable}
+
 <div{if $errors.img} class="err"{/if}>
 	<p class="err">{$errors.img|escape}</p>
 	<label><#Help Entry Image#>:</label>

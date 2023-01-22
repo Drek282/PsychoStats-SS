@@ -29,6 +29,13 @@ $cms->theme->assign('page', 'help');
 $validfields = array('ref','id','del','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 
+$msg_not_writable = '';
+$action_result = '';
+$uploaded_himg = '';
+$cms->theme->assign_by_ref('msg_not_writable', $msg_not_writable);
+$cms->theme->assign_by_ref('result', $action_result);
+$cms->theme->assign_by_ref('uploaded_himg', $uploaded_himg);
+
 $message = '';
 $cms->theme->assign_by_ref('message', $message);
 
@@ -126,5 +133,38 @@ $cms->theme->add_css('css/forms.css');
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_js('js/help.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer', '');
+
+function validate_img($file) {
+	global $form, $cms, $ps;
+	$c = $ps->conf['theme']['himgs'];
+	$ext = $ps->conf['theme']['images']['search_ext'];
+	if (empty($ext)) $ext = 'png, jpg, gif, webp';
+	$list = explode(',',$ext);
+	$list = array_map('trim', $list);
+	$match = '\\.(' . implode('|', $list) . ')$';
+	$res = true;
+	$file['name'] ??= null;
+	if (!preg_match("/$match/", $file['name'])) {
+		return $cms->trans("Image type must be one of the following:") . ' <b>' . implode(', ', $list) . '</b>';
+#	} elseif ($file['info'][2] > 3) {
+#		return $cms->trans("Image type is invalid");		
+	} elseif ($c['max_size'] and $file['size'] > $c['max_size']) {
+		return $cms->trans("Image size is too large") . " (" . abbrnum($file['size']) . " > " . abbrnum($c['max_size']) . ")";
+	} elseif ($file['info'][0] > $c['max_width'] or $file['info'][1] > $c['max_height']) {
+		return $cms->trans("Image dimensions are too big") . " ({$file['info'][0]}x{$file['info'][1]} > " . $c['max_width'] . "x" . $c['max_height'] . ")";
+	} elseif (substr($file['name'], 0, 1) == '.') { 
+		return $cms->trans("Image name can not start with a period");
+	}
+	return $res;
+}
+
+// shuwdown function; delete temp file
+function sd_del_file($file) {
+//	global $file;
+	print "unlink(" . $file['tmp_name'] . ")";
+	if ($file['tmp_name'] and @is_file($file['tmp_name'])) {
+		@unlink($file['tmp_name']);
+	}
+}
 
 ?>

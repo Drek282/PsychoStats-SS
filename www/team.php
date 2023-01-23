@@ -312,10 +312,6 @@ function negpos500($val) {
 	return neg_pos_500($val);
 }
 
-function dash_if_empty($val) {
-	return !empty($val) ? $val : '-';
-}
-
 function remove_zero_point($val) {
 	$val = preg_replace('/^0\./', '.', $val);
 	return $val;

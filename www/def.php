@@ -200,7 +200,7 @@ $table->attr('class', 'ps-table ps-team-table');
 $table->sort_baseurl($search ? array( 'search' => $search ) : array( 'q' => $q ));
 $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
-	'rank'			=> array( 'label' => $cms->trans("Rank"), 'callback' => 'dash_if_empty', 'tooltip' => $cms->trans("Ranked by Team Winning Percentage") ),
+	'rank'			=> array( 'label' => $cms->trans("Rank"), 'tooltip' => $cms->trans("Ranked by Team Winning Percentage") ),
 	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 //	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'callback' => 'ps_table_division_link' ),
@@ -266,10 +266,6 @@ $cms->theme->assign(array(
 $basename = basename(__FILE__, '.php');
 //$cms->theme->add_js('js/index.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
-
-function dash_if_empty($val) {
-	return !empty($val) ? $val : '-';
-}
 
 function remove_zero_point($val) {
 	$val = preg_replace('/^0\./', '.', $val);

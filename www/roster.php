@@ -148,7 +148,7 @@ $dtable->columns(array(
 	'pi_games_started'			=> array( 'label' => $cms->trans("GS"), 'tooltip' => $cms->trans("Games Started") ),
 	'pi_complete_games'			=> array( 'label' => $cms->trans("CG"), 'tooltip' => $cms->trans("Complete Games") ),
 	'pi_shutouts'				=> array( 'label' => $cms->trans("ShO"), 'tooltip' => $cms->trans("Shutouts") ),
-	'pi_run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Run Support"), 'callback' => 'dash_if_zero' ),
+	'pi_run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Run Support"), 'callback' => 'dash_if_empty' ),
 	'pi_saves'					=> array( 'label' => $cms->trans("Sv") ),
 	'pi_innings_pitched'		=> array( 'label' => $cms->trans("IP"), 'tooltip' => $cms->trans("Innings Pitched") ),
 	'pi_runs_against'			=> array( 'label' => $cms->trans("R"), 'tooltip' => $cms->trans("Runs Scored Against") ),
@@ -197,7 +197,7 @@ $otable->columns(array(
 	'po_caught_stealing'		=> array( 'label' => $cms->trans("CS"), 'tooltip' => $cms->trans("Caught Stealing") ),
 	'po_outstanding_plays'		=> array( 'label' => $cms->trans("OP"), 'tooltip' => $cms->trans("Outstanding Plays") ),
 	'po_fielding_errors'		=> array( 'label' => $cms->trans("E"), 'tooltip' => $cms->trans("Fielding Errors") ),
-	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_zero' )
+	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_empty' )
 ));
 $otable->column_attr('player_name', 'class', 'left');
 $otable->column_attr('po_passed_balls', 'class', 'right');
@@ -243,15 +243,11 @@ if ($team['team_id']) {
 }
 
 function dash_if_empty($val) {
-	return !empty($val) ? $val : '-';
+	return !empty(intval($val)) ? $val : '-';
 }
 
 function negpos500($val) {
 	return neg_pos_500($val);
-}
-
-function dash_if_zero($val) {
-	return ($val == 0) ? '-' : $val;
 }
 
 function remove_zero_point($val) {

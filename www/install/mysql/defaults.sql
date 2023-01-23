@@ -89,8 +89,9 @@ INSERT INTO `psss_config` (`id`, `conftype`, `section`, `var`, `value`, `label`,
             <h3>How long we retain your data</h3>
             <p>If you create a profile, your profile and its metadata are retained indefinitely.</p>
             <p>For users that register in PsychoStats, we also store the personal information they provide in their user profile. All users can see, edit, or delete their personal information at any time (except they cannot change their username), unless user logins are subsequently disabled. PsychoStats users with administrator accounts can see and edit that information at any time.</p>
-            <p>A history of Scoresheet owner names is visible to users that are logged in on each team page.  These names are scraped from the official Scoresheet player stats pages where they are viewable by anyone.  If anyone has a problem with this, they need to take the issue up with Scoresheet Games.</p>
-            <p>The user profiles and the information contained in them are only visible to users that are logged in.  Every effort has been made to ensure that PschoStats for Scoresheet Baselball users are Scoresheet team owners, but there are no guarantees in that regard.</p>
+            <h3>A note regarding owner names</h3>
+            <p>A history of Scoresheet owner names is visible to users that are logged in on each team page.  These names are scraped from the official Scoresheet player stats pages where they are viewable to anyone.  If anyone has a problem with this, they need to take the issue up with Scoresheet Games.</p>
+            <p>The user profiles and the information contained in them, including owner names, are only visible to users that are logged in.  Every effort has been made to ensure that PschoStats for Scoresheet Baselball users are Scoresheet team owners, but there are no guarantees in that regard.</p>
             </div>',
             'Site Privacy Policy','textarea',0,'','','This is the Privacy Policy for PsychoStats.  It uses html formatting.'),
         (2800,'main','security','enable_cookieconsent','1','Enable Cookie Consent?','boolean',0,'','','This enables the cookie consent code for CCPA and GDPR compliance.  Note that if you disable cookie consent, you should also either disable, or modify, the privacy policy.'),

@@ -243,11 +243,11 @@ if ($team['team_id']) {
 }
 
 function dash_if_empty($val) {
-	return !empty(intval($val)) ? $val : '-';
+	return !empty(intval($val * 1000)) ? $val : '-';
 }
 
-function negpos500($val) {
-	return neg_pos_500($val);
+function negpos500($val, $med = 0.5, $remz = true) {
+	return neg_pos_500($val, $med, $remz);
 }
 
 function remove_zero_point($val) {

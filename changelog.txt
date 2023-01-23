@@ -8,10 +8,11 @@ Version 0.0.4b (in progress)
 * [Improved] Numbers, such as batting average, now display in standard baseball format.
 * [Added] Styles and graphics to certain table elements.
 * [Fixed] PHP 8.2 deprecation warning.
+* [Tweaked] PT20X template.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.
-* [Changed] Made problematic "name" columns more specific.
+* [Improved] Made problematic "name" columns more specific.
 * [Added] User accounts are now linked to owner names.
 * [Changed] User accounts linked to owner name will now automatically be deleted in the Python backend when the owner name changes, unless they are the last remaining admin account.  In that case the account will be unlinked from the team.
 * [Fixed] Error when admin has not installed theme indicated in current session cookie.

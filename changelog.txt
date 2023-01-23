@@ -9,6 +9,7 @@ Version 0.0.4b (in progress)
 * [Added] Styles and graphics to certain table elements.
 * [Fixed] PHP 8.2 deprecation warning.
 * [Tweaked] PT20X template.
+* [Tweaked] Behaviour of dash_if_empty function.  Removed it where it was serving no purpose.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -220,6 +220,10 @@ function gb_status($val) {
 		$img_path = $cms->theme->url() . $img_path;
 	}
 	switch ($val) {
+		case 'clinch':
+			$output = sprintf("<img src='%s/dt.webp' alt='Clinched Division Title' title='Clinched Division Title'>", $img_path);
+			break;
+
 		case 'dt':
 			$output = sprintf("<img src='%s/dt.webp' alt='Division Title' title='Division Title'>", $img_path);
 			break;

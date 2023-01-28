@@ -178,7 +178,7 @@ foreach ($teams as $tm => $val) {
 $teams[0]['la_team_rs'] ??= 0;
 $total['ranked'] ??= 0;
 if ($total['ranked'] > 0) {
-	$la_team_rs = round($la_team_rs / $total['ranked'], 2);
+	$la_team_rs = round($la_team_rs / $total['ranked'], 1);
 }
 
 // reset $sort variable to first sort column
@@ -203,7 +203,7 @@ $table->columns(array(
 	'rank'			=> array( 'label' => $cms->trans("Rank"), 'tooltip' => $cms->trans("Ranked by Team Winning Percentage") ),
 	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
-	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game") ),
+	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game"), 'callback' => 'negposavg' ),
 	'runs'			=> array( 'label' => $cms->trans("R"), 'tooltip' => $cms->trans("Team Total Runs Scored") ),
 	'hits'			=> array( 'label' => $cms->trans("H"), 'tooltip' => $cms->trans("Team Total Hits") ),
 	'doubles'			=> array( 'label' => $cms->trans("2B"), 'tooltip' => $cms->trans("Team Total Doubles") ),
@@ -272,6 +272,16 @@ $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 function remove_zero_point($val) {
 	$val = preg_replace('/^0\./', '.', $val);
 	return $val;
+}
+
+function negposavg($val) {
+	global $la_team_rs;
+	if ($val < $la_team_rs) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
 }
 
 ?>

@@ -204,7 +204,7 @@ $table->columns(array(
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 //	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'callback' => 'ps_table_division_link' ),
 	'team_era'			=> array( 'label' => $cms->trans("ERA"), 'tooltip' => $cms->trans("Team Earned Runs Against Average per 9 Innings") ),
-	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Team Runs Against Average per 9 Innings") ),
+	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Team Runs Against Average per 9 Innings"), 'callback' => 'negposavg' ),
 	'complete_games'			=> array( 'label' => $cms->trans("CG"), 'tooltip' => $cms->trans("Team Total Complete Games\n—Pitcher AAA excluded") ),
 	'shutouts'			=> array( 'label' => $cms->trans("ShO"), 'tooltip' => $cms->trans("Team Total Shutouts") ),
 	'team_saves'			=> array( 'label' => $cms->trans("Saves") ),
@@ -270,6 +270,16 @@ $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 function remove_zero_point($val) {
 	$val = preg_replace('/^0\./', '.', $val);
 	return $val;
+}
+
+function negposavg($val) {
+	global $la_team_ra;
+	if ($val > $la_team_ra) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
 }
 
 ?>

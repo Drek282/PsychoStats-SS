@@ -614,7 +614,7 @@ function get_team($args = array(), $minimal = false) {
 		$team['hist_rs'] = $team['hist_rs'] + $team['offence'][$s]['run_support'];
 		$count++;
 	}
-	$team['hist_rs'] = round($team['hist_rs'] / $count, 2);
+	$team['hist_rs'] = round($team['hist_rs'] / $count, 1);
 
 	// Get historical team average run differential.
 	$team['hist_rdiff'] = 0;

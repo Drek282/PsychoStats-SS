@@ -29,7 +29,7 @@
 {if $search}
 			<#Search criteria#> "<em>{$results.phrase|escape}</em>" <#matched#> <strong>{$total.ranked|commify}</strong> <#listed teams out of#> <strong>{$total.all|commify}</strong> <#total#>
 {else}
-			<#season#> <strong>{$season}</strong> :: <#league average runs against per 9 innings is#> <strong>{$teams.0.la_team_ra}</strong>
+			<#season#> <strong>{$season}</strong> :: <#league average runs against per 9 innings is#> <strong>{$la_team_ra}</strong>
 {/if}
 		</h2>
 		</div>

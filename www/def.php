@@ -175,10 +175,9 @@ foreach ($teams as $tm => $val) {
 	$teams[$tm]['team_ra'] ??= 0;
     $la_team_ra = $la_team_ra + $teams[$tm]['team_ra'];
 }
-$teams[0]['la_team_ra'] ??= 0;
 $total['ranked'] ??= 0;
 if ($total['ranked'] > 0) {
-	$teams[0]['la_team_ra'] = round($la_team_ra / $total['ranked'], 2);
+	$la_team_ra = round($la_team_ra / $total['ranked'], 2);
 }
 
 // reset $sort variable to first sort column
@@ -246,6 +245,7 @@ $cms->theme->assign(array(
 	'search_blurb'	=> $cms->trans('Search criteria "<em>%s</em>" matched %d ranked teams out of %d total',
 		psss_escape_html($q), $total['ranked'], $total['absolute']
 	),
+	'la_team_ra'	=> $la_team_ra,
 	'teams'	=> $teams,
 	'teams_table'	=> $table->render(),
 	'total'		=> $total,

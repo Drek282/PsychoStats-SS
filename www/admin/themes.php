@@ -71,7 +71,7 @@ if ($reinstall and $dir) {			// reinstall a local theme already on the hard driv
 			));
 		} else {
 			$message = $cms->message('theme-failure', array( 
-				'invalid'	=> true,
+				'invalid'	=> 'The theme directory does not contain a valid theme XML file.',
 				'message_title'	=> "Error reinstalling theme",
 				'message'	=> $newtheme->error()
 			));
@@ -88,6 +88,7 @@ if ($reinstall and $dir) {			// reinstall a local theme already on the hard driv
 		$submit = false;
 		if ($newtheme->code() != PSTHEME_ERR_XML) {
 			$message = $cms->message('theme-failure', array( 
+				'invalid'	=> 'The link is not to a valid theme XML file.',
 				'message_title'	=> "Error installing theme",
 				'message'	=> $newtheme->error()
 			));

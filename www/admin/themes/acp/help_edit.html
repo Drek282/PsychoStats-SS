@@ -16,7 +16,7 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 
 <div class="ps-form-container" id="ps-{$page}-form">
 <div class="ps-form">
-<form method="post" action="{url}">
+<form method="post" action="{url}" enctype="multipart/form-data">
 <fieldset>
 <legend>{if $id}<#Edit#>{else}<#New#>{/if} <#Help Entry#></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
@@ -37,15 +37,31 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 	</p>
 </div>
 
-<div{if $errors.img} class="err"{/if}>
-	<p class="err">{$errors.img|escape}</p>
-	<label><#Help Entry Image#>:</label>
-	<textarea name="phrase" rows="1" class="field medium">{$form.img|escape}</textarea>
+{if $id and !$msg_not_writable}
+<div id="himg-upload">
+	<h4><#Upload Help Image#></h4>
+	<p>
+		<input name="upload" type="submit" value="<#Upload from file#>" class="up-btn">
+		<input name="file" type="file" size="40">
+	</p>
+	<p>
+		<input name="upload" type="submit" value="<#Upload from URL#>" class="up-btn">
+		<input name="url" type="text" size="40" value="{$form.url|escape:'spaces_url'}">
+	</p>
 	<p class="small">
-		<#This should be a url link to a help image. By default these images are stored in the "img/help" folder in your root web directory.#> <#Images can be in gif, jpg, png or webp format.#><br>
-		<strong><#Example#>:</strong> <em>img/help/popcorn.jpg</em>
+		<strong><#OPTIONAL#>:</strong> <#You can now upload an image that will be associated with this help entry.#> <#This image will be displayed with the help entry as an illustration.#> <#This image can be in gif, jpg, png or webp format.#>
 	</p>
 </div>
+{elseif $id}
+{$msg_not_writable}
+{else}
+<div id="himg-upload">
+	<h4><#Help Image#></h4>
+	<p class="small">
+		<strong><#OPTIONAL#>:</strong> <#Once you have created and saved the help entry you can edit it to upload an associated image.#> <#This image will be displayed with the help entry as an illustration.#>
+	</p>
+</div>
+{/if}
 
 <div{if $errors.content} class="err"{/if}>
 	<p class="err">{$errors.content|escape}</p>

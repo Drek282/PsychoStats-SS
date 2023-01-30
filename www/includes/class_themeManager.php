@@ -163,9 +163,9 @@ function install() {
 		$created = array();
 		// loop through each file in the archive and save it to our local theme directory.
 		// every file in the zip must have the theme 'theme_name' as the root directory, or ignore it.
-		while ($zip_entry = zip_read($this->zip)) {
-			zip_entry_open($this->zip, $zip_entry);
-			$name = zip_entry_name($zip_entry);
+		for( $i = 0; $i < $za->numFiles; $i++ ) {
+			$zip_entry = $zip->statIndex($i);
+			$name = $zip_entry['name'];
 			if (strpos($name, $this->xml_name().'/') !== 0) {
 				$this->error("Invalid directory structure in theme archive. ABORTING INSTALLATION");
 				$ok = false;
@@ -187,7 +187,7 @@ function install() {
 				$file = catfile($this->template_dir, $name);
 				$fh = fopen($file,'wb');
 				if ($fh) {
-					fwrite($fh, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)), zip_entry_filesize($zip_entry));
+					fwrite($fh, $zip->getFromIndex($i);
 					fclose($fh);
 					@chmod($file, 0664);
 					$created[] = $file;
@@ -197,7 +197,7 @@ function install() {
 					break;
 				}
 			}
-			zip_entry_close($zip_entry);
+			$zip->close($zip_entry);
 		}
 		$this->close_zip();
 
@@ -303,19 +303,16 @@ function toggle($enabled) {
 
 // attempts to open the file for reading.
 function open_zip($file) {
+	$za = new ZipArchive;
 	$res = false;
-	if (!function_exists('zip_open')) {
-		$this->error("Error processing downloaded file. ZIP support not fully enabled in your PHP installation.");
-		return false;
-	}
-	$res = zip_open($file);
+	$res = $zip->open($file);
 	$this->zip = $res;
 	return $res ? true : false;
 }
 
 function close_zip() {
 	if ($this->zip) {
-		zip_close($this->zip);
+		$zip->close($this->zip);
 	}
 	$this->zip = null;
 }
@@ -342,9 +339,7 @@ function parse_headers($fields) {
 	if (!is_array($fields)) return $res;
 	foreach( $fields as $field ) {
 		if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
-            /* Obsolete /e switch.
-			$match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1]))); */
-			$match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./', function($m) { return strtoupper($m[0]); }, strtolower(trim($match[1])));
+			$match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function($m) { return strtoupper($m[0]); }, strtolower(trim($match[1])));
 			$match[1] = strtolower($match[1]);
 			if( isset($res[$match[1]]) ) {
 				$res[$match[1]] = array($res[$match[1]], $match[2]);

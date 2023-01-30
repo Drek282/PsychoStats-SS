@@ -1,0 +1,67 @@
+#himg-gallery {
+	border: 1px solid gray;
+	background-color: #eeeeee;
+	padding: 1em;
+}
+#himg-gallery strong {
+	font-size: 150%;
+	font-weight: bold;
+	color: gray;
+}
+#himg-gallery span {
+}
+#himg-gallery span himg {
+	margin: 5px;
+}
+#himg-gallery himg {
+	padding: 3px;
+}
+#himg-gallery .readonly {
+	padding: 2px;
+	border: 1px dashed red;
+	background-color: #ffeeee;
+}
+#himg-gallery p {
+	margin-top: 0.5em;
+	text-align: left;
+}
+
+#himg-upload {
+	border: 1px solid gray;
+	background-color: #ddddff;
+	overflow: hidden;
+	margin-bottom: 0.25em;
+	text-align: left;
+	padding: 1em;
+}
+#himg-upload h4, #himg-gallery h4 {
+	text-align: left;
+	font-size: 110%;
+	border-bottom: 2px solid #444499;
+	margin-bottom: 0.25em;
+	padding-bottom: 2px;
+}
+
+#himg-upload p {
+	margin-top: 0.5em;
+}
+#himg-upload .up-btn {
+	width: 150px;
+}
+
+#result {
+	line-height: 2em;
+	font-weight: bold;
+	text-align: center;
+	border: 1px solid gray;
+	margin-bottom: 0.25em;
+	background-color: #ffffee;
+	padding-left: 20px;
+}
+#result.good {
+	background: #eeffee url(../img/imgs/tick.png) no-repeat 16px 50%;
+}
+#result.bad {
+	background: #ffeeee url(../img/imgs/cross.png) no-repeat 16px 50%;
+}
+

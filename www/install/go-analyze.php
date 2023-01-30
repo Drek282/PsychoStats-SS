@@ -47,10 +47,7 @@ $optional_ext = array(
 	'ftp'	=> "FTP support is only needed if you want to be able to download updates, themes and plugins " . 
 		   "directly from your stats web pages. Also, the installer can use FTP to save your configuration.",
 	'gd'	=> "GD (version 2) support is recommended so that some dynamic images can be created within the " . 
-		   "team stats (charts and graphs).",
-	'gmp'	=> "GNU Multiple Precision support is only required for SteamID conversion routines for " . 
-            "team profiles.",
-	'zip'	=> "ZIP support will allow you to download and install new themes directly from the ACP."
+		   "team stats (charts and graphs)."
 );
 
 // check php and mysql versions for minimum requirement

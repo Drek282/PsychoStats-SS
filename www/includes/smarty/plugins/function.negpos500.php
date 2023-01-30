@@ -7,7 +7,7 @@
 
 
 /**
- * Smarty PS3 rankchange function plugin
+ * Smarty PS3 negpos500 function plugin
  *
  * Type:     function<br>
  * Name:     negpos500<br>

@@ -71,6 +71,7 @@ $form->field('enabled');
 $form->field('title','blank');
 $form->field('img');
 $form->field('content','blank');
+$form->field('url');
 
 // process the form if submitted
 $valid = true;
@@ -120,9 +121,9 @@ if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->
 
 $tokens ??= null;
 $cms->theme->assign(array(
-	'errors'	=> $form->errors(),
 	'help'		=> $help,
-	'form'		=> $form->values(),
+	'form'		=> $form ? $form->values() : array('url' => null,),
+	'errors'	=> $form ? $form->errors() : array('fatal' => null,),
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'tokens'	=> $tokens,
 ));
@@ -130,6 +131,7 @@ $cms->theme->assign(array(
 // display the output
 $basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
+$cms->theme->add_css('css/imgs.css');
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_js('js/help.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer', '');

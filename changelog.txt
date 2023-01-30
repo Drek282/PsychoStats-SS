@@ -11,6 +11,7 @@ Version 0.0.4b (in progress)
 * [Tweaked] PT20X template.
 * [Tweaked] Behaviour of dash_if_empty function.  Removed it where it was serving no purpose.
 * [Tweaked] Default privacy policy updates.
+* [Removed] Requirements for npm and deprecated zip modules.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -12,82 +12,13 @@
 {$message} 
 
 {if $allow.install}
+{if $theme_dirs}
 <div class="ps-theme-install">
 <form action="{url}" method="post">
 	<div><h2><#Install new theme#>:</h2></div>
-	{if $submit and !$confirm}	{* show a confirmation message and button to actually install the specified theme *}
-	<div>
-		<label><#XML URL Location#>:</label>
-		<span><strong><a href="{$url|escape}">{$url|escape}</a></strong></span>
-		<input name="submit" value="1" type="hidden">
-		<input name="url" value="{$url|escape}" type="hidden">
-	</div>
-	<div>&nbsp;</div>
-	<div><h2><#Please confirm theme installation!#></h2></div>
-	<div>
-		<#Are you sure you want to install this theme?#>
-		<input name="confirm" value="<#Yes#>" type="submit" class="btn">
-		/ 
-		<input name="cancel"  value="<#No#>" type="submit" class="btn">
-		<p><strong><#Themes should only be installed from trusted sources!#></strong></p>
-	</div>
-{if $newtheme.theme_exists}
-	<div class="theme-warn">
-		<p>
-			<strong><#Warning#>:</strong> This theme already exists on the local server. 
-			If you choose to install this theme it will overwrite the existing theme on your server.
-			This is ok if you're installing a newer version.
-		</p>
-	</div>
-{/if}
-	<div>&nbsp;</div>
-	<div class="theme-info">
-		{if $newtheme.image}<div class="image"><img src="{$newtheme.image|escape}" alt="No preview available" title="Preview of {$newtheme.theme_name|escape}"></div>{/if}
-		<div>
-			<label><#Short Name#>:</label>
-			<span>{$newtheme.theme_name|escape} {if $newtheme.parent}<em>(<#parent#>: {$newtheme.parent|escape})</em>{/if}</span>
-		</div>
-		<div>
-			<label><#Title#>:</label>
-			<span>{$newtheme.title|escape}</span>
-		</div>
-		<div>
-			<label><#Version#>:</label>
-			<span>{$newtheme.version|escape}</span>
-		</div>
-		<div>
-			<label><#Author#>:</label>
-			{if $newtheme._author.email}
-			<span><a href="mailto:{$newtheme._author.email|escape}">{$newtheme.author|escape}</a></span>
-			{else}
-			<span>{$newtheme.author|escape}</span>
-			{/if}
-		</div>
-		<div>
-			<label><#File#>:</label>
-			<span><a href="{$newtheme.file|escape}">{$newtheme.file|truncate:'44':'...':true:true|escape}</a></span>
-		</div>
-		<div>
-			<label><#File Size#>:</label>
-			<span>{if $newtheme._file.size}{$newtheme._file.size|abbrnum}{else}<em><#Unknown#></em>{/if}</span>
-		</div>
-		<div>
-			<label><#File Type#>:</label>
-			<span>{if $newtheme._file.type}{$newtheme._file.type|upper|escape}{else}<em><#Unknown#></em>{/if}</span>
-		</div>
-		<div class="theme-desc">{$newtheme.description|escape}</div>
-		<div class="clear"></div>
-	</div>
-	{else} {* Provide input to specify URL to get theme from *}
-	<div class="row">
-		<label><#XML URL Location#>:</label>
-		<input name="url" value="{$url|escape}" type="text" class="field">
-		<input name="submit" value="<#Fetch#>" type="submit" class="btn">
-	</div>
-{if $theme_dirs}
 	<div class="row-sep">
 		<p>
-		<#You can also reinstall a local theme in the list below.#> 
+		<#You can install a theme from the list below.#> 
 		</p>
 		<p>
 		<#These themes are already in your themes directory but are not installed in your database.#>
@@ -96,15 +27,14 @@
 	<div class="row">
 		<label><#Select Theme#>:</label>
 		<select name="dir">
-			<option><#Select theme to reinstall#>&nbsp;&nbsp;</option>
+			<option><#Select theme to install#>&nbsp;&nbsp;</option>
 	{foreach from=$theme_dirs item="d"}
 			<option value="{$d.directory|escape}">{$d.title|escape} ({$d.directory|escape})</option>
 	{/foreach}
 		</select>
-		<input name="reinstall" value="<#Reinstall#>" type="submit" class="btn">
+		<input name="reinstall" value="<#Install#>" type="submit" class="btn">
 	</div>
 {/if}
-	{/if}
 </form>
 </div>
 {else}
@@ -113,7 +43,6 @@
 		<h4><#Themes can not be installed!#></h4>
 		<p><#Your server environment will not allow new themes to be installed due to the following reasons.#></p>
 		<ul>
-{if !$allow.url}			<li><#allow_url_fopen INI setting is disabled.#> See: <a href="http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen">php:allow_url_fopen</a></li>{/if}
 {if !$allow.write}			<li><#Theme directory <em>{$conf.theme.template_dir|escape}</em> is not writable by web server.#> <#Please fix permissions.#></li>{/if}
 		</ul>
 	</div>

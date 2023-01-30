@@ -164,7 +164,7 @@ function install() {
 		// loop through each file in the archive and save it to our local theme directory.
 		// every file in the zip must have the theme 'theme_name' as the root directory, or ignore it.
 		for( $i = 0; $i < $za->numFiles; $i++ ) {
-			$zip_entry = $zip->statIndex($i);
+			$zip_entry = $za->statIndex($i);
 			$name = $zip_entry['name'];
 			if (strpos($name, $this->xml_name().'/') !== 0) {
 				$this->error("Invalid directory structure in theme archive. ABORTING INSTALLATION");
@@ -187,7 +187,7 @@ function install() {
 				$file = catfile($this->template_dir, $name);
 				$fh = fopen($file,'wb');
 				if ($fh) {
-					fwrite($fh, $zip->getFromIndex($i);
+					fwrite($fh, $za->getFromIndex($i));
 					fclose($fh);
 					@chmod($file, 0664);
 					$created[] = $file;
@@ -197,7 +197,7 @@ function install() {
 					break;
 				}
 			}
-			$zip->close($zip_entry);
+			$za->close($zip_entry);
 		}
 		$this->close_zip();
 
@@ -305,14 +305,14 @@ function toggle($enabled) {
 function open_zip($file) {
 	$za = new ZipArchive;
 	$res = false;
-	$res = $zip->open($file);
+	$res = $za->open($file);
 	$this->zip = $res;
 	return $res ? true : false;
 }
 
 function close_zip() {
 	if ($this->zip) {
-		$zip->close($this->zip);
+		$za->close($this->zip);
 	}
 	$this->zip = null;
 }

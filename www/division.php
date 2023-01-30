@@ -163,7 +163,7 @@ $dtable->start_and_sort($dstart, $dsort, $dorder, 'd');
 $dtable->columns(array(
 	'team_n'			=> array( 'label' => $cms->trans("Team #"), 'callback' => 'psss_table_team_link' ),
 	'team_era'			=> array( 'label' => $cms->trans("ERA"), 'tooltip' => $cms->trans("Team Earned Runs Against Average per 9 Innings") ),
-	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Team Runs Against Average per 9 Innings") ),
+	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Team Runs Against Average per 9 Innings"), 'callback' => 'negposraavg' ),
 //	'complete_games'			=> array( 'label' => $cms->trans("Complete Games") ),
 	'shutouts'			=> array( 'label' => $cms->trans("Shutouts") ),
 	'team_saves'			=> array( 'label' => $cms->trans("Saves") ),
@@ -198,7 +198,7 @@ $otable->sort_baseurl(array( 'id' => $id, '_anchor' => 'offence' ));
 $otable->start_and_sort($ostart, $osort, $oorder, 'o');
 $otable->columns(array(
 	'team_n'			=> array( 'label' => $cms->trans("Team #"), 'callback' => 'psss_table_team_link' ),
-	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game"), 'callback' => 'one_decimal_zero' ),
+	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Team Total Runs Scored per Game"), 'callback' => 'negposrsavg' ),
 	'runs'			=> array( 'label' => $cms->trans("R"), 'tooltip' => $cms->trans("Team Total Runs Scored") ),
 	'hits'			=> array( 'label' => $cms->trans("H"), 'tooltip' => $cms->trans("Team Total Hits") ),
 	'doubles'			=> array( 'label' => $cms->trans("2B"), 'tooltip' => $cms->trans("Team Total Doubles") ),
@@ -240,6 +240,8 @@ $shades = array(
 	's_divisionoffence'		=> null,
 );
 
+$team_ra = $division['team_ra'];
+$run_support = $division['run_support'];
 $cms->theme->assign(array(
 	'division'			=> $division,
 	'advanced_table'	=> $atable->render(),
@@ -293,6 +295,27 @@ function remove_zero_point($val) {
 function one_decimal_zero($val) {
 	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
 	return $val;
+}
+
+function negposraavg($val) {
+	global $team_ra;
+	if ($val > $team_ra) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
+}
+
+function negposrsavg($val) {
+	global $run_support;
+	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
+	if ($val < $run_support) {
+		$output = sprintf("<span class='neg'>$val</span>");
+	} else {
+		$output = sprintf("<span class='pos'>$val</span>");
+	}
+	return $output;
 }
 
 ?>

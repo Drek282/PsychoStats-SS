@@ -297,6 +297,12 @@ function one_decimal_zero($val) {
 	return $val;
 }
 
+function one_decimal_zerozero($val) {
+	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
+	if (preg_match('/^[0-9]+\.[1-9]$/', $val)) $val = $val . "0";
+	return $val;
+}
+
 function negposraavg($val) {
 	global $team_ra;
 	if ($val > $team_ra) {

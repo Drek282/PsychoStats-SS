@@ -169,7 +169,7 @@ div#ps-seasons_h-dropdown {
 	position: absolute;
 	width: 230px;
 	height: 103px;
-	background: transparent url(../img/popup-login.gif) no-repeat;
+	background: transparent url(../img/popup-login.webp) no-repeat;
 	overflow: hidden;
 	z-index: 65535;
 }
@@ -186,6 +186,9 @@ div#ps-seasons_h-dropdown {
 div#ps-login-inner {
     text-align: center;
 }
+div#ps-login-inner h4 {
+	color: #16171c;
+}
 #ps-login-inner a {
     font-size: larger;
 }
@@ -193,6 +196,7 @@ div#ps-login-inner {
 	margin-bottom: 0.2em;
 }
 #ps-login-inner p label {
+	color: #16171c;
 	padding-right: 5px;
 	margin-top: 5px;
 	float: left;
@@ -208,6 +212,7 @@ div#ps-login-inner {
 	cursor: pointer;
 }
 #ps-login-reg {
+	color: #16171c;
 	position: absolute;
 	right: 10px;
 	top: 13px;
@@ -216,13 +221,14 @@ div#ps-login-inner {
 	text-decoration: underline;
 }
 #ps-login-options {
+	color: #16171c;
 	position: absolute;
 	right: 95px;
 	bottom: 7px;
 	font-size: 8pt;
 }
 #ps-login-popup input.field {
-	border: 1px solid #888;
+	border: 1px solid #8a8b79;
 	width: 130px;
 }
 #ps-login-options a {
@@ -238,9 +244,9 @@ div#ps-login-inner {
 	position: absolute;
 	padding: 2em;
 	text-align: left;
-	background: #333;
-	color: #DD8E4E;
-	border: 1px solid #666;
+	background: #2f2d30;
+	color: #71a5f7;
+	border: 1px solid #342b24;
 	width: 300px;
 	font-size: 110%;
 }

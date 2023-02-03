@@ -270,8 +270,7 @@ $basename = basename(__FILE__, '.php');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 function remove_zero_point($val) {
-	$val = preg_replace('/^0\./', '.', $val);
-	return $val;
+	return preg_replace('/^0\./', '.', $val);
 }
 
 function negposavg($val) {

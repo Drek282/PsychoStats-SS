@@ -141,9 +141,9 @@ $table->columns(array(
 	'divisionname'		=> array( 'label' => $cms->trans("Division Name"), 'callback' => 'psss_table_division_link' ),
 	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'tooltip' => $cms->trans("Division Average"), 'callback' => 'negpos500' ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("Division Average (Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
-	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Division Average Runs Against per 9 Innings") ),
+	'team_ra'		=> array( 'label' => $cms->trans("RA"), 'tooltip' => $cms->trans("Division Average Runs Against per 9 Innings"), 'callback' => 'one_decimal_zerozero' ),
 	'run_support'			=> array( 'label' => $cms->trans("RS"), 'tooltip' => $cms->trans("Division Average Total Runs Scored per Game"), 'callback' => 'one_decimal_zero' ),
-	'team_whip'			=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("Division Average (Hits + Walks)/Inning Pitched") ),
+	'team_whip'			=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("Division Average (Hits + Walks)/Inning Pitched"), 'callback' => 'one_decimal_zerozero' ),
 	'ops'		=> array( 'label' => $cms->trans("OPS"), 'tooltip' => $cms->trans("Division Average On Base Plus Slugging"), 'callback' => 'remove_zero_point' ),
 	'team_drat'			=> array( 'label' => $cms->trans("DRAT"), 'tooltip' => $cms->trans("Division Average Team Defensive Rating:\n—all defensive stats combined into a single number, not including wild pitches\n—roughly equivalent to defensive runs saved per 9 innings"), 'callback' => 'remove_zero_point' ),
 	'team_srat'			=> array( 'label' => $cms->trans("SRAT"), 'tooltip' => $cms->trans("Division Average Team Speed Rating:\n—all offensive stats affected by baserunning combined into a single number\n—roughly equivalent to runs scored per 9 innings affected by team speed"), 'callback' => 'remove_zero_point' ),
@@ -191,13 +191,15 @@ function negpos500($val) {
 }
 
 function remove_zero_point($val) {
-	$val = preg_replace('/^0\./', '.', $val);
-	return $val;
+	return preg_replace('/^0\./', '.', $val);
 }
 
 function one_decimal_zero($val) {
-	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
-	return $val;
+	return sprintf("%.1f", $val);
+}
+
+function one_decimal_zerozero($val) {
+	return sprintf("%.2f", $val);
 }
 
 

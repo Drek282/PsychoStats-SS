@@ -288,19 +288,15 @@ function standings($val) {
 }
 
 function remove_zero_point($val) {
-	$val = preg_replace('/^0\./', '.', $val);
-	return $val;
+	return preg_replace('/^0\./', '.', $val);
 }
 
 function one_decimal_zero($val) {
-	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
-	return $val;
+	return sprintf("%.1f", $val);
 }
 
 function one_decimal_zerozero($val) {
-	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
-	if (preg_match('/^[0-9]+\.[1-9]$/', $val)) $val = $val . "0";
-	return $val;
+	return sprintf("%.2f", $val);
 }
 
 function negposraavg($val) {
@@ -315,7 +311,7 @@ function negposraavg($val) {
 
 function negposrsavg($val) {
 	global $run_support;
-	$val = preg_replace('/^([0-9]+)$/', '$1.0', $val);
+	$val = sprintf("%.1f", $val);
 	if ($val < $run_support) {
 		$output = sprintf("<span class='neg'>$val</span>");
 	} else {

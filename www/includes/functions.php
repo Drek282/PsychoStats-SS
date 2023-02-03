@@ -254,10 +254,8 @@ function neg_pos($val) {
 }
 
 function neg_pos_500($val) {
+	$val = sprintf("%.3f", $val);
 	$val = preg_replace('/^0\./', '.', $val);
-	if (empty(intval($val * 1000))) $val = ".000";
-	if (preg_match('/^\.[1-9]$/', $val)) $val = $val . "0";
-	if (preg_match('/^\.[1-9][0-9]$/', $val)) $val = $val . "0";
 	if ($val < 0.5) {
 		$output = sprintf("<span class='neg'>$val</span>");
 	} else {

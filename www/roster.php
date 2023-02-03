@@ -251,8 +251,7 @@ function negpos500($val, $med = 0.5, $remz = true) {
 }
 
 function remove_zero_point($val) {
-	$val = preg_replace('/^0\./', '.', $val);
-	return $val;
+	return preg_replace('/^0\./', '.', $val);
 }
 
 ?>

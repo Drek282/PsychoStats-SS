@@ -487,8 +487,17 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Calculate wOBA.
         rpo_dfo['wOBA'] = round((0.69 * rpo_dfo['BB'] + 0.89 * (rpo_dfo['H'] - rpo_dfo['D'] - rpo_dfo['T'] - rpo_dfo['HR']) + 1.27 * rpo_dfo['D'] + 1.62 * rpo_dfo['T'] + 2.10 * rpo_dfo['HR']) / (rpo_dfo['AB'] + rpo_dfo['BB'] + rpo_dfo['SF']), 3)
 
+        # Convert OPS to float
+        rpo_dfo['OPS'] = rpo_dfo['OPS'].astype(float)
+
+        # Calculate V.
+        rpo_dfo['V'] = round((rpo_dfo['OPS'] * rpo_dfo['AB'] * 0.476 / 1000), 2)
+
+        # If player AAA V = 0
+        rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
+
         # Reorder the columns.
-        rpo_dfo = rpo_dfo.loc[:, ['Player_Name','G','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','OPS','wOBA','SH','F','SF','GDP','SB','CS','OP','E','PB']]
+        rpo_dfo = rpo_dfo.loc[:, ['Player_Name','G','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','OPS','wOBA','SH','F','SF','GDP','SB','CS','OP','E','PB','V']]
 
         # Replace NaN with 0.
         rpo_dfo = rpo_dfo.fillna(0)
@@ -508,11 +517,11 @@ def generate_psss_team_rosters (season, season_url, season_dir):
             # Is the row empty?
             if data:
                 # Update database.
-                query = "UPDATE psss_team_rpo SET po_games_played='" + str(row['G']) + "', po_at_bats='" + str(row['AB']) + "', po_runs='" + str(row['R']) + "', po_hits='" + str(row['H']) + "', po_doubles='" + str(row['D']) + "', po_triples='" + str(row['T']) + "', po_home_runs='" + str(row['HR']) + "', po_rbis='" + str(row['RBI']) + "', po_walks='" + str(row['BB']) + "', po_strikeouts='" + str(row['K']) + "', po_batting_average='" + str(row['BA']) + "', po_on_base_average='" + str(row['OBA']) + "', po_slugging_average='" + str(row['SlgA']) + "', po_ops='" + str(row['OPS']) + "', po_woba='" + str(row['wOBA']) + "', po_sacrifice_hits='" + str(row['SH']) + "', po_sacrifice_fails='" + str(row['F']) + "', po_sacrifice_flies='" + str(row['SF']) + "', po_gidps='" + str(row['GDP']) + "', po_stolen_bases='" + str(row['SB']) + "', po_caught_stealing='" + str(row['CS']) + "', po_outstanding_plays='" + str(row['OP']) + "', po_fielding_errors='" + str(row['E']) + "', po_passed_balls='" + str(row['PB']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+                query = "UPDATE psss_team_rpo SET po_games_played='" + str(row['G']) + "', po_at_bats='" + str(row['AB']) + "', po_runs='" + str(row['R']) + "', po_hits='" + str(row['H']) + "', po_doubles='" + str(row['D']) + "', po_triples='" + str(row['T']) + "', po_home_runs='" + str(row['HR']) + "', po_rbis='" + str(row['RBI']) + "', po_walks='" + str(row['BB']) + "', po_strikeouts='" + str(row['K']) + "', po_batting_average='" + str(row['BA']) + "', po_on_base_average='" + str(row['OBA']) + "', po_slugging_average='" + str(row['SlgA']) + "', po_ops='" + str(row['OPS']) + "', po_woba='" + str(row['wOBA']) + "', po_sacrifice_hits='" + str(row['SH']) + "', po_sacrifice_fails='" + str(row['F']) + "', po_sacrifice_flies='" + str(row['SF']) + "', po_gidps='" + str(row['GDP']) + "', po_stolen_bases='" + str(row['SB']) + "', po_caught_stealing='" + str(row['CS']) + "', po_outstanding_plays='" + str(row['OP']) + "', po_fielding_errors='" + str(row['E']) + "', po_passed_balls='" + str(row['PB']) + "', po_v='" + str(row['V']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
                 cursor.execute(query)
             else:
                 # Add new entry to db.
-                query = "INSERT INTO psss_team_rpo VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['G']) + "', '" + str(row['AB']) + "', '" + str(row['R']) + "', '" + str(row['H']) + "', '" + str(row['D']) + "', '" + str(row['T']) + "', '" + str(row['HR']) + "', '" + str(row['RBI']) + "', '" + str(row['BB']) + "', '" + str(row['K']) + "', '" + str(row['BA']) + "', '" + str(row['OBA']) + "', '" + str(row['SlgA']) + "', '" + str(row['OPS']) + "', '" + str(row['wOBA']) + "', '" + str(row['SH']) + "', '" + str(row['F']) + "', '" + str(row['SF']) + "', '" + str(row['GDP']) + "', '" + str(row['SB']) + "', '" + str(row['CS']) + "', '" + str(row['OP']) + "', '" + str(row['E']) + "', '" + str(row['PB']) + "')"
+                query = "INSERT INTO psss_team_rpo VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['G']) + "', '" + str(row['AB']) + "', '" + str(row['R']) + "', '" + str(row['H']) + "', '" + str(row['D']) + "', '" + str(row['T']) + "', '" + str(row['HR']) + "', '" + str(row['RBI']) + "', '" + str(row['BB']) + "', '" + str(row['K']) + "', '" + str(row['BA']) + "', '" + str(row['OBA']) + "', '" + str(row['SlgA']) + "', '" + str(row['OPS']) + "', '" + str(row['wOBA']) + "', '" + str(row['SH']) + "', '" + str(row['F']) + "', '" + str(row['SF']) + "', '" + str(row['GDP']) + "', '" + str(row['SB']) + "', '" + str(row['CS']) + "', '" + str(row['OP']) + "', '" + str(row['E']) + "', '" + str(row['PB']) + "', '" + str(row['V']) + "')"
                 cursor.execute(query)
         
         # Clean up.
@@ -592,6 +601,16 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Replace ---- with 0.
         rpi_dfo = rpi_dfo.replace('----', 0)
 
+        # Convert WHIP and IP to float
+        rpi_dfo['WHIP'] = rpi_dfo['WHIP'].astype(float)
+        rpi_dfo['IP'] = rpi_dfo['IP'].astype(float)
+
+        # Calculate V.
+        rpi_dfo['V'] = round(((3 - rpi_dfo['WHIP']) * rpi_dfo['IP'] * 0.952 / 1000), 2)
+
+        # If player AAA V = 0
+        rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
+
         # Replace NaN with 0.
         rpi_dfo = rpi_dfo.fillna(0)
 
@@ -615,11 +634,11 @@ def generate_psss_team_rosters (season, season_url, season_dir):
             # Is the row empty?
             if data:
                 # Update database.
-                query = "UPDATE psss_team_rpi d SET pi_wins='" + str(row['W']) + "', pi_losses='" + str(row['L']) + "', pi_win_percent='" + str(row['pct.']) + "', pi_era='" + str(row['ERA']) + "', pi_games_played='" + str(row['G']) + "', pi_games_started='" + str(row['GS']) + "', pi_complete_games='" + str(row['CG']) + "', pi_shutouts='" + str(row['ShO']) + "', pi_run_support='" + str(row['RS']) + "', pi_saves='" + str(row['Sv']) + "', pi_innings_pitched='" + str(row['IP']) + "', pi_runs_against='" + str(row['R']) + "', pi_earned_runs_against='" + str(row['ER']) + "', pi_hits_surrendered='" + str(row['H']) + "', pi_opp_batting_average='" + str(row['BA']) + "', pi_opp_walks='" + str(row['BB']) + "', pi_whip='" + str(row['WHIP']) + "', pi_strikeouts='" + str(row['K']) + "', pi_wild_pitches='" + str(row['WP']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
+                query = "UPDATE psss_team_rpi d SET pi_wins='" + str(row['W']) + "', pi_losses='" + str(row['L']) + "', pi_win_percent='" + str(row['pct.']) + "', pi_era='" + str(row['ERA']) + "', pi_games_played='" + str(row['G']) + "', pi_games_started='" + str(row['GS']) + "', pi_complete_games='" + str(row['CG']) + "', pi_shutouts='" + str(row['ShO']) + "', pi_run_support='" + str(row['RS']) + "', pi_saves='" + str(row['Sv']) + "', pi_innings_pitched='" + str(row['IP']) + "', pi_runs_against='" + str(row['R']) + "', pi_earned_runs_against='" + str(row['ER']) + "', pi_hits_surrendered='" + str(row['H']) + "', pi_opp_batting_average='" + str(row['BA']) + "', pi_opp_walks='" + str(row['BB']) + "', pi_whip='" + str(row['WHIP']) + "', pi_strikeouts='" + str(row['K']) + "', pi_wild_pitches='" + str(row['WP']) + "', pi_v='" + str(row['V']) + "' WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
                 cursor.execute(query)
             else:
                 # Add new entry to db.
-                query = "INSERT INTO psss_team_rpi VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['W']) + "', '" + str(row['L']) + "', '" + str(row['pct.']) + "', '" + str(row['ERA']) + "', '" + str(row['G']) + "', '" + str(row['GS']) + "', '" + str(row['CG']) + "', '" + str(row['ShO']) + "', '" + str(row['RS']) + "', '" + str(row['Sv']) + "', '" + str(row['IP']) + "', '" + str(row['R']) + "', '" + str(row['ER']) + "', '" + str(row['H']) + "', '" + str(row['BA']) + "', '" + str(row['BB']) + "', '" + str(row['WHIP']) + "', '" + str(row['K']) + "', '" + str(row['WP']) + "')"
+                query = "INSERT INTO psss_team_rpi VALUES ('" + str(season) + "', '" + str(team) + "', '" + row['Player_Name'] + "', '" + str(row['W']) + "', '" + str(row['L']) + "', '" + str(row['pct.']) + "', '" + str(row['ERA']) + "', '" + str(row['G']) + "', '" + str(row['GS']) + "', '" + str(row['CG']) + "', '" + str(row['ShO']) + "', '" + str(row['RS']) + "', '" + str(row['Sv']) + "', '" + str(row['IP']) + "', '" + str(row['R']) + "', '" + str(row['ER']) + "', '" + str(row['H']) + "', '" + str(row['BA']) + "', '" + str(row['BB']) + "', '" + str(row['WHIP']) + "', '" + str(row['K']) + "', '" + str(row['WP']) + "', '" + str(row['V']) + "')"
                 cursor.execute(query)
         
         # Clean up.

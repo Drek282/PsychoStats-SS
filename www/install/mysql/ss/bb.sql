@@ -100,6 +100,7 @@ CREATE TABLE `psss_team_rpi` (
   `pi_whip` decimal(4,2) NOT NULL default '0.00',
   `pi_strikeouts` smallint unsigned NOT NULL default '0',
   `pi_wild_pitches` smallint unsigned NOT NULL default '0',
+  `pi_v` decimal(3,2) NOT NULL default '0.00',
   PRIMARY KEY  (`season`,`team_id`,`player_name`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
@@ -131,6 +132,7 @@ CREATE TABLE `psss_team_rpo` (
   `po_outstanding_plays` smallint unsigned NOT NULL default '0',
   `po_fielding_errors` smallint unsigned NOT NULL default '0',
   `po_passed_balls` smallint unsigned NOT NULL default '0',
+  `po_v` decimal(3,2) NOT NULL default '0.00',
   PRIMARY KEY  (`season`,`team_id`,`player_name`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 

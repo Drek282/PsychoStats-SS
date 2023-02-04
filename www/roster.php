@@ -158,10 +158,11 @@ $dtable->columns(array(
 	'pi_opp_walks'				=> array( 'label' => $cms->trans("BB"), 'tooltip' => $cms->trans("Walks Surrendered") ),
 	'pi_whip'					=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("(Hits + Walks)/Inning Pitched") ),
 	'pi_strikeouts'				=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Strikeouts") ),
-	'pi_wild_pitches'			=> array( 'label' => $cms->trans("WP"), 'tooltip' => $cms->trans("Wild Pitches") )
+	'pi_wild_pitches'			=> array( 'label' => $cms->trans("WP"), 'tooltip' => $cms->trans("Wild Pitches") ),
+	'pi_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on WHIP and IP\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point' )
 ));
 $dtable->column_attr('player_name', 'class', 'left');
-$dtable->column_attr('pi_wild_pitches', 'class', 'right');
+$dtable->column_attr('pi_v', 'class', 'right');
 $ps->team_pitcher_table_mod($dtable);
 $cms->filter('roster_pitcher_table_object', $dtable);
 
@@ -197,10 +198,11 @@ $otable->columns(array(
 	'po_caught_stealing'		=> array( 'label' => $cms->trans("CS"), 'tooltip' => $cms->trans("Caught Stealing") ),
 	'po_outstanding_plays'		=> array( 'label' => $cms->trans("OP"), 'tooltip' => $cms->trans("Outstanding Plays") ),
 	'po_fielding_errors'		=> array( 'label' => $cms->trans("E"), 'tooltip' => $cms->trans("Fielding Errors") ),
-	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_empty' )
+	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_empty' ),
+	'po_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on OPS and AB\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point' )
 ));
 $otable->column_attr('player_name', 'class', 'left');
-$otable->column_attr('po_passed_balls', 'class', 'right');
+$otable->column_attr('po_v', 'class', 'right');
 $ps->team_position_table_mod($otable);
 $cms->filter('roster_position_table_object', $otable);
 

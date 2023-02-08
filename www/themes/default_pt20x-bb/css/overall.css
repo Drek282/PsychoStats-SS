@@ -187,7 +187,7 @@ div#ps-login-inner {
     text-align: center;
 }
 div#ps-login-inner h4 {
-	color: #16171c;
+	color: #9dd4cf;
 }
 #ps-login-inner a {
     font-size: larger;
@@ -196,7 +196,7 @@ div#ps-login-inner h4 {
 	margin-bottom: 0.2em;
 }
 #ps-login-inner p label {
-	color: #16171c;
+	color: #9dd4cf;
 	padding-right: 5px;
 	margin-top: 5px;
 	float: left;
@@ -212,7 +212,7 @@ div#ps-login-inner h4 {
 	cursor: pointer;
 }
 #ps-login-reg {
-	color: #16171c;
+	color: #9dd4cf;
 	position: absolute;
 	right: 10px;
 	top: 13px;
@@ -221,7 +221,7 @@ div#ps-login-inner h4 {
 	text-decoration: underline;
 }
 #ps-login-options {
-	color: #16171c;
+	color: #9dd4cf;
 	position: absolute;
 	right: 95px;
 	bottom: 7px;

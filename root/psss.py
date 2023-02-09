@@ -449,6 +449,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Replace commas with # as a placeholder.
         raw_rpo = re.sub(r',', '#', raw_rpo, 200, re.MULTILINE)
 
+        # Fix names with brackets.
+        raw_rpo = re.sub(r'\(.+?#', '#', raw_rpo, 200, re.MULTILINE)
+
         # Delete single quotes.
         raw_rpo = re.sub(r"'", '', raw_rpo, 200, re.MULTILINE)
 
@@ -567,6 +570,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
 
         # Replace commas with # as a placeholder.
         raw_rpi = re.sub(r',', '#', raw_rpi, 200, re.MULTILINE)
+
+        # Fix names with brackets.
+        raw_rpi = re.sub(r'\(.+?#', '#', raw_rpi, 200, re.MULTILINE)
 
         # Delete single quotes.
         raw_rpi = re.sub(r"'", '', raw_rpi, 200, re.MULTILINE)

@@ -491,7 +491,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         rpo_dfo['OPS'] = rpo_dfo['OPS'].astype(float)
 
         # Calculate V.
-        rpo_dfo['V'] = round((rpo_dfo['OPS'] * rpo_dfo['AB'] * 0.476 / 1000), 2)
+        rpo_dfo['V'] = round((rpo_dfo['OPS'] * rpo_dfo['AB'] * 0.595 / 1000), 2)
 
         # If player AAA V = 0
         rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
@@ -606,7 +606,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         rpi_dfo['IP'] = rpi_dfo['IP'].astype(float)
 
         # Calculate V.
-        rpi_dfo['V'] = round(((3 - rpi_dfo['WHIP']) * rpi_dfo['IP'] * 0.952 / 1000), 2)
+        rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP']) * rpi_dfo['IP'] * 1.666 / 1000), 2)
 
         # If player AAA V = 0
         rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'

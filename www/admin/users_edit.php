@@ -131,6 +131,10 @@ if ($submit) {
 	if (!array_key_exists($input['accesslevel'], $u->accesslevels())) {
 		$form->error('accesslevel', $cms->trans("Invalid access level specified"));
 	}
+
+	if ($u->load_user($input['username'], 'username')) {
+		$form->error('username', $cms->trans("Username already exists under a different user"));
+	}
 	
 	$valid = ($valid and !$form->has_errors());
 	while ($valid) {
@@ -240,7 +244,7 @@ if ($submit) {
 			}
 
 			if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
-				$input['temp_password'] = $team_user->hash(psss_generate_pw());
+				$input['temp_password'] = $u->hash(psss_generate_pw());
 				$input['email_confirmed'] = 0;
 				$input['tpw_timestamp'] = time();
 			} else {

@@ -355,8 +355,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         query = "SELECT * FROM psss_team_ids_names WHERE team_id='" + str(team) + "' AND owner_name LIKE \"" + owner_name + "%\""
         cursor.execute(query)
         data = cursor.fetchone()
-        # Check that the owner_name match is for the MAX(lastseen)
+        # Does team id and owner name exist in the db?
         if data:
+            # Check that the owner_name match is for the MAX(lastseen)
             query = "SELECT owner_name, MAX(lastseen) lastseen FROM psss_team_ids_names WHERE team_id='" + str(team) + "'"
             cursor.execute(query)
             owner_check = cursor.fetchone()
@@ -367,13 +368,10 @@ def generate_psss_team_rosters (season, season_url, season_dir):
                 # Update lastseen if it is newer.
                 query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(tdtd) + "' > i.lastseen, '" + str(tdtd) + "', i.lastseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
                 cursor.execute(query)
-                data = {}
-                owner_check = {}
                 add_name = False
-            else:
-                owner_check = {}
-        # Does team id and owner name exist in the db?
-        if data:
+            
+            owner_check = {}
+            
             # Update firstseen if it is older.
             query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(tdtd) + "' < i.firstseen, '" + str(tdtd) + "', i.firstseen) WHERE i.team_id='" + str(team) + "' AND i.owner_name LIKE \"" + owner_name + "%\""
             cursor.execute(query)
@@ -392,7 +390,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
                 cursor.execute(query)
                 admin_check = cursor.fetchone()
                 if (admin_check and admin_check['accesslevel'] != 99):
-                    query = "DELETE FROM psss_user WHERE team_id='" + str(data['userid']) + "'"
+                    query = "DELETE FROM psss_user WHERE userid='" + str(data['userid']) + "'"
                     cursor.execute(query)
                 admin_check = {}
                 # Reset psss_team_profile to defaults for the team_id.
@@ -412,6 +410,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
                 query = "INSERT IGNORE INTO psss_team_ids_names VALUES ('" + str(id) + "', '" + str(team) + "', '', \"" + owner_name + "\", '" + str(tdtd) + "', '" + str(tdtd) + "')"
                 cursor.execute(query)
 
+        # If team_name and owner_name are empty, delete row.
+        query = "DELETE FROM psss_team_ids_names WHERE team_name='' AND owner_name=''"
+        cursor.execute(query)
 
         ## Process position player stats.
         # Remove raw_ps_dump prefix to search string and create the raw_rpo variable.

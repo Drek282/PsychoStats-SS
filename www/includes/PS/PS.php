@@ -2138,9 +2138,8 @@ function flagimg($cc, $args = array()) {
 // returns TRUE if no errors were encountered, or an array of error strings that occured.
 function reset_stats($keep = array()) {
 	$keep += array(
-		'team_profiles'	=> true,
-		'team_aliases'	=> true,
-		'users'			=> true,
+		'team_profiles'	=> false,
+		'users'			=> false,
 	);
 	$errors = array();
     
@@ -2151,7 +2150,6 @@ function reset_stats($keep = array()) {
 		't_team_def', 
 		't_team_off', 
 		't_team_wc',
-		't_team_ids_names',
 //		't_team_profile', 
 //		't_plugins',
 		't_search_results',
@@ -2172,7 +2170,7 @@ function reset_stats($keep = array()) {
 
 	// delete optional data ...
 	$empty_extra = array();
-	if (!$keep['team_profiles']) $empty_extra[] = 't_team_profile';
+	if (!$keep['team_profiles']) array_push($empty_extra, 't_team_profile', 't_team_ids_names');
 	foreach ($empty_extra as $t) {
 		$tbl = $this->$t;
 		if (!$this->db->truncate($tbl) and !preg_match("/exist/", $this->db->errstr)) {
@@ -2183,6 +2181,9 @@ function reset_stats($keep = array()) {
 	// delete users (except those that are admins)
 	if (!$keep['users']) {
 		$ok = true;
+		if (!$this->db->truncate('t_team_ids_name') and !preg_match("/exist/", $this->db->errstr)) {
+			$errors[] = "t_team_ids_name: " . $this->db->errstr;
+		}
 		$users = $this->db->fetch_list("SELECT userid FROM $this->t_user WHERE accesslevel < 99");
 		$this->db->begin();
 		if ($users) {

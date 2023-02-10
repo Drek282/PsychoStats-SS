@@ -159,7 +159,7 @@ $dtable->columns(array(
 	'pi_whip'					=> array( 'label' => $cms->trans("WHIP"), 'tooltip' => $cms->trans("(Hits + Walks)/Inning Pitched") ),
 	'pi_strikeouts'				=> array( 'label' => $cms->trans("K"), 'tooltip' => $cms->trans("Strikeouts") ),
 	'pi_wild_pitches'			=> array( 'label' => $cms->trans("WP"), 'tooltip' => $cms->trans("Wild Pitches") ),
-	'pi_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on WHIP and IP\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point' )
+	'pi_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on WHIP and IP\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point_die' )
 ));
 $dtable->column_attr('player_name', 'class', 'left');
 $dtable->column_attr('pi_v', 'class', 'right');
@@ -199,7 +199,7 @@ $otable->columns(array(
 	'po_outstanding_plays'		=> array( 'label' => $cms->trans("OP"), 'tooltip' => $cms->trans("Outstanding Plays") ),
 	'po_fielding_errors'		=> array( 'label' => $cms->trans("E"), 'tooltip' => $cms->trans("Fielding Errors") ),
 	'po_passed_balls'			=> array( 'label' => $cms->trans("PB"), 'tooltip' => $cms->trans("Passed Balls"), 'callback' => 'dash_if_empty' ),
-	'po_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on OPS and AB\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point' )
+	'po_v'			=> array( 'label' => $cms->trans("V"), 'tooltip' => $cms->trans("Player Value:\n—based on OPS and AB\n—percentile value rating that allows for comparison between players"), 'callback' => 'remove_zero_point_die' )
 ));
 $otable->column_attr('player_name', 'class', 'left');
 $otable->column_attr('po_v', 'class', 'right');
@@ -254,6 +254,11 @@ function negpos500($val, $med = 0.5, $remz = true) {
 
 function remove_zero_point($val) {
 	return preg_replace('/^0\./', '.', $val);
+}
+
+function remove_zero_point_die($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return !empty(intval($val * 1000)) ? $val : '-';
 }
 
 ?>

@@ -488,14 +488,12 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Calculate wOBA.
         rpo_dfo['wOBA'] = round((0.69 * rpo_dfo['BB'] + 0.89 * (rpo_dfo['H'] - rpo_dfo['D'] - rpo_dfo['T'] - rpo_dfo['HR']) + 1.27 * rpo_dfo['D'] + 1.62 * rpo_dfo['T'] + 2.10 * rpo_dfo['HR']) / (rpo_dfo['AB'] + rpo_dfo['BB'] + rpo_dfo['SF']), 3)
 
-        # Convert OPS to float
-        rpo_dfo['OPS'] = rpo_dfo['OPS'].astype(float)
-
         # Calculate V.
-        rpo_dfo['V'] = round((rpo_dfo['OPS'] * rpo_dfo['AB'] * 0.595 / 1000), 2)
+        rpo_dfo['V'] = round((rpo_dfo['OPS'].astype(float) * rpo_dfo['AB'] * 0.595 / 1000), 2)
 
-        # If player AAA V = 0
-        rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
+        # If player AAA V = 0, if V < 0, V = 0.
+        rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0.00'
+        rpo_dfo.loc[rpo_dfo['V'].astype(float) < 0, 'V'] = '0.00'
 
         # Reorder the columns.
         rpo_dfo = rpo_dfo.loc[:, ['Player_Name','G','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','OPS','wOBA','SH','F','SF','GDP','SB','CS','OP','E','PB','V']]
@@ -602,15 +600,12 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Replace ---- with 0.
         rpi_dfo = rpi_dfo.replace('----', 0)
 
-        # Convert WHIP and IP to float
-        rpi_dfo['WHIP'] = rpi_dfo['WHIP'].astype(float)
-        rpi_dfo['IP'] = rpi_dfo['IP'].astype(float)
-
         # Calculate V.
-        rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP']) * rpi_dfo['IP'] * 1.666 / 1000), 2)
+        rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP'].astype(float)) * rpi_dfo['IP'].astype(float) * 1.666 / 1000), 2)
 
-        # If player AAA V = 0
+        # If player AAA V = 0, if V < 0, V = 0.
         rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
+        rpi_dfo.loc[rpi_dfo['V'].astype(float) < 0, 'V'] = '0.00'
 
         # Replace NaN with 0.
         rpi_dfo = rpi_dfo.fillna(0)

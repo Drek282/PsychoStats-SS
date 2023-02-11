@@ -183,6 +183,7 @@ function psss_table_division_link2($name, $division) {
 }
 
 function negpos($val) {
+	$val = sprintf("%.2f", $val);
 	return neg_pos($val);
 }
 

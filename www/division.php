@@ -227,8 +227,11 @@ $otable->column_attr('team_srat', 'class', 'right');
 $ps->division_offence_table_mod($otable);
 $cms->filter('division_offence_table_object', $otable);
 
-# Are wildcard statndings available?
+// Are wildcard statndings available?
 $wildcard = $ps->get_total_wc();
+
+// $division['team_rdiff'] format.
+$division['team_rdiff'] = sprintf("%.2f", $division['team_rdiff']);
 
 // Declare shades array.
 $shades = array(

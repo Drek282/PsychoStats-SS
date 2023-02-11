@@ -230,8 +230,10 @@ $cms->filter('division_offence_table_object', $otable);
 // Are wildcard statndings available?
 $wildcard = $ps->get_total_wc();
 
-// $division['team_rdiff'] format.
+// Number formats.
 $division['team_rdiff'] = sprintf("%.2f", $division['team_rdiff']);
+$division['team_drat'] = sprintf("%.2f", $division['team_drat']);
+$division['team_srat'] = sprintf("%.2f", $division['team_srat']);
 
 // Declare shades array.
 $shades = array(

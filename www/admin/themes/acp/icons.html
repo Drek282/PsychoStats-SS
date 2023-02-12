@@ -15,7 +15,7 @@
 {$message}
 {if $errors.fatal}<div id='fatal' class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
-{if !$msg_not_writable}
+{if !$msg_not_writeable}
 <div id="icon-upload">
 <form action="{url}" method="post" enctype="multipart/form-data">
 	<h4><#Upload New Icon#></h4>
@@ -30,7 +30,7 @@
 </form>
 </div>
 {/if}
-{$msg_not_writable}
+{$msg_not_writeable}
 
 <div id="result" style="display: none">{$result|escape}</div>
 
@@ -45,7 +45,7 @@
 	</p>
 {foreach from=$icons item=i}{strip}
 	<span>
-{if $i.is_writable}
+{if $i.is_writeable}
 		<a class="icon" href="{url delete=$i.filename}" title="{$i.filename|escape} ({$i.size|abbrnum})">
 			<img {if $uploaded_icon == $i.filename}class='icon-uploaded'{/if} src="{$icons_url}/{$i.filename|escape:'spaces_url'}" alt="{$i.filename|escape:'spaces_text'}">
 		</a>

@@ -28,10 +28,10 @@ include("./common.php");
 $validfields = array('ref','delete','upload','ajax');
 $cms->theme->assign_request_vars($validfields, true);
 
-$msg_not_writable = '';
+$msg_not_writeable = '';
 $action_result = '';
 $uploaded_icon = '';
-$cms->theme->assign_by_ref('msg_not_writable', $msg_not_writable);
+$cms->theme->assign_by_ref('msg_not_writeable', $msg_not_writeable);
 $cms->theme->assign_by_ref('result', $action_result);
 $cms->theme->assign_by_ref('uploaded_icon', $uploaded_icon);
 
@@ -41,7 +41,7 @@ if ($delete) {
 	$file = catfile($ps->conf['theme']['icons_dir'], basename($delete));
 	if (@file_exists($file)) {
 		if (!@unlink($file)) {
-			$res = !is_writable($file) ? $cms->trans("Permission denied") : $cms->trans("Unknown error while deleting file");
+			$res = !is_writeable($file) ? $cms->trans("Permission denied") : $cms->trans("Unknown error while deleting file");
 		}
 	} else {
 		$res = $cms->trans("Icon '%s' does not exist", basename($file));
@@ -114,20 +114,11 @@ if ($upload) {
 				if (preg_match('/:/', $h)) {
 					list($key, $str) = explode(":", $h, 2);
 					$str = trim($str);
-					if ($key == 'Content-Type') {
-						list($mime,$type) = explode("/", $str, 2);
-						if ($mime != 'image') {
-							$err = $cms->trans("The URL does not point to an image");
-						} else {
-							// add the type (png, gif, jpg, ...) to the filename (if not already present)
-							if (substr($file['name'],-strlen($type)) != $type) {
-								$file['name'] .= '.' . $type;
-							}
-						}
-					} elseif ($key == 'Content-Length') {
+					if ($key == 'Content-Length') {
 						if ($str > $ps->conf['theme']['icons']['max_size']) {
 							$err = $cms->trans("File download is too large") . " (" . abbrnum($str) . " > " . abbrnum($ps->conf['theme']['icons']['max_size']) . ")";
 						}
+						break;
 					}
 				}
 			}
@@ -170,7 +161,7 @@ if ($upload) {
 		$ok = @rename_file($file['tmp_name'], $newfile);
 		if (!$ok) {
 			$err = $cms->trans("Error copying new image to icon directory!");
-//			$err .= is_writable(dirname($newfile)) ? "<br>" . $cms->trans("Permission Denied") : '';
+//			$err .= is_writeable(dirname($newfile)) ? "<br>" . $cms->trans("Permission Denied") : '';
 //			if (isset($php_errormsg)) $err .= "<br>\n" . $php_errormsg;
 		} else {
 			$action_result = $cms->trans("File '%s' uploaded successfully!", $file['name']);
@@ -206,11 +197,11 @@ if (is_dir($dir)) {
 				'filename' 	=> $file,
 				'fullfile' 	=> $full,
 				'size'		=> @filesize($full),
-				// if the file is not writable but the directory is, we should still be able
+				// if the file is not writeable but the directory is, we should still be able
 				// to delete the file (since deleting a file writes to the directory and not the actual file).
 				// unless the STICKY bit is set on the directory and someone other than the webserver user
 				// owns the file.
-				'is_writable'	=> is_writable($full) || is_writable(rtrim(dirname($full), '/\\')),
+				'is_writeable'	=> is_writeable($full) || is_writeable(rtrim(dirname($full), '/\\')),
 				'basename'	=> basename($file),
 				'path'		=> $dir
 			);
@@ -219,10 +210,10 @@ if (is_dir($dir)) {
 	}
 }
 
-if (!is_writable($dir)) {
-	$msg_not_writable = $cms->message('not_writable', array(
+if (!is_writeable($dir)) {
+	$msg_not_writeable = $cms->message('not_writeable', array(
 		'message_title'	=> $cms->trans("Permissions Error!"),
-		'message'	=> $cms->trans("The icons directory is not writable.") . ' ' . $cms->trans("You can not upload any new icons until the permissions are corrected."),
+		'message'	=> $cms->trans("The icons directory is not writeable.") . ' ' . $cms->trans("You can not upload any new icons until the permissions are corrected."),
 	));
 }
 

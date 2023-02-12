@@ -31,14 +31,32 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 <div{if $errors.title} class="err"{/if}>
 	<p class="err">{$errors.title|escape}</p>
 	<label><#Help Entry Title#>:</label>
-	<input name="title" value="{$form.title|escape}" type="text" class="field medium">
+	<input name="title" value="{$form.title|escape}" type="text" class="field long">
 	<p class="small">
 		<#The help entry title is a short, searchable, generic description of what the overall help entry is. It can be in the form of a single word or acronym, or in the form of a phrase or question.#>
 	</p>
 </div>
 
-{if $id and !$msg_not_writable}
-<div id="himg-upload">
+{if $id and !$msg_not_writeable}
+{if $help.img}
+<div>
+	{include file='ajax.html' float='right' size='small' text='<#Deleting#> ...'}
+	<label><#Help Image#>:</label>
+	<div>
+		<a href="{url id=$id delhimg=$himg.filename}" title="{$himg.filename|escape} ({$himg.size|abbrnum})">
+			<img id="ps-himg" {if $uploaded_himg == $himg.filename}class='himg-uploaded'{/if} src="{$himgs_url}/{$himg.filename|escape:'spaces_url'}" alt="{$himg.filename|escape:'spaces_text'}">
+		</a>
+	</div>
+	<p class="small">Click on the image to delete it.</p>
+	<p class="small">If you wish to change the image you will need to delete this image before you can upload a new one.</p>
+	<div>
+		<label><input id="confirm" type="checkbox" value="1" checked="checked"> <#Confirm deletion?#></label>
+	</div>
+</div>
+{/if}
+
+{if !$help.img}
+<div id="ps-himgupload">
 	<h4><#Upload Help Image#></h4>
 	<p>
 		<input name="upload" type="submit" value="<#Upload from file#>" class="up-btn">
@@ -49,13 +67,12 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 		<input name="url" type="text" size="40" value="{$form.url|escape:'spaces_url'}">
 	</p>
 	<p class="small">
-		<strong><#OPTIONAL#>:</strong> <#You can now upload an image that will be associated with this help entry.#> <#This image will be displayed with the help entry as an illustration.#> <#This image can be in gif, jpg, png or webp format.#>
+		<strong><#OPTIONAL#>:</strong> <#You can upload an image that will be associated with this help entry.#> <#This image will be displayed with the help entry as an illustration.#> <#This image can be in the following formats#>:  {$conf.theme.images.search_ext}. <#The image should be no larger than#> {$conf.theme.himgs.max_width} X {$conf.theme.himgs.max_height} <#pixels#>.
 	</p>
 </div>
-{elseif $id}
-{$msg_not_writable}
+{/if}
 {else}
-<div id="himg-upload">
+<div id="ps-himgupload">
 	<h4><#Help Image#></h4>
 	<p class="small">
 		<strong><#OPTIONAL#>:</strong> <#Once you have created and saved the help entry you can edit it to upload an associated image.#> <#This image will be displayed with the help entry as an illustration.#>
@@ -66,7 +83,9 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 <div{if $errors.content} class="err"{/if}>
 	<p class="err">{$errors.content|escape}</p>
 	<label><#Help Entry Content#>:</label>
-	<textarea name="content" rows="5" class="field medium">{$form.content|escape}</textarea>
+	<div>
+		<textarea name="content" rows="5" class="field full">{$form.content|escape}</textarea>
+	</div>
 	<p class="small">
 		<#This is the searchable content of the help entry. This can contain html formating.#>
 	</p>

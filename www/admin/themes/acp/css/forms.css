@@ -192,6 +192,9 @@
 .ps-form form div textarea.medium {
 	width: 300px;
 }
+.ps-form form div textarea.full {
+	width: 560px;
+}
 .ps-form form div textarea.long, .ps-form form div input.long {
 	width: 400px;
 }

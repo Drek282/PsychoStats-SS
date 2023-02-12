@@ -26,14 +26,12 @@ include("../includes/common.php");
 include("./common.php");
 $cms->theme->assign('page', 'help');
 
-$validfields = array('ref','id','del','submit','cancel');
+$validfields = array('ref','id','del','upload','ajax','delhimg','message','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 
-$msg_not_writable = '';
-$action_result = '';
+$msg_not_writeable = '';
 $uploaded_himg = '';
-$cms->theme->assign_by_ref('msg_not_writable', $msg_not_writable);
-$cms->theme->assign_by_ref('result', $action_result);
+$cms->theme->assign_by_ref('msg_not_writeable', $msg_not_writeable);
 $cms->theme->assign_by_ref('uploaded_himg', $uploaded_himg);
 
 $message = '';
@@ -58,11 +56,65 @@ if (is_numeric($id)) {
 	exit();		
 }
 
-// delete it, if asked to
+// Delete the help image, if specified.
+if ($delhimg) {
+	$res = 'success';
+	$file = catfile($ps->conf['theme']['himgs_dir'], basename($delhimg));
+	$ps->db->update($ps->t_config_help, array( 'img' => '' ), 'id', $id);
+	if (@file_exists($file)) {
+		if (!@unlink($file)) {
+			$res = !is_writeable($file) ? $cms->message('error', array(
+					'message_title'	=> $cms->trans("Unable to Delete Image"),
+					'message'	=> $cms->trans("Permission denied")))
+				: $cms->message('error', array(
+					'message_title'	=> $cms->trans("Unable to Delete Image"),
+					'message'	=> $cms->trans("Unknown error while deleting file")
+				));
+		}
+	} else {
+		$res = $cms->message('error', array(
+				'message_title'	=> $cms->trans("Unable to Delete Image"),
+				'message'	=> $cms->trans("Help image '%s' does not exist", basename($file))
+			));
+	}
+
+	// if $ajax is true this was an AJAX request.
+	if ($ajax) {
+		print $res;
+		exit();
+	} else {
+		$message = $res == 'success' ? $cms->message('success', array(
+					'message_title'	=> $cms->trans("Image Deleted"),
+					'message'	=> $cms->trans("Help image '%s' deleted successfully", basename($file))))
+				: $res;
+		$help['img'] = '';
+	}
+	//previouspage(psss_url_wrapper('help_edit.php?id=' . $id));
+}
+
+// delete entry, if asked to
 if ($del and $help['id'] == $id) {
 	$ps->db->delete($ps->t_config_help, 'id', $id);
+	$res = 'success';
+	$file = catfile($ps->conf['theme']['himgs_dir'], basename($delhimg));
+	if (@file_exists($file)) {
+		if (!@unlink($file)) {
+			$res = !is_writeable($file) ? $cms->trans("Permission denied") : $cms->trans("Unknown error while deleting file");
+		}
+	} else {
+		$res = $cms->trans("Help image '%s' does not exist", basename($file));
+	}
 	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'help.php' )));
 }
+
+// load the help image part 1
+$help['img'] ??= null;
+$himg = array();
+$ext = $ps->conf['theme']['images']['search_ext'];
+if (empty($ext)) $ext = 'png, jpg, gif, webp';
+$list = explode(',',$ext);
+$list = array_map('trim', $list);
+$match = '\\.(' . implode('|', $list) . ')$';
 
 // create the form variables
 $form = $cms->new_form();
@@ -73,14 +125,144 @@ $form->field('img');
 $form->field('content','blank');
 $form->field('url');
 
+// process an image upload request (either from a file or a remote URL)
+$errors = array();
+$file = array();
+
 // process the form if submitted
 $valid = true;
 if ($submit) {
 	$form->validate();
 	$input = $form->values();
 	$valid = !$form->has_errors();
+
 	// protect against CSRF attacks
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
+//	$form->field('file');
+	$input = $form->values();
+
+	if ($upload) {
+
+		// first determine where we're fetching the url from 
+		$from = null;
+		if ($cms->file['file']['size']) {
+			$from = $cms->file['file'];
+		} elseif ($input['url'] and $input['url'] != 'http://') {
+			$from = $input['url'];
+		}
+
+		$err = '';
+		if (is_array($from)) {	// upload file
+			$file = $from;
+			if (!is_uploaded_file($file['tmp_name'])) {
+				$err = $cms->trans("Uploaded help image is invalid");
+			}
+		} elseif ($from) {	// fetch file from URL
+			$file = array();
+			if (!preg_match('|^\w+://|', $from)) {	// make sure a http:// prefex is present
+				$from = "http://" . $from;
+			}
+
+			if (($tmpname = @tempnam('/tmp', 'himg_')) === FALSE) {
+				$err = $cms->trans("Unable to create temporary file for download");
+			} else {
+				$file['tmp_name'] = $tmpname;
+				$url = parse_url(rawurldecode($from));
+				$file['name'] = basename($url['path']);
+				if (empty($file['name'])) $file['name'] = $url['host'];
+				$file['size'] = 0;
+				// open the URL for reading ... 
+				if (!($dl = @fopen($from, 'rb'))) {
+					$err = $cms->trans("Unable to download file from server");
+//					if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+				}
+				// open the tmp file for writting ... 
+				if ($dl and !($fh = @fopen($file['tmp_name'], 'wb'))) {
+					$err = $cms->trans("Unable to process download");
+//					if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+				}
+
+				// get the headers from the request
+				$hdr = $http_response_header;	// built in PHP variable (hardly documented, php 4 and 5)
+
+				// find the Content-Type and Size
+				foreach ($hdr as $h) {
+					if (preg_match('/:/', $h)) {
+						list($key, $str) = explode(":", $h, 2);
+						$str = trim($str);
+						if ($key == 'Content-Length') {
+							if ($str > $ps->conf['theme']['himgs']['max_size']) {
+								$err = $cms->trans("File download is too large") . " (" . abbrnum($str) . " > " . abbrnum($ps->conf['theme']['himgs']['max_size']) . ")";
+							}
+							break;
+						}
+					}
+				}
+
+				// read the contents of the URL into the tmp file ... 
+				if (!$err and $dl and $fh) {
+					// make sure the URL file is a valid image type before we download it
+					if (!preg_match("/$match/", $file['name'])) {
+						$err = $cms->trans("Image type of URL must be one of the following:") . " <b>" . $ps->conf['theme']['images']['search_ext'] . "</b>";
+					} else {
+						$total = 0;
+						while (!feof($dl) and $total < $ps->conf['theme']['himgs']['max_size']) {
+							$total += fwrite($fh, fread($dl, 8192));
+						}
+						// if it's not the EOF then the file was too large ... 
+						if (!feof($dl)) {
+							$err = $cms->trans("File download is too large") . " (" . abbrnum($file['size']) . " > " . abbrnum($ps->conf['theme']['himgs']['max_size']) . ")";
+						}
+					}
+					fclose($dl);
+					fclose($fh);
+					$file['size'] = filesize($file['tmp_name']);
+				}
+			}
+		}
+		$file['info'] = array();
+		$file['tmp_name'] ??= null;
+		if ($file['tmp_name']) $file['info'] = @getimagesize($file['tmp_name']);
+		if (!$err) {
+			$res = validate_img($file);
+			if ($res !== true) {
+				$err = $res;
+			}
+		}
+
+		// still no error? we can now try and copy the file from the tmp location to the help images dir
+		if (!$err) {
+			$newfile = catfile($ps->conf['theme']['himgs_dir'], $file['name']);
+			$overwrote = file_exists($newfile);
+			$ok = @rename_file($file['tmp_name'], $newfile);
+			if (!$ok) {
+				$err = $cms->trans("Error copying new image to help image directory!");
+//				$err .= is_writeable(dirname($newfile)) ? "<br/>" . $cms->trans("Permission Denied") : '';
+//				if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
+			} else {
+				$message = $cms->trans("File '%s' uploaded successfully!", $file['name']);
+				if ($overwrote) $message .= " (" . $cms->trans("Original file was overwritten") . ")";
+				$uploaded_himg = $file['name'];
+				$message = $cms->message('success', array(
+						'message_title'	=> $cms->trans("Image Uploaded"),
+						'message'	=> $message
+					));
+				@chmod(catfile($ps->conf['theme']['himgs_dir'], $file['name']), 0644);
+				$input['img'] = $uploaded_himg;
+				unset($input['url']);
+				$ps->db->update($ps->t_config_help, $input, 'id', $id);
+			}
+		}
+
+		if ($err) {
+			$form->error('fatal',$err);
+		}
+
+		// don't care if this fails
+		@unlink($file['tmp_name']);
+	}
+
+	unset($input['url']);
 
 	$valid = ($valid and !$form->has_errors());
 	if ($valid) {
@@ -94,7 +276,12 @@ if ($submit) {
 		if (!$ok) {
 			$form->error('fatal', "Error updating database: " . $ps->db->errstr);
 		} else {
-			previouspage(psss_url_wrapper('help.php'));
+			$message = $cms->message('success', array(
+					'message_title'	=> $cms->trans("Image Uploaded"),
+					'message'	=> $cms->trans("Image '%s' uploaded successfully", basename($input['img']))
+				));
+			$help['img'] = basename($input['img']);
+			//previouspage(psss_url_wrapper('help_edit.php?id=' . $id));
 		}
 	}
 
@@ -105,14 +292,31 @@ if ($submit) {
 	} else {
 		// new help should default to being enabled
 		$form->input['enabled'] = 1;
-		$form->input['limit'] = 5;
-		$form->input['order'] = 'desc';
-		$form->input['format'] = '%s';
 	}
 }
 
+// load the help image part 2
+$dir = $ps->conf['theme']['himgs_dir'];
+$full = $dir . "/" . $help['img'];
+$himg = array(
+	'filename' 	=> $help['img'],
+	'fullfile' 	=> $full,
+	'size'		=> @filesize($full),
+	'is_writeable'	=> is_writeable($full) || is_writeable(rtrim(dirname($full), '/\\')),
+	'basename'	=> basename($help['img']),
+	'path'		=> $dir
+);
+
+if (!is_writeable($dir)) {
+	$msg_not_writeable = $cms->message('not_writeable', array(
+		'message_title'	=> $cms->trans("Permissions Error!"),
+		'message'	=> $cms->trans("The help images directory is not writeable.") . ' ' . $cms->trans("You can not upload any new help images until the permissions are corrected."),
+	));
+	$message = $msg_not_writeable;
+}
+
 $cms->crumb('Manage', psss_url_wrapper('manage.php'));
-$cms->crumb('Awards', psss_url_wrapper('help.php'));
+$cms->crumb('Help', psss_url_wrapper('help.php'));
 $cms->crumb('Edit');
 
 // save a new form key in the users session cookie
@@ -122,6 +326,8 @@ if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->
 $tokens ??= null;
 $cms->theme->assign(array(
 	'help'		=> $help,
+	'himg'		=> $himg,
+	'himgs_url'	=> $ps->conf['theme']['himgs_url'],
 	'form'		=> $form ? $form->values() : array('url' => null,),
 	'errors'	=> $form ? $form->errors() : array('fatal' => null,),
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
@@ -131,9 +337,11 @@ $cms->theme->assign(array(
 // display the output
 $basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
-$cms->theme->add_css('css/imgs.css');
+$cms->theme->add_css('css/himgs.css');
+$cms->theme->add_js('js/jquery.interface.js'); // needed for color animation
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_js('js/help.js');
+$cms->theme->add_js('js/message.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer', '');
 
 function validate_img($file) {

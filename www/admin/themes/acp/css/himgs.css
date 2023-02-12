@@ -1,0 +1,55 @@
+#ps-himg {
+	max-width: 560px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid gray;
+	background-color: #ddddff;
+	overflow: hidden;
+	margin-bottom: 0.25em;
+	padding: 1em;
+}
+
+#ps-himgupload {
+	width: 535px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid gray;
+	background-color: #ddddff;
+	overflow: hidden;
+	margin-bottom: 0.25em;
+	text-align: left;
+	padding: 1em;
+}
+#ps-himgupload h4, #ps-himg h4 {
+	text-align: left;
+	font-size: 110%;
+	border-bottom: 2px solid #444499;
+	margin-bottom: 0.25em;
+	padding-bottom: 2px;
+}
+
+#ps-himgupload p {
+	margin-top: 0.5em;
+}
+#ps-himgupload .up-btn {
+	width: 150px;
+}
+
+#result {
+	line-height: 2em;
+	font-weight: bold;
+	text-align: center;
+	border: 1px solid gray;
+	margin-bottom: 0.25em;
+	background-color: #ffffee;
+	padding-left: 20px;
+}
+#result.good {
+	background: #eeffee url(../img/imgs/tick.png) no-repeat 16px 50%;
+}
+#result.bad {
+	background: #ffeeee url(../img/imgs/cross.png) no-repeat 16px 50%;
+}
+

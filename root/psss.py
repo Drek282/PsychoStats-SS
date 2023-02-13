@@ -476,6 +476,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Remove rpo_tmp file.
         os.remove(rpo_tmp_fname)
 
+        # Fix AAA names.
+        rpo_dfo['Player_Name'] = rpo_dfo['Player_Name'].str.replace('#AAA', ' AAA', regex=True)
+
         # Replace - with 0.
         rpo_dfo = rpo_dfo.replace('-', 0)
 
@@ -590,6 +593,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
 
         # Remove rpo_tmp file.
         os.remove(rpi_tmp_fname)
+
+        # Fix AAA names.
+        rpi_dfo['Player_Name'] = rpi_dfo['Player_Name'].str.replace('#AAA', ' AAA', regex=True)
 
         # Replace - with 0.
         rpi_dfo = rpi_dfo.replace('-', 0)

@@ -129,6 +129,8 @@ if (empty($t['root_img_dir'])) $t['root_img_dir'] = catfile(PS_ROOTDIR, 'img');
 if (empty($t['root_img_url'])) $t['root_img_url'] = catfile(rtrim($t['script_url'], '/\\'), 'img');
 if (empty($t['flags_dir'])) $t['flags_dir'] = catfile($t['root_img_dir'], 'flags');
 if (empty($t['flags_url'])) $t['flags_url'] = catfile($t['root_img_url'], 'flags');
+if (empty($t['icons_dir'])) $t['himgs_dir'] = catfile($t['root_img_dir'], 'help');
+if (empty($t['icons_url'])) $t['himgs_url'] = catfile($t['root_img_url'], 'help');
 if (empty($t['icons_dir'])) $t['icons_dir'] = catfile($t['root_img_dir'], 'icons');
 if (empty($t['icons_url'])) $t['icons_url'] = catfile($t['root_img_url'], 'icons');
 

@@ -606,8 +606,14 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         # Replace ---- with 0.
         rpi_dfo = rpi_dfo.replace('----', 0)
 
+        # Convert player IP to decimal.
+        rpi_dfo['IP'] = np.trunc(rpi_dfo['IP']) + round((rpi_dfo['IP'] % 1) * 3, 1)
+
         # Calculate V.
         rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP'].astype(float)) * rpi_dfo['IP'].astype(float) * 1.666 / 1000), 2)
+
+        # Convert decimal player IP to baseball format IP.
+        rpi_dfo['IP'] = np.trunc(rpi_dfo['IP']) + round((rpi_dfo['IP'] % 1) / 3, 1)
 
         # If player AAA V = 0, if V < 0, V = 0.
         rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
@@ -1142,6 +1148,8 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     working_stats_def_dfo['WHIP'] = round((working_stats_def_dfo['HA'] + working_stats_def_dfo['BBA']) / working_stats_com_dfo['IP'], 2)
     # Calculate DRat.
     working_stats_def_dfo['DRat'] = round(((working_stats_def_dfo['OP'] - working_stats_def_dfo['E'] - working_stats_def_dfo['PB']) / working_stats_def_dfo['IP'] + working_stats_def_dfo['DP'] / (working_stats_def_dfo['HA'] + working_stats_def_dfo['BBA']) * 0.5 + working_stats_def_dfo['OCS'] / (working_stats_def_dfo['OSB'] + working_stats_def_dfo['OCS']) * 0.05) * 5, 2)
+    # Convert decimal IP back to baseball format IP.
+    working_stats_def_dfo['IP'] = np.trunc(working_stats_def_dfo['IP']) + round((working_stats_def_dfo['IP'] % 1) / 3, 1)
     # Reorder the columns.
     working_stats_def_dfo = working_stats_def_dfo.loc[:, ["Season","Team","ERA","RA9","CG","ShO","Sv","IP","RA","ER","HA","BAA","BBA","WHIP","KA","OP","DP","E","WP","PB","OSB","OCS","DRat"]]
 

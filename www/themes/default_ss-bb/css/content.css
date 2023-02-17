@@ -47,6 +47,13 @@
 	float: right;
 	font-weight: bold;
 }
+#ps-main #ps-page-title div.inner a {
+	color: #ceb99e;
+}
+#ps-main #ps-page-title div.inner a:hover {
+	color: #988d87;
+}
+#ps-main #ps-page-title div.inner,
 #ps-main #ps-page-title div.inner span {
 	color: #DDD;
 }

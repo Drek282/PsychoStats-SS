@@ -159,6 +159,11 @@
 	background: url(../img/hof_plaque.webp) no-repeat;
 }
 
+#ps-amazed-img {
+	height: 297px;
+	background: url(../img/amazed.webp) no-repeat;
+}
+
 #ps-random-img {
 	height: 140px;
 	background: url(../img/random.webp) no-repeat;

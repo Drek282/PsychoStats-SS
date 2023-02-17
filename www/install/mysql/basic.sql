@@ -53,7 +53,7 @@ CREATE TABLE `psss_config_help` (
   `title` text NOT NULL default '',
   `content` text NOT NULL default '',
   `img` varchar(191) NOT NULL default '',
-  `weight` int unsigned NOT NULL default '0',
+  `weight` int NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE TABLE `psss_config_themes` (

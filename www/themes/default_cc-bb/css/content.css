@@ -44,6 +44,7 @@
 	float: right;
 	font-weight: bold;
 }
+#ps-main #ps-page-title div.inner,
 #ps-main #ps-page-title div.inner span {
 	color: #DDD;
 }
@@ -93,7 +94,7 @@
 }
 
 #ps-container div.ps-team-profile div label {
-    color: #f9df79;
+    color: #7d6f3d;
 	display: inline;
 	float: left;
 	width: 175px;

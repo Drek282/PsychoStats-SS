@@ -96,7 +96,7 @@ if ($delhimg) {
 if ($del and $help['id'] == $id) {
 	$ps->db->delete($ps->t_config_help, 'id', $id);
 	$res = 'success';
-	$file = catfile($ps->conf['theme']['himgs_dir'], basename($delhimg));
+	$file = catfile($ps->conf['theme']['himgs_dir'], basename($help['img']));
 	if (@file_exists($file)) {
 		if (!@unlink($file)) {
 			$res = !is_writeable($file) ? $cms->trans("Permission denied") : $cms->trans("Unknown error while deleting file");
@@ -241,7 +241,7 @@ if ($submit) {
 //				if (isset($php_errormsg)) $err .= "<br/>\n" . $php_errormsg;
 			} else {
 				$message = $cms->trans("File '%s' uploaded successfully!", $file['name']);
-				if ($overwrote) $message .= " (" . $cms->trans("Original file was overwritten") . ")";
+				if ($overwrote) $message .= " (" . $cms->trans("original file was overwritten") . ")";
 				$uploaded_himg = $file['name'];
 				$message = $cms->message('success', array(
 						'message_title'	=> $cms->trans("Image Uploaded"),
@@ -249,6 +249,7 @@ if ($submit) {
 					));
 				@chmod(catfile($ps->conf['theme']['himgs_dir'], $file['name']), 0644);
 				$input['img'] = $uploaded_himg;
+				$help['img'] = $uploaded_himg;
 				unset($input['url']);
 				$ps->db->update($ps->t_config_help, $input, 'id', $id);
 			}
@@ -265,23 +266,32 @@ if ($submit) {
 	unset($input['url']);
 
 	$valid = ($valid and !$form->has_errors());
-	if ($valid) {
+	if ($valid && !$uploaded_himg) {
 		$ok = false;
 		if ($id) {
+			$input['img'] = $help['img'];
 			$ok = $ps->db->update($ps->t_config_help, $input, 'id', $id);
+			if (!$ok) {
+				$form->error('fatal', "Error updating database: " . $ps->db->errstr);
+			} else {
+				$message = $cms->message('success', array(
+						'message_title'	=> $cms->trans("Help Entry Updated"),
+						'message'	=> $cms->trans("Help entry '%s' updated successfully", basename($input['title']))
+					));
+			}
 		} else {
 			$input['id'] = $ps->db->next_id($ps->t_config_help);
 			$ok = $ps->db->insert($ps->t_config_help, $input);
-		}
-		if (!$ok) {
-			$form->error('fatal', "Error updating database: " . $ps->db->errstr);
-		} else {
-			$message = $cms->message('success', array(
-					'message_title'	=> $cms->trans("Image Uploaded"),
-					'message'	=> $cms->trans("Image '%s' uploaded successfully", basename($input['img']))
-				));
-			$help['img'] = basename($input['img']);
-			//previouspage(psss_url_wrapper('help_edit.php?id=' . $id));
+			if (!$ok) {
+				$form->error('fatal', "Error updating database: " . $ps->db->errstr);
+			} else {
+				$message = $cms->message('success', array(
+						'message_title'	=> $cms->trans("Help Entry Created"),
+						'message'	=> $cms->trans("Help entry '%s' created successfully", basename($input['title']))
+					));
+				$id = $input['id'];
+				//previouspage(psss_url_wrapper('help_edit.php?id=' . $id));
+			}
 		}
 	}
 

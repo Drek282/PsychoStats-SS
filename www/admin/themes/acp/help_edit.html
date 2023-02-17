@@ -21,6 +21,11 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 <legend>{if $id}<#Edit#>{else}<#New#>{/if} <#Help Entry#></legend>
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
+<div class="notes">
+	<p>
+		<h4><#IMPORTANT#></h4> <#If you do not properly close all your html tags you will ruin the formating of the Help page!#>
+	</p>
+</div>
 <div{if $errors.enabled} class="err"{/if}>
 	<p class="err">{$errors.enabled|escape}</p>
 	<label><#Enabled?#></label>
@@ -31,7 +36,7 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 <div{if $errors.title} class="err"{/if}>
 	<p class="err">{$errors.title|escape}</p>
 	<label><#Help Entry Title#>:</label>
-	<input name="title" value="{$form.title|escape}" type="text" class="field long">
+	<input name="title" value="{$form.title|escape}" type="text" class="field medium">
 	<p class="small">
 		<#The help entry title is a short, searchable, generic description of what the overall help entry is. It can be in the form of a single word or acronym, or in the form of a phrase or question.#>
 	</p>
@@ -90,7 +95,6 @@ delete_message = "<#Are you sure you want to delete the help entry?#>";
 		<#This is the searchable content of the help entry. This can contain html formating.#>
 	</p>
 </div>
-
 
 </fieldset>
 <fieldset>

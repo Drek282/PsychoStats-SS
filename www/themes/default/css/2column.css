@@ -82,7 +82,7 @@
 #ps-container .ps-column-content p.substat
 {					/* each <p>...</p> is a row */
 /*	margin-bottom: 0.3em; */
-	border-top: 1px solid #DDDDDD;
+	border-top: 1px solid #DDD;
 	line-height: 1.5em;
 	padding: 0.1em 0.3em 0 0.3em;
 	clear: left;			/* IE7 */
@@ -156,6 +156,11 @@
 #ps-hof-img {
 	height: 416px;
 	background: url(../img/hof_plaque.webp) no-repeat;
+}
+
+#ps-amazed-img {
+	height: 297px;
+	background: url(../img/amazed.webp) no-repeat;
 }
 
 #ps-random-img {

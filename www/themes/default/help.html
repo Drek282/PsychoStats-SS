@@ -3,67 +3,42 @@
 
 <!--inner container for the content-->
 <div id="ps-main">
-
+<form action="{url}" method="get">
 	<div id="ps-page-title">
 		<div class="inner">
-		<h1><#Hall of Fame#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>
-		<h2>&nbsp;</h2>
+		<span>
+			<input id='q-hdr' name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field hsearch">
+			<input name="sort" value="{$sort|escape}" type="hidden">
+			<input name="order" value="{$order|escape}" type="hidden">
+		</span>
+		<h1><#Help Page#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>
+		{if $search_blurb}
+			<h2>{$search_blurb}</h2>
+		{else}
+			<h2>enter a <b>Q</b>uestion, <B>W</B>ord, <b>A</b>cronym or <b>P</b>hrase into the search field—any kind of <b>QWAP</b>...</h2>
+		{/if}
 		</div>
 	</div>
+</form>
 
 <!--left column block -->
 <div id="ps-main-column">
 
 <div class="ps-column-frame">
-<div id="ps-hof-img"></div>
+<div id="ps-amazed-img"></div>
 </div>
 
-<div class="ps-column-frame{if $shades.s_championships} s-closed{/if}">
-<div class="ps-column-header"><a href="" onclick="return false"><span><#Most League Championships#></span></a></div>
-<div id="s-championships" class="ps-column-content">
-<p class="hl firstrow">
-	<label>{$lc_count.0.team_name}</label>
-	<span>{$lc_count.0.count}</span>
-</p>
-<p class="hl">
-	<label><#runners up#></label>
-</p>
-{foreach from=$lc_count item='lc' key='k'}
-{if $k != 0}
-<p class="substat">
-	<label>{$lc.team_name}</label>
-	<span>{$lc.count}</span>
-</p>
-{/if}
+<div class="ps-column-frame{if $shades.s_popular} s-closed{/if}">
+<div class="ps-column-header"><a href="" onclick="return false"><span><#Most Popular Help Topics#></span></a></div>
+<div id="s-popular" class="ps-column-content">
+{foreach from=$top_help item='th'}
+<div class="firstrow">
+	<label class="thelp">{$th.title|truncate:35}</label>
+</div>
+<div class="chelp">{$th.content}</div>
 {/foreach}
 </div>
 </div>
-
-<div class="ps-column-frame{if $shades.s_titles} s-closed{/if}">
-{if $dt_count.0.divisionname == 'na'}
-	<div class="ps-column-header"><a href="" onclick="return false"><span><#Most League Titles#></span></a></div>
-{else}
-	<div class="ps-column-header"><a href="" onclick="return false"><span><#Most Division Titles#></span></a></div>
-{/if}
-<div id="s-titles" class="ps-column-content">
-<p class="hl firstrow">
-	<label>{$dt_count.0.team_name}</label>
-	<span>{$dt_count.0.count}</span>
-</p>
-<p class="hl">
-	<label><#runners up#></label>
-</p>
-{foreach from=$dt_count item='dt' key='k'}
-{if $k != 0}
-<p class="substat">
-	<label>{$dt.team_name}</label>
-	<span>{$dt.count}</span>
-</p>
-{/if}
-{/foreach}
-</div>
-</div>
-
 </div>
 <!--end of left column -->
 
@@ -71,34 +46,33 @@
 <div id="ps-main-content" class="ps-page-{$page}">
 
 
-<div id="ps-award-frame">
+<div id="ps-help-frame">
 
-	<div class="award-hdr">
-		<p><#Team Awards#></p>
+	<div class="help-hdr">
+		<p><#Help Entries#></p>
 	</div>
-{foreach from=$awards item='a'}
-	<div class="award{if $a.negative}-neg{/if}{if $team_id and $a.topteamid == $team_id} selected-team{/if}">
-		<h1>{$a.name}</h1>
-		<h2>{award_phrase award=$a}</h2>
-		<p>{award_phrase award=$a desc=1}</p>
-		{if $a.1.team_id}
-		<div class="runnersup">
-		<h3><#Runners Up#>:</h3>
-		{foreach from=$a item='tm' key='k'}
-			{if is_array($tm) and $k != 0}
-				<p>{runnerup_phrase award=$tm}</p>
-			{/if}
-		{/foreach}
-		</div>
+	<div class="hint">
+		<p><b>HINT:</b>  <#Try to include specific words or acronyms that you think might be included in the help entry you are trying to find.#></p>
+	</div>
+{foreach from=$help item='h'}
+	<div class="help">
+		{if $h.img}
+			<div><img class="ps-himg-disp" src="{$himgs_url}/{$h.img}" alt="Help Image"></div>
 		{/if}
-	</div>
-{foreachelse}
-	<div class="award-none">
-		<p><#No teams qualify for this award#></p>
+		<h1>{$h.title}</h1>
+		<p>{$h.content}</p>
+		{if $cookieconsent}
+		<form method="post" action="{url}" enctype="multipart/form-data">
+			<label class="hwght">Did you find this helpful?</label>
+			<input class="btn like" type="submit" name="like" value="{$h.id}:1">
+			<input class="btn dislike" type="submit" name="like" value="{$h.id}:-1">
+		</form>
+		{/if}
+		<p>&nbsp;</p>
 	</div>
 {/foreach}
 
-</div> {* end ps-award-frame *}
+</div> {* end ps-help-frame *}
 
 </div> {* end ps-main-content *}
 

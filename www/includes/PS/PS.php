@@ -331,6 +331,176 @@ function search_teams($search_id, $criteria) {
 }
 
 /*
+    * function search_help
+    * Performs a search on the DB for teams matching the criteria specified.
+    * 
+    * @param  string  $search_id  The search ID to use for this search.
+    * @param  string/array  $criteria  Array of options allows to change
+    * the criteria very specifically. A string will be used as the text to
+    * search for.
+    * 
+    * @return integer Total matches found.
+*/
+function search_help($search_id, $criteria) {
+	global $cms;
+	$help_ids = array();
+	
+	// convert criteria string to an array
+	if (!is_array($criteria)) {
+		$criteria = array( 'phrase' => $criteria );
+	}
+
+	// assign criteria defaults
+	$criteria += array(
+		'phrase'	=> null,
+		'mode'		=> 'contains', 	// 'contains', 'begins', 'ends', 'exact'
+	);
+	// 'limit' is forced based on current configuration
+	$criteria['limit'] = coalesce($this->conf['main']['security']['search_limit'], 1000);
+	if (!$criteria['limit']) $criteria['limit'] = 1000;
+
+	// do not allow blank phrases to be searched
+	$criteria['phrase'] = trim($criteria['phrase']);
+	if (is_null($criteria['phrase']) or $criteria['phrase'] == '') {
+		return false;
+	}
+
+	// sanitize 'mode'
+	$criteria['mode'] = strtolower($criteria['mode']);
+	if (!in_array($criteria['mode'], array('contains', 'begins', 'ends', 'exact'))) {
+		$criteria['mode'] = 'contains';
+	}
+
+	// sanitize 'phrase'
+    $criteria['phrase'] = strtolower($criteria['phrase']);
+    $criteria['phrase'] = preg_replace("/[[:punct:]]+/", "", $criteria['phrase']);
+    $criteria['phrase'] = str_replace(" +", " ", $criteria['phrase']);
+
+	// tokenize our search phrase
+	$tokens = array();
+	if ($criteria['mode'] == 'exact') {
+		$tokens = array( $criteria['phrase'] );
+	} else {
+		$tokens = query_to_tokens($criteria['phrase']);
+	}
+
+	// build our WHERE clause
+	$where = "";
+
+	// first search title for exact matches
+	$where = "title='" . $tokens[0] . "'";
+	foreach (array_slice($tokens, 1) as $t) {
+		$where .= " OR title='$t'";
+	}
+
+	// perform search and find Jimmy Hoffa!
+	$cmd  = "SELECT *,IF(weight > 10, (10 + 10), IF(weight < -10, (-10 + 10), (weight + 10))) w FROM $this->t_config_help ";
+	
+	$cmd .= "WHERE ($where) ";
+	$cmd .= "LIMIT " . $criteria['limit'];
+	$stitle = $this->db->fetch_rows(1, $cmd);
+	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
+
+	// now perform "LIKE" search
+	// build our WHERE clause
+	$where = "";
+	$inner = array();
+	$outer = array();
+	
+	// loop through each field and add it to the 'where' clause.
+	foreach (array('title', 'content') as $field) {
+		foreach ($tokens as $t) {
+			// don't include one or two letter tokens in "LIKE" search
+			if (strlen($t) <= 2) continue;
+			$token = $this->token_to_sql($t, $criteria['mode']);
+            $inner[] = "$field LIKE '$token'";
+		}
+		if ($inner) {
+			$outer[] = $inner;
+		}
+		$inner = array();
+	}
+
+	if (empty($outer)) {
+		$help_ids = $this->db->fetch_list($cmd);
+
+		// delete any searches that are more than a few hours old
+		$this->delete_stale_searches();
+
+		// psss_search_results record for insertion
+		$search = array(
+				'search_id'	=> $search_id,
+				'session_id'	=> $cms->session->sid(),
+				'phrase'	=> $criteria['phrase'],
+				'result_total'	=> count($help_ids),
+				'abs_total'	=> $total,
+				'results'	=> join(',', $help_ids),
+				'query'		=> $cmd,
+				'updated'	=> date('Y-m-d H:i:s'),
+			);
+		$ok = $this->save_search($search);
+		return $ok ? array('count' => count($stitle), 'help' => $stitle) : false;
+	}
+
+	// combine the outer and inner clauses into a where clause
+	foreach ($outer as $in) {
+		$where .= " (" . join(" OR ", $in) . ") OR ";
+	}
+	$where = substr($where, 0, -4);		// remove the trailing " OR "
+
+	// perform search and find Jimmy Hoffa!
+	$cmd  = "SELECT *,IF(weight > 10, (10 + 1), IF(weight < -10, (-10 + 1), (weight + 1))) w FROM $this->t_config_help ";
+	
+	$cmd .= "WHERE ($where) ";
+	$cmd .= "LIMIT " . $criteria['limit'];
+	$slike = $this->db->fetch_rows(1, $cmd);
+	$help_ids = $this->db->fetch_list($cmd);
+	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
+
+	// join the title and "LIKE" search results
+	$reindexed = array();
+	foreach ($stitle as $values) {
+    	$reindexed[$values['id']] = $values;
+	}
+	$help = array();
+	$count = 0;
+	foreach ($slike as $s) {
+		$count++;
+    	$id = $s['id'];
+		$help[$count] = $s;
+    	$help[$count]['w'] = isset($reindexed[$id]) ? $help[$count]['w'] + $reindexed[$id]['w'] : $help[$count]['w'];
+	}
+	$reindexed = array();
+	foreach ($slike as $values) {
+    	$reindexed[$values['id']] = $values;
+	}
+	foreach ($stitle as $s) {
+		$count++;
+    	$id = $s['id'];
+		if (!isset($reindexed[$id])) $help[$id + $criteria['limit']] = $s;
+	}
+
+	// delete any searches that are more than a few hours old
+	$this->delete_stale_searches();
+
+	// psss_search_results record for insertion
+	$search = array(
+		'search_id'	=> $search_id,
+		'session_id'	=> $cms->session->sid(),
+		'phrase'	=> $criteria['phrase'],
+		'result_total'	=> count($help_ids),
+		'abs_total'	=> $total,
+		'results'	=> join(',', $help_ids),
+		'query'		=> $cmd,
+		'updated'	=> date('Y-m-d H:i:s'),
+		
+	);
+	$ok = $this->save_search($search);
+	
+	return $ok ? array('count' => count($help), 'help' => $help) : false;
+}
+
+/*
     * function save_search
     * Saves the results of a search done with search_teams
     * 
@@ -1027,6 +1197,38 @@ function get_award_team_list($args = array()) {
 	return $list;
 }
 
+function get_help($args = array()) {
+	global $cms;
+	$args += array(
+		'id'			=> 0,
+		'enabled'		=> 1,
+		'idx'			=> 0,
+		'title'			=> '',
+		'content'		=> '',
+		'img'			=> '',
+		'weight'		=> 0,
+	);
+
+	$id = $args['id'];
+	$cmd  = "SELECT * FROM $this->t_config_help ";
+	$cmd .= "WHERE id=$id";
+
+	$results = array();
+	$results = $this->db->fetch_rows(1, $cmd);
+	$results = $results[0];
+
+	return $results;
+}
+
+function get_top_help() {
+	$cmd  = "SELECT * FROM $this->t_config_help ORDER BY weight DESC LIMIT 5";
+
+	$results = array();
+	$results = $this->db->fetch_rows(1, $cmd);
+
+	return $results;
+}
+
 function get_team_list($args = array()) {
 	global $cms;
 	$args += array(
@@ -1436,6 +1638,14 @@ function get_total_teams($args = array()) {
 		$f = '%' . $this->db->escape($filter) . '%';
 		$cmd .= " AND (name.team_name LIKE '$f')";	// I don't like using OR logic, queries run much slower.
 	}
+	$this->db->query($cmd);
+	list($total) = $this->db->fetch_row(0);
+	return $total;
+}
+
+function get_total_help() {
+	$cmd = "";
+	$cmd = "SELECT count(*) FROM $this->t_config_help";
 	$this->db->query($cmd);
 	list($total) = $this->db->fetch_row(0);
 	return $total;

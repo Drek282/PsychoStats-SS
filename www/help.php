@@ -18,13 +18,20 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version $Id: awards.php 495 2008-06-18 18:41:37Z lifo $
+ *	Version $Id: help.php $
  */
 define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
-$cms->theme->page_title('PsychoStats - Hall of Fame');
+$cms->theme->page_title('PsychoStats - Help Page');
+
+// collect url parameters ...
+$validfields = array('sort','order','q','search','like');
+$cms->theme->assign_request_vars($validfields, true);
+
+// Default limit.
+$DEFAULT_LIMIT = 5;
 
 // create the form variable
 $form = $cms->new_form();
@@ -52,32 +59,6 @@ if (isset($cms->input['cookieconsent'])) {
 	previouspage($php_scnm);
 }
 
-// Check to see if there is any data in the database before we continue.
-$cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
-
-$results = array();
-$results = $ps->db->fetch_rows(1, $cmd);
-
-// if $results is empty then we have no data in the database
-if (empty($results)) {
-	$cms->full_page_err('awards', array(
-		'message_title'	=> $cms->trans("No Stats Found"),
-		'message'	=> $cms->trans("psss.py must be run before any stats will be shown."),
-		'lastupdate'	=> $ps->get_lastupdate(),
-		'division'		=> null,
-		'wildcard'		=> null,
-		'season_c'		=> null,
-		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-		'cookieconsent'	=> $cookieconsent,
-	));
-	exit();
-}
-unset ($results);
-
-// collect url parameters ...
-$validfields = array('t');
-$cms->theme->assign_request_vars($validfields, true);
-
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {
 	if ($cms->theme->is_language($cms->input['language'])) {
@@ -96,36 +77,25 @@ if (isset($cms->input['language'])) {
 	previouspage($php_scnm);
 }
 
-if (!is_numeric($t)) $t = '';
-$_t = $ps->db->escape($t, true);
-
-// Defaults limit.
-$DEFAULT_LIMIT = 5;
-
-$order ??= 'desc';
-$limit ??= $DEFAULT_LIMIT;
-
 unset($list);
 
 // Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
 
-// Get list of teams and the division titles and championships count.
-$dt_count = $ps->get_tc_count('dt', $limit);
-$lc_count = $ps->get_tc_count('lc', $limit);
+$limit = $DEFAULT_LIMIT;
 
-// Grab list of awards.
-$cmd = "SELECT * FROM $ps->t_config_awards";
+// Grab list of top help entries.
+$cmd = "SELECT * FROM $ps->t_config_help ORDER BY idx LIMIT $limit";
 
 $results = array();
 $results = $ps->db->fetch_rows(1, $cmd);
 
-// if $results is empty then we have no awards in the database
+// if $results is empty then we have no help entries in the database
 if (empty($results)) {
-	$cms->full_page_err('awards', array(
-		'message_title'	=> $cms->trans("No Awards Found"),
-		'message'	=> $cms->trans("There are currently no awards to display."),
+	$cms->full_page_err('help', array(
+		'message_title'	=> $cms->trans("No Help Entries Found"),
+		'message'	=> $cms->trans("There are currently no help entries to display."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
@@ -135,47 +105,106 @@ if (empty($results)) {
 	exit();
 }
 
-// Iterate through list of awards.
-foreach ($results as $a => $var) {
+// Iterate through list of help entriess.
+foreach ($results as $h => $var) {
 
-	// Only process award if it is enabled.
-	if ($results[$a]['enabled'] == 0) continue;
+	// Only process help entry if it is enabled.
+	if ($results[$h]['enabled'] == 0) continue;
 
-	// fetch award...
-	$awards[$a] = $ps->get_award(array(
-		'id'			=> $results[$a]['id'],
-		'enabled'		=> $results[$a]['enabled'],
-		'idx'			=> $results[$a]['idx'],
-		'negative'		=> $results[$a]['negative'],
-		'name'			=> $results[$a]['name'],
-		'groupname'		=> $results[$a]['groupname'],
-		'phrase'		=> $results[$a]['phrase'],
-		'expr'			=> $results[$a]['expr'],
-		'where'			=> $results[$a]['where'],
-		'format'		=> $results[$a]['format'],
-		'description'	=> $results[$a]['description'],
-		'order'			=> $results[$a]['order'],
-		'limit'			=> $results[$a]['limit'],
+	// fetch help item...
+	$help[$h] = $ps->get_help(array(
+		'id'			=> $results[$h]['id'],
+		'enabled'		=> $results[$h]['enabled'],
+		'idx'			=> $results[$h]['idx'],
+		'title'			=> $results[$h]['title'],
+		'content'		=> $results[$h]['content'],
+		'img'			=> $results[$h]['img'],
+		'weight'		=> $results[$h]['weight'],
 	));
 }
 unset ($results);
 
-// Sort the array by idx.
-$idx = array_column($awards, 'idx');
-array_multisort($idx, SORT_ASC, $awards);
-unset ($idx);
-//print_r($awards);
+$top_help = $ps->get_top_help();
+
+$total = array();
+$results = array();
+if ($q != '') {
+	// a new search was requested (a query string was given)
+	$search = $ps->init_search();
+	$matched = $ps->search_help($search, array(
+		'phrase'	=> $q,
+		'mode'		=> 'contains',
+	));
+	$results = $ps->get_search($search);
+	
+} else if ($ps->is_search($search)) {
+	// an existing search was requested (new page or sort)
+	$results = $ps->get_search($search);
+	
+} else {
+	// no search, just fetch a list teams
+	$search = '';
+}
+
+// determine the total teams found
+$total['all'] = $ps->get_total_help();
+$search_blurb ??= null;
+if ($results && $matched['help']) {
+	$total['results'] = $matched['count'];
+	unset($help);
+	$help = $matched['help'];
+	$search_blurb = $cms->trans('search criteria "<em>%s</em>" matched %d help entries out of %d total',
+			psss_escape_html($q), $total['results'], $total['all']
+		);
+} elseif ($search) {
+	$search_blurb = $cms->trans('either your search criteria was too general or no help entries contained your query');
+}
+
+// if there is no 'w' key sort the array by idx
+if (isset($help[1]['w'])) {
+	$idx = array_column($help, 'w');
+	array_multisort($idx, SORT_DESC, $help);
+} else {
+	$idx = array_column($help, 'idx');
+	array_multisort($idx, SORT_ASC, $help);
+}
+unset($idx);
+unset($hsort);
+//print_r($help);
+
+// feedback system
+// ten minute delay between ratings
+$cms->session->options['ltime'] ??= 0;
+$lrest = $cms->session->options['ltime'] + $ps->conf['main']['fb_delay'];
+if ($like && $lrest < time()) {
+	$cms->session->opt('ltime', time());
+	$cms->session->save_session_options();
+	$lary = explode(':', $like);
+	$lid = $lary[0];
+	$ll = $lary[1];
+	$wght = implode($ps->db->fetch_row(1, "SELECT weight FROM $ps->t_config_help WHERE id=$lid"));
+	$wght = $wght + $ll;
+	$ps->db->update($ps->t_config_help, array( 'weight' => $wght ), 'id', $lid);
+	unset($like);
+	unset($lid);
+	unset($ll);
+	unset($wght);
+}
 
 // Declare shades array.
 $shades = array(
-	's_titles'		=> null,
-	's_championships'		=> null,
+	's_popular'		=> null,
 );
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'search'		=> $search,
+	'results'		=> $results,
+	'search_blurb'	=> $search_blurb,
 	'page'			=> basename(__FILE__,'.php'),
-	'awards'		=> $awards,
+	'help'			=> $help,
+	'top_help'		=> $top_help,
+	'himgs_url'		=> $ps->conf['theme']['himgs_url'],
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,
@@ -183,9 +212,6 @@ $cms->theme->assign(array(
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
-	'team_id'		=> $t,
-	'dt_count'		=> $dt_count,
-	'lc_count'		=> $lc_count,
 	'shades'		=> $shades,
 	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
@@ -193,6 +219,7 @@ $cms->theme->assign(array(
 
 // display the output
 $basename = basename(__FILE__, '.php');
+$cms->theme->add_css('css/help.css');
 $cms->theme->add_css('css/2column.css');	// this page has a left column
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

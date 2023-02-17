@@ -142,7 +142,7 @@ body.psychostats {
 /* --- HISTORICAL SEASONS DROP DOWN --------------------------------------------- */
 #ps-seasons_h-dropdown {
 	position: absolute;
-	right: 60px;
+	right: 116px;
 	top: 110px;
 	overflow: hidden;
 	z-index: 65535;

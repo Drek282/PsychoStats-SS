@@ -394,7 +394,7 @@ function search_help($search_id, $criteria) {
 	}
 
 	// perform search and find Jimmy Hoffa!
-	$cmd  = "SELECT *,IF(weight > 10, (10 + 10), IF(weight < -10, (-10 + 10), (weight + 10))) w FROM $this->t_config_help ";
+	$cmd  = "SELECT *,IF(weight > 10, 20, IF(weight < -10, 0, (weight + 10))) w FROM $this->t_config_help ";
 	
 	$cmd .= "WHERE ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];
@@ -449,7 +449,7 @@ function search_help($search_id, $criteria) {
 	$where = substr($where, 0, -4);		// remove the trailing " OR "
 
 	// perform search and find Jimmy Hoffa!
-	$cmd  = "SELECT *,IF(weight > 10, (10 + 1), IF(weight < -10, (-10 + 1), (weight + 1))) w FROM $this->t_config_help ";
+	$cmd  = "SELECT *,IF(weight > 10, 11, IF(weight < -10, -9, (weight + 1))) w FROM $this->t_config_help ";
 	
 	$cmd .= "WHERE ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];

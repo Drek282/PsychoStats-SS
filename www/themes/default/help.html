@@ -57,7 +57,7 @@
 {foreach from=$help item='h'}
 	<div class="help">
 		{if $h.img}
-			<div><img class="ps-himg-disp" style="max-width: {$conf.theme.himgs.max_width};" src="{$himgs_url}/{$h.img}" alt="Help Image"></div>
+			<div><img class="ps-himg-disp" style="max-width: {$conf.theme.himgs.max_width}px;" src="{$himgs_url}/{$h.img}" alt="Help Image"></div>
 		{/if}
 		<h1>{$h.title}</h1>
 		<p>{$h.content}</p>

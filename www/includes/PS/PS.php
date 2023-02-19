@@ -384,10 +384,11 @@ function search_help($search_id, $criteria) {
 		$tokens = query_to_tokens($criteria['phrase']);
 	}
 
+	/*
+		first search title for exact matches
+	*/
 	// build our WHERE clause
 	$where = "";
-
-	// first search title for exact matches
 	$where = "title='" . $tokens[0] . "'";
 	foreach (array_slice($tokens, 1) as $t) {
 		$where .= " OR title='$t'";
@@ -401,7 +402,13 @@ function search_help($search_id, $criteria) {
 	$stitle = $this->db->fetch_rows(1, $cmd);
 	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
 
-	// now perform "LIKE" search
+	/*
+		now do the $help_ids search
+	*/
+
+	// delete any searches that are more than a few hours old
+	$this->delete_stale_searches();
+
 	// build our WHERE clause
 	$where = "";
 	$inner = array();
@@ -410,7 +417,7 @@ function search_help($search_id, $criteria) {
 	// loop through each field and add it to the 'where' clause.
 	foreach (array('title', 'content') as $field) {
 		foreach ($tokens as $t) {
-			// don't include one or two letter tokens in "LIKE" search
+			// don't include one or two letter tokens in $help_ids search
 			if (strlen($t) <= 2) continue;
 			$token = $this->token_to_sql($t, $criteria['mode']);
             $inner[] = "$field LIKE '$token'";
@@ -423,9 +430,6 @@ function search_help($search_id, $criteria) {
 
 	if (empty($outer)) {
 		$help_ids = $this->db->fetch_list($cmd);
-
-		// delete any searches that are more than a few hours old
-		$this->delete_stale_searches();
 
 		// psss_search_results record for insertion
 		$search = array(
@@ -449,39 +453,61 @@ function search_help($search_id, $criteria) {
 	$where = substr($where, 0, -4);		// remove the trailing " OR "
 
 	// perform search and find Jimmy Hoffa!
-	$cmd  = "SELECT *,IF(weight > 10, 11, IF(weight < -10, -9, (weight + 1))) w FROM $this->t_config_help ";
+	$cmd  = "SELECT * FROM $this->t_config_help ";
 	
 	$cmd .= "WHERE ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];
-	$slike = $this->db->fetch_rows(1, $cmd);
 	$help_ids = $this->db->fetch_list($cmd);
-	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
 
-	// join the title and "LIKE" search results
-	$reindexed = array();
-	foreach ($stitle as $values) {
-    	$reindexed[$values['id']] = $values;
-	}
+	/*
+		now do a 'LIKE' search on title and contents
+	*/
+
+	// setup the  $help array and reindex $stitle
 	$help = array();
-	$count = 0;
-	foreach ($slike as $s) {
-		$count++;
-    	$id = $s['id'];
-		$help[$count] = $s;
-    	$help[$count]['w'] = isset($reindexed[$id]) ? $help[$count]['w'] + $reindexed[$id]['w'] : $help[$count]['w'];
+	foreach ($stitle as $st) {
+    	$help[$st['id']] = $st;
 	}
-	$reindexed = array();
-	foreach ($slike as $values) {
-    	$reindexed[$values['id']] = $values;
-	}
-	foreach ($stitle as $s) {
-		$count++;
-    	$id = $s['id'];
-		if (!isset($reindexed[$id])) $help[$id + $criteria['limit']] = $s;
-	}
+	unset($stitle);
 
-	// delete any searches that are more than a few hours old
-	$this->delete_stale_searches();
+	// iterate through $tokens and do a search on each token while building the $help array
+	foreach ($tokens as $t) {
+		// don't include one or two letter tokens in $help_ids search
+		if (strlen($t) <= 2) continue;
+
+		// greater weight to tokens that are 5+ characters in length
+		if (strlen($t) > 4) {
+			$cmd  = "SELECT *,IF(weight > 10, 12, IF(weight < -10, -8, (weight + 2))) w FROM $this->t_config_help ";
+			$cmd .= "WHERE ( CONCAT_WS('', title,content) LIKE '%$t%' ) ";
+			$cmd .= "LIMIT " . $criteria['limit'];
+			$slike = $this->db->fetch_rows(1, $cmd);
+			
+			foreach ($slike as $s) {
+    			$id = $s['id'];
+    			if (isset($help[$id])) {
+					$help[$id]['w'] = $s['w'] + $help[$id]['w'];
+				} else {
+					$help[$s['id']] = $s;
+				}
+			}
+		} else {
+			$cmd  = "SELECT *,IF(weight > 10, 11, IF(weight < -10, -9, (weight + 1))) w FROM $this->t_config_help ";
+			$cmd .= "WHERE ( CONCAT_WS('', title,content) LIKE '%$t%' ) ";
+			$cmd .= "LIMIT " . $criteria['limit'];
+			$slike = $this->db->fetch_rows(1, $cmd);
+			foreach ($slike as $s) {
+    			$id = $s['id'];
+    			if (isset($help[$id])) {
+					$help[$id]['w'] = $s['w'] + $help[$id]['w'];
+				} else {
+					$help[$s['id']] = $s;
+				}
+			}
+		
+		}
+
+		unset($slike);
+	}
 
 	// psss_search_results record for insertion
 	$search = array(

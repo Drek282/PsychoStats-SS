@@ -343,7 +343,9 @@ function search_teams($search_id, $criteria) {
 */
 function search_help($search_id, $criteria) {
 	global $cms;
-	$help_ids = array();
+
+	// delete any searches that are more than a few hours old
+	$this->delete_stale_searches();
 	
 	// convert criteria string to an array
 	if (!is_array($criteria)) {
@@ -387,6 +389,7 @@ function search_help($search_id, $criteria) {
 	/*
 		first search title for exact matches
 	*/
+	
 	// build our WHERE clause
 	$where = "";
 	$where = "title='" . $tokens[0] . "'";
@@ -400,14 +403,10 @@ function search_help($search_id, $criteria) {
 	$cmd .= "WHERE ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];
 	$stitle = $this->db->fetch_rows(1, $cmd);
-	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
 
 	/*
 		now do the $help_ids search
 	*/
-
-	// delete any searches that are more than a few hours old
-	$this->delete_stale_searches();
 
 	// build our WHERE clause
 	$where = "";
@@ -430,34 +429,20 @@ function search_help($search_id, $criteria) {
 
 	if (empty($outer)) {
 		$help_ids = $this->db->fetch_list($cmd);
+	} else {
 
-		// psss_search_results record for insertion
-		$search = array(
-				'search_id'	=> $search_id,
-				'session_id'	=> $cms->session->sid(),
-				'phrase'	=> $criteria['phrase'],
-				'result_total'	=> count($help_ids),
-				'abs_total'	=> $total,
-				'results'	=> join(',', $help_ids),
-				'query'		=> $cmd,
-				'updated'	=> date('Y-m-d H:i:s'),
-			);
-		$ok = $this->save_search($search);
-		return $ok ? array('count' => count($stitle), 'help' => $stitle) : false;
+		// combine the outer and inner clauses into a where clause
+		foreach ($outer as $in) {
+			$where .= " (" . join(" OR ", $in) . ") OR ";
+		}
+		$where = substr($where, 0, -4);		// remove the trailing " OR "
+
+		// perform search and find Jimmy Hoffa!
+		$cmd  = "SELECT * FROM $this->t_config_help ";
+		$cmd .= "WHERE ($where) ";
+		$cmd .= "LIMIT " . $criteria['limit'];
+		$help_ids = $this->db->fetch_list($cmd);
 	}
-
-	// combine the outer and inner clauses into a where clause
-	foreach ($outer as $in) {
-		$where .= " (" . join(" OR ", $in) . ") OR ";
-	}
-	$where = substr($where, 0, -4);		// remove the trailing " OR "
-
-	// perform search and find Jimmy Hoffa!
-	$cmd  = "SELECT * FROM $this->t_config_help ";
-	
-	$cmd .= "WHERE ($where) ";
-	$cmd .= "LIMIT " . $criteria['limit'];
-	$help_ids = $this->db->fetch_list($cmd);
 
 	/*
 		now do a 'LIKE' search on title and contents
@@ -515,7 +500,7 @@ function search_help($search_id, $criteria) {
 		'session_id'	=> $cms->session->sid(),
 		'phrase'	=> $criteria['phrase'],
 		'result_total'	=> count($help_ids),
-		'abs_total'	=> $total,
+		'abs_total'	=> count($help),
 		'results'	=> join(',', $help_ids),
 		'query'		=> $cmd,
 		'updated'	=> date('Y-m-d H:i:s'),

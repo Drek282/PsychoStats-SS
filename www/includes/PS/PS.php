@@ -418,7 +418,7 @@ function search_help($search_id, $criteria) {
 	foreach (array('title', 'content') as $field) {
 		foreach ($tokens as $t) {
 			// don't include one or two letter tokens in $help_ids search
-			if (strlen($t) <= 2) continue;
+			if (strlen($t) < 3) continue;
 			$token = $this->token_to_sql($t, $criteria['mode']);
             $inner[] = "$field LIKE '$token'";
 		}
@@ -473,7 +473,7 @@ function search_help($search_id, $criteria) {
 	// iterate through $tokens and do a search on each token while building the $help array
 	foreach ($tokens as $t) {
 		// don't include one or two letter tokens in $help_ids search
-		if (strlen($t) <= 2) continue;
+		if (strlen($t) < 3) continue;
 
 		// greater weight to tokens that are 5+ characters in length
 		if (strlen($t) > 4) {
@@ -491,7 +491,7 @@ function search_help($search_id, $criteria) {
 				}
 			}
 		} else {
-			$cmd  = "SELECT *,IF(weight > 10, 11, IF(weight < -10, -9, (weight + 1))) w FROM $this->t_config_help ";
+			$cmd  = "SELECT *,IF(weight > 10, 10, IF(weight < -10, -10, weight)) w FROM $this->t_config_help ";
 			$cmd .= "WHERE ( CONCAT_WS('', title,content) LIKE '%$t%' ) ";
 			$cmd .= "LIMIT " . $criteria['limit'];
 			$slike = $this->db->fetch_rows(1, $cmd);

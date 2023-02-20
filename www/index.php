@@ -192,7 +192,7 @@ $table->columns(array(
 ));
 $table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
-$table->column_attr('team_rdiff', 'class', 'right');
+$table->column_attr('pythag_plus', 'class', 'right');
 //$table->column_attr('rank', 'class', 'left');
 $table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);

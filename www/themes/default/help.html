@@ -33,7 +33,7 @@
 <div id="s-popular" class="ps-column-content">
 {foreach from=$top_help item='th'}
 <div class="firstrow">
-	<label class="thelp">{$th.title|truncate:35}</label>
+	<label class="thelp">{$th.title|tablesearchlink}{$th.title|truncate:35}</a></label>
 </div>
 <div class="chelp">{$th.content}</div>
 {/foreach}

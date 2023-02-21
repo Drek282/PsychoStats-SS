@@ -223,4 +223,8 @@ $cms->theme->add_css('css/help.css');
 $cms->theme->add_css('css/2column.css');	// this page has a left column
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
+function tablesearchlink($val) {
+	return psss_table_search_link($val);
+}
+
 ?>

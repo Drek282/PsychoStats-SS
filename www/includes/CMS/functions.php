@@ -287,6 +287,23 @@ if (!function_exists('psss_table_division_link')) {
 	}
 }
 
+if (!function_exists('psss_table_search_link')) {
+	/**
+	Creates a search link from a query string.  Does not close the <a> tag.
+	*/
+	function psss_table_search_link($q) {
+		global $ps;
+
+		// setup query string for url
+    	$qurl = strtolower($q);
+    	$qurl = preg_replace("/[[:punct:]]+/", "", $qurl);
+    	$qurl = preg_replace("/ +/", "+", $qurl);
+
+		$url = psss_url_wrapper(array( '_base' => 'help.php')) . "?q=" . $qurl;
+		return "<a class='division' href='$url'>";
+	}
+}
+
 if (!function_exists('psss_escape_html')) {
 	/**
 	Escapes a string for output within the HTML themes. This should be used instead of 

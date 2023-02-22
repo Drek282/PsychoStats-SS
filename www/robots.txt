@@ -1,0 +1,12 @@
+User-agent: MJ12bot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: *
+Disallow: /admin/
+Disallow: /ajax/
+Disallow: /img/
+Disallow: /includes/
+Disallow: /plugins/
+Disallow: /temp/
+Disallow: /themes/

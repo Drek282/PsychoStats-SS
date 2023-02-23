@@ -42,7 +42,14 @@
 {/if}
 </div>
 
+<div>&nbsp</div>
+
 {if $conf.main.registration != 'closed'}
+<div class="notes">
+	<h4><#IMPORTANT#></h4>
+	<p><#If you have just taken ownership of a team, you will need to wait until the first league results after you took ownership of the team before you can register.  Typically that would be the first league results of a season if you took ownership of a team in the off season.#></p>
+</div>
+
 <div{if $errors.team_id} class="err"{/if}>
 	<p class="err" id="err-team_id">{$errors.team_id|escape}</p>
 	<label>{$team_id_label}:</label>
@@ -57,8 +64,6 @@
 	<label><#Owner Name#>:</label>
 	<input name="owner_name" value="{$form.owner_name|escape}" type="text" class="field">
 	<p class="small"><#You must enter the owner name you play Scoresheet Baseball under.#></p>
-	<p class="small"><#If you have just taken ownership of a team, you will need to wait until the first league results after you took ownership of the team before you can register.  Typically that would be the first league results of a season if you took ownership of a team in the off season.#></p>
-	<p class="small"><#ie: Herman Perwinkle#></p>
 </div>
 
 <div{if $errors.username} class="err"{/if}>
@@ -68,7 +73,10 @@
 	<p class="small">
 		<#This is the user name you will use to log into your account.#>
 	</p>
+	<p class="small"><#ie: Herman Perwinkle#></p>
 </div>
+
+<div>&nbsp</div>
 
 {if $conf.main.email.enable && !empty($conf.main.email.admin_email)}
 <div{if $errors.email} class="err"{/if}>

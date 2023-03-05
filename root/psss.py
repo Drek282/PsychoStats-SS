@@ -1512,10 +1512,25 @@ if  data['value']:
 else:
     check_loop = 0
 
-# Check to see if the stats pages have been updated or continue if
-# checkloop is not set.
+# Check to see if the stats pages have been updated or continue if checkloop is not set.
 if check_loop != 0:
-    grp_check(check_loop, league_url)
+    # Setup month range (April to October).
+    mr = range(4, 10)
+    # Return the current month as an integer.
+    mc = now_utc.strftime("%-m")
+    # Only engage check loop if the month is April to October.
+    if mc in mr:
+        grp_check(check_loop, league_url)
+    else:
+        print(
+            '''
+            INFO:   This is the off season, the league page will not be checked for weekly results.
+            '''
+            )
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season the league page will not be checked for weekly results."
 
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"

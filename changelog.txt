@@ -15,6 +15,7 @@ Version 0.0.4b (in progress)
 * [Removed] Install themes from URL.
 * [Fixed] Icons can now be uploaded from URL.
 * [Fixed] Miscellaneous CSS issues.
+* [Improved] The loop to check league pages for weekly results will now only function from April to October.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

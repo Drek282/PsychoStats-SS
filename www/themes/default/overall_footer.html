@@ -1,3 +1,18 @@
+<script>var jlupdate = {$lastupdate};</script>
+{literal}
+  <script>
+    // Convert lastupdate to client time
+    var fjlupdate = new Date(jlupdate * 1000);
+    fjlupdate = fjlupdate.getFullYear()+
+		  "-"+(fjlupdate.getMonth()+1)+
+		  "-"+(fjlupdate.getDate()+1)+
+      " "+fjlupdate.getHours()+
+      ":"+fjlupdate.getMinutes()+
+      ":"+fjlupdate.getSeconds();
+    document.getElementById("lastupdate").innerHTML = fjlupdate;
+  </script>
+{/literal}
+
 <div id="ps-overall-footer">
 <div id="ps-footer-middle">
 {if $language_list and $cookieconsent}
@@ -22,7 +37,7 @@
     {if $show_benchmark}
 		-- <#Page loaded in#> <!--PAGE_BENCHMARK--> <#seconds with#> {db->totalqueries} <#SQL queries#> 
     {/if}
-    -- <#Last Updated#>: {$lastupdate|date_format:'%Y-%m-%d %H:%M:%S'}<br>
+    -- <#Last Updated#>: <span id="lastupdate">na</span><br>
     {if ! $conf.theme.permissions.show_admin and $cookieconsent}
         <strong>[ <a href="admin/index.php"><#Admin Control Panel#></a> ]</strong>
     {/if}

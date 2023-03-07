@@ -16,8 +16,6 @@ This also open source software.  The code can be modified by anyone who wishes t
 
 ## **Stuff that Remains Untested**
 
-* Tracking teams by anything other than TEAM_ID.
-* Primary team name selection mode.
 * Automatic deletion of user accounts on owner change.
 * First stats in a new season.
 * Repair database on install.

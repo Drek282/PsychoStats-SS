@@ -111,16 +111,14 @@ if ($team['team_id']) {
 	// allow mods to have their own section on the left side bar
 	$ps->team_left_column_mod($team, $cms->theme);
 
-	if ($ps->conf['main']['team_id'] == 'team_id') {
-		$team_id = $team['ids_team_id'][0]['team_id'];
-		if ($team_id and strtoupper(substr($team_id, 0, 3)) !== 'BOT' and function_exists('gmp_init')) {
-			include_once(PS_ROOTDIR . "/includes/class_Team_ID.php");
-			$v = new Team_ID($team_id);
-			$friendid = $v->ConvertToUInt64($team_id);
-			$team['friend_id'] = $friendid;
-			$team['steam_community_url'] = $v->steam_community_url($friendid);
-			$team['steam_add_friend_url'] = $v->steam_add_friend_url($friendid);
-		}
+	$team_id = $team['ids_team_id'][0]['team_id'];
+	if ($team_id and strtoupper(substr($team_id, 0, 3)) !== 'BOT' and function_exists('gmp_init')) {
+		include_once(PS_ROOTDIR . "/includes/class_Team_ID.php");
+		$v = new Team_ID($team_id);
+		$friendid = $v->ConvertToUInt64($team_id);
+		$team['friend_id'] = $friendid;
+		$team['steam_community_url'] = $v->steam_community_url($friendid);
+		$team['steam_add_friend_url'] = $v->steam_add_friend_url($friendid);
 	}
 
 	$cms->theme->add_css('css/2column.css');	// this page has a left column

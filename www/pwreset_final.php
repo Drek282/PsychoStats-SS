@@ -30,9 +30,7 @@ $cms->theme->page_title('PsychoStats - Email Confirmation');
 $validfields = array('username','tpw','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 		
-switch ($ps->conf['main']['team_id']) {
-	case 'team_id': $team_id_label = $cms->trans("Team #"); break;
-};
+$team_id_label = $cms->trans("Team #");
 
 $form = $cms->new_form();
 

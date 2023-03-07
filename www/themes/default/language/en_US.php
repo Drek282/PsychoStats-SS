@@ -496,7 +496,7 @@ function __construct() {
 		'',
 	'The Discord ID is not in the correct format.' =>
 		'',
-	'The unique ID ({$conf.main.team_id}) given for your team must already exist or registration will fail.' =>
+	'The team number given for your team must already exist or registration will fail.' =>
 		'',
 	'The unique ID entered above should match the team you play as.' =>
 		'',

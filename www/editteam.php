@@ -350,9 +350,6 @@ if ($submit) {
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
 $uid = $team['team_id'];
-if ($ps->conf['main']['team_id'] == 'ipaddr') {
-	$uid = long2ip($uid);
-}
 
 $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowed_html_tags']);
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';

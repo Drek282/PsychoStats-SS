@@ -261,6 +261,7 @@ function val_blank($var, $value, &$form) {
 // Validator: returns true if the value is numeric (or if it's blank)
 function val_numeric($var, $value, &$form) {
 	if (!is_numeric($value) and $value != '') {
+		$this->valid_errors['numeric'] ??= null;
 		$form->error($var, $this->valid_errors['numeric'] ? $this->valid_errors['numeric'] : "Field must be a number");
 		return false;
 	} 
@@ -270,6 +271,7 @@ function val_numeric($var, $value, &$form) {
 // Validator: returns true if the value is a positive number
 function val_positive($var, $value, &$form) {
 	if ($value != '' and (!is_numeric($value) or $value < 0)) {
+		$this->valid_errors['positive'] ??= null;
 		$form->error($var, $this->valid_errors['positive'] ? $this->valid_errors['positive'] : "Field must be a positive number");
 		return false;
 	} 
@@ -310,6 +312,7 @@ function val_strtotime($var, $value, &$form) {
 	if (!empty($value)) {
 		$time = strtotime($value);
 		if ($time === false or $time == -1) {
+			$this->valid_errors['strtotime'] ??= null;
 			$form->error($var, $this->valid_errors['strtotime'] ? $this->valid_errors['strtotime'] : "Field must be a valid date (YYYY-MM-DD)");
 			return false;
 		}
@@ -323,6 +326,7 @@ function val_hostname($var, $value, &$form) {
 		$ip = gethostbyname($value);
 		if ($ip != $value) return true;		// hostname was resolved successfully
 		if (!preg_match('/^(\\d{1,3}\\.){3}\\d{1,3}$/', $value)) {
+			$this->valid_errors['hostname'] ??= null;
 			$form->error($var, $this->valid_errors['hostname'] ? $this->valid_errors['hostname'] : "Unknown hostname or IP Address");
 			return false;
 		}

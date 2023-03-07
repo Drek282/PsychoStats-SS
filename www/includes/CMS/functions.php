@@ -127,11 +127,14 @@ if (!function_exists('psss_date')) {
 				$sign = substr($ofs,0,1);
 				$neg = (bool)($sign == '-');
 				if ($neg || $sign == '+') $ofs = substr($ofs,1);
-	
-				list($h,$m) = explode(':', $ofs);
-				$h = (int)$h;
-				$m = (int)$m;
-				$ofs = 60*60*$h + 60*$m;
+				if (str_contains($ofs, ':')) {
+					list($h,$m) = explode(':', $ofs);
+					$h = (int)$h;
+					$m = (int)$m;
+					$ofs = 60*60*$h + 60*$m;
+				} else {
+					$ofs = 60*60*$ofs;
+				}
 				if ($neg) $ofs *= -1;
 			} else {
 				$ofs = 0;	// make sure it's not null if time_offset is empty

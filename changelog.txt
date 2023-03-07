@@ -17,6 +17,8 @@ Version 0.0.4b (in progress)
 * [Fixed] Miscellaneous CSS issues.
 * [Improved] The loop to check league pages for weekly results will now only function from April to October.
 * [Changed] The last update time is now shown in the web client's local time.
+* [Fixed] More PHP 8 related warnings.
+* [Fixed] The Time Offset setting in the Admin CP Formats / HTML Configuration menu now works as originally intended and can handle minutes.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

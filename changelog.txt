@@ -20,6 +20,7 @@ Version 0.0.4b (in progress)
 * [Fixed] More PHP 8 related warnings.
 * [Fixed] The Time Offset setting in the Admin CP Formats / HTML Configuration menu now works as originally intended and can handle minutes.
 * [Removed] The option to configure how teams are identified in the software.
+* [Fixed] Non-functional filter options on certain Admin CP pages.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

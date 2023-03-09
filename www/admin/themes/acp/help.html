@@ -34,7 +34,8 @@
 		<table id='aw-table' class='ps-table ps-help-table'>
 		<tr class='hdr'>
 			<th class="active"><p><span class="asc"><#Order#></span></p></th>
-			<th><p><span class="asc"><#Help Title#></span></p></th>
+			<th><p><span class="asc"><#Help Entry#></span></p></th>
+			<th><p><span class="asc"><abbr title="<#User feedback ( 'helpful' / 'not helpful' )#>"><#Weight#></abbr></span></p></th>
 			<th><p><span class="asc"><abbr title="<#Is help entry enabled?#>">?</abbr></span></p></th>
 		</tr>
 {foreach from=$help item='h'}
@@ -44,6 +45,7 @@
 <a {if !$h.down}style="display: none"{/if} class="dn" href="{url move='down' id=$h.id}"><img src="{theme->url}/img/icons/arrow_down.png" alt="Move Down"></a>
 			{/strip}</td>
 			<td class="item"><a href="{url _base='help_edit.php' id=$h.id}">{$h.title|escape}</a><span class='sub'>{$h.content}</span></td>
+			<td>{$h.weight}</td>
 			<td><img src="{theme->url}/img/icons/{if $h.enabled}tick{else}cross{/if}.png" alt="{if $h.enabled}Enabled{else}Disabled{/if}"></td>
 		</tr>
 {foreachelse}

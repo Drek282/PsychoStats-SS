@@ -233,8 +233,11 @@ dd.user-green a {
 dd.user-red a {
 	background-image: url(../img/icons/user_red.png);
 }
-dd.help a {
-	background-image: url(../img/icons/help.webp);
+dd.h_entry a {
+	background-image: url(../img/icons/h_entry.webp);
+}
+dd.h_query a {
+	background-image: url(../img/icons/h_query.webp);
 }
 dd.cog a {
 	background-image: url(../img/icons/cog.png);

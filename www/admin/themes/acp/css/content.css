@@ -472,6 +472,45 @@ td.error-log {
     text-overflow: ellipsis;
 }
 
+/*
+	inline-notes style used in forms
+*/
+#ps-main-content div.inline-notes
+{
+	background-color: #FFFFE1;
+	border: 1px solid #666666;
+	color: #666666;
+	font-size: 88%;
+	height: auto;
+	margin: 0 5px 5px;
+	padding: 3px;
+	width: auto;
+}
+
+#ps-main-content div.inline-notes a 
+{
+	text-decoration: underline;
+}
+
+#ps-main-content div.inline-notes h4 
+{
+	background: transparent url(../img/icons/information.png) no-repeat left 50%;
+	border-color: #666666;
+	border-style: solid;
+	border-width: 0 0 1px;
+	color: #666666;
+	font-size: 110%;
+	padding: 0 0 3px 20px;
+	text-align: left;
+}
+
+#ps-main-content div.inline-notes p 
+{
+	color: #666666;
+	margin: 0.5em 0 0;
+	text-align: left;
+}
+
 /* --- clear floats ------------ */
 .ps-stat-container:after, 
 .ps-stat-content p:after 

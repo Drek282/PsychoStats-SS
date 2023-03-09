@@ -68,7 +68,7 @@ $cmd = "SELECT * FROM $ps->t_config_help WHERE ";
 $where = "1";
 if ($filter != '') {
 	$f = '%' . $ps->db->escape($filter) . '%';
-	$where .= " AND (name LIKE '%$f%' OR description LIKE '%$f%')";
+	$where .= " AND (title LIKE '%$f%' OR content LIKE '%$f%')";
 }
 $cmd .= $where . " " . $ps->getsortorder($_order);
 $list = $ps->db->fetch_rows(1, $cmd);

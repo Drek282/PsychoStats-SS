@@ -28,7 +28,7 @@ include("./common.php");
 $cms->crumb('Manage', psss_url_wrapper($_SERVER['REQUEST_URI']));
 $cms->crumb('Awards', psss_url_wrapper($php_scnm));
 
-$validfields = array('ref','start','limit','order','sort','move','ajax','id');
+$validfields = array('ref','start','limit','order','sort','move','filter','ajax','id');
 $cms->theme->assign_request_vars($validfields, true);
 
 if (!is_numeric($start) or $start < 0) $start = 0;
@@ -66,12 +66,16 @@ if ($move and $id) {
 $awards = array();
 $cmd = "SELECT * FROM $ps->t_config_awards WHERE ";
 $where = "1";
+if ($filter != '') {
+	$f = '%' . $ps->db->escape($filter) . '%';
+	$where .= " AND (award_name LIKE '%$f%' OR phrase LIKE '%$f%')";
+}
 $cmd .= $where . " " . $ps->getsortorder($_order);
 $list = $ps->db->fetch_rows(1, $cmd);
 
 $total = $ps->db->count($ps->t_config_awards, '*', $where);
 $pager = pagination(array(
-	'baseurl'	=> psss_url_wrapper($_order),
+	'baseurl'	=> psss_url_wrapper(array('filter' => $filter) + $_order),
 	'total'		=> $total,
 	'start'		=> $start,
 	'perpage'	=> $limit, 

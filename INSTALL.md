@@ -17,13 +17,13 @@ There is no option currently for a graceful or automated upgrade.  Typically in 
 
 1. If you've already unzipped the archive you will have a directory structure that looks like this:
   
-\root
-\www
+\root  
+\www  
 changelog.txt  
-INSTALL.md
-license.txt
-readme_*.txt
-README.md
+INSTALL.md  
+license.txt  
+readme_*.txt  
+README.md  
 
 2. You will need a MySQL or MariaDB database, user and password.  If you don't know how to set that up, Google is your friend.  It's fairly simple and there is a lot of information on how to do that on the web.  Make sure your user has full permissions on the database.
 

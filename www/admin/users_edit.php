@@ -132,7 +132,7 @@ if ($submit) {
 		$form->error('accesslevel', $cms->trans("Invalid access level specified"));
 	}
 
-	if ($u->load_user($input['username'], 'username')) {
+	if (empty($u->info['username']) and $u->load_user($input['username'], 'username')) {
 		$form->error('username', $cms->trans("Username already exists under a different user"));
 	}
 	
@@ -325,7 +325,7 @@ $cms->crumb('Edit');
 
 $email = (isset($email)) ? $email : $email = (isset($u->info['email'])) ? $u->info['email'] : null;
 $cms->theme->assign(array(
-	'errors'	=> $form->errors(),
+	'errors'	=> $form ? $form->errors() : array('fatal' => null,),
 	'u'		=> $u->to_form_input(),
 	'email'			=> $email,
 	'accesslevels'	=> $u->accesslevels(),

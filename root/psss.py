@@ -1530,7 +1530,7 @@ if check_loop != 0:
 
         # Log entry.
         error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season the league page will not be checked for weekly results.\n"
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season.  The league page will not be checked for weekly results.\n"
 
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"

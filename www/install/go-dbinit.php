@@ -177,9 +177,9 @@ function do_init($games, $mods) {
 	}
 	if ($errors) return false;
 	$queries = array_merge($schema, $defaults);
-
 	$allow_next = true;
 	foreach ($queries as $sql) {
+
 		if (empty($sql)) continue;
 		$action = substr($sql, 0, 6);
 		$is_create = (strtolower($action) == 'create');
@@ -193,8 +193,7 @@ function do_init($games, $mods) {
 		}
 
 		// if the table exists and overwrite is true, drop it first.
-		$exists[$table] = $exists[$table] ?? null;
-		if ($exists[$table] and $overwrite and $is_create) {
+		if (isset($exists[$table]) and $overwrite) {
 			if ($db->droptable($table)) {
 				unset($exists[$table]);
 				$actions[$table] = array('status' => 'good', 'msg' => "Dropped table '$table'");
@@ -208,7 +207,7 @@ function do_init($games, $mods) {
 
 		if ($is_create) {
 			// don't try to create a table that already exists
-			if ($exists[$table]) {
+			if (isset($exists[$table])) {
 				$ignore[$table] = true;
 				$actions[$table] = array(
 					'status' => 'warn',
@@ -224,8 +223,7 @@ function do_init($games, $mods) {
 			}
 		} else {
 			// do 'insert' query
-			$ignore[$table] = $ignore[$table] ?? null;
-			if ($ignore[$table]) continue;
+			if (isset($ignore[$table])) continue;
 			if ($db->query($sql)) {
 				$actions[$table] = array( 'status' => 'good', 'msg' => "Created and initialized table '$table'" );
 			} else {

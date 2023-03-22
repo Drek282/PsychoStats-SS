@@ -12,13 +12,13 @@ This also open source software.  The code can be modified by anyone who wishes t
 * The CSRF protection is currently not working as intended.  This should not be a serious security issue but the hope is to revisit the code and get this working at some point in the future.
 * The coded language support is incomplete.  The goal is to update and finish it, as well as add support, at a minimum, for Spanish.
 * The setting to allow uploads for icons has no effect.  There is no code in place to allow users to upload icons.
+* Choosing the "Overwrite existing tables" option produces the exact same result as dropping and recreating the database.
 
 
 ## **Stuff that Remains Untested**
 
 * Automatic deletion of user accounts on owner change.
 * First stats in a new season.
-* Repair database on install.
 
 
 ## **Future Plans**

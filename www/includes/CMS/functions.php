@@ -272,7 +272,8 @@ if (!function_exists('psss_table_br_search_link')) {
 	function psss_table_br_search_link($player_name) {
 		global $ps;
 		if (preg_match('/AAA/', $player_name)) return $player_name;
-		$url = 'https://www.baseball-reference.com/search/search.fcgi?search=' . $player_name;
+		$html_player_name = str_replace(' ', '%20', $player_name);
+		$url = 'https://www.baseball-reference.com/search/search.fcgi?search=%22' . $html_player_name . '%22';
 		return "<a class='team' href='$url' target='_blank' rel='noopener noreferrer'>" . $player_name . "</a>";
 	}
 }

@@ -277,7 +277,6 @@ function rank_change($args = array()) {
 		'prevrank'	=> 0,
 		'imgfmt'	=> "rank_%s.gif",
 		'difffmt'	=> "%d",
-		'attr'		=> "",
 		'acronym'	=> true,
 		'textonly'	=> false,
 	);
@@ -320,7 +319,7 @@ function rank_change($args = array()) {
 			$img = $cms->theme->url() . $img;
 		}
 
-		$output = sprintf("<img src='%s' alt='%s' title='%s' %s/>", $img, $alt, $alt, $args['attr']);
+		$output = sprintf("<img src='%s' alt='%s' title='%s'>", $img, $alt, $alt);
 #		if ($args['acronym']) {
 #			$output = "<abbr title='$alt'>$output</abbr>";
 #		}

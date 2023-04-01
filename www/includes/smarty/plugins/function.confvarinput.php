@@ -21,7 +21,6 @@ function smarty_function_confvarinput($args, &$smarty)
 	global $conf_layout, $form;
 	$args += array(
 		'var'	=> '',
-		'xhtml'	=> 1,
 	);
 
 //	$var = $conf_layout[$args['var']];

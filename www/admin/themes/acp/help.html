@@ -44,7 +44,7 @@
 <a {if !$h.up}style="display: none"{/if} class="up" href="{url move='up' id=$h.id}"><img src="{theme->url}/img/icons/arrow_up.png" alt="Move Up"></a>
 <a {if !$h.down}style="display: none"{/if} class="dn" href="{url move='down' id=$h.id}"><img src="{theme->url}/img/icons/arrow_down.png" alt="Move Down"></a>
 			{/strip}</td>
-			<td class="item"><a href="{url _base='help_edit.php' id=$h.id}">{$h.title|escape}</a><span class='sub'>{$h.content}</span></td>
+			<td class="item"><a href="{url _base='help_edit.php' id=$h.id}">{$h.title|escape}</a><div class='sub'>{$h.content}</div></td>
 			<td>{$h.weight}</td>
 			<td><img src="{theme->url}/img/icons/{if $h.enabled}tick{else}cross{/if}.png" alt="{if $h.enabled}Enabled{else}Disabled{/if}"></td>
 		</tr>

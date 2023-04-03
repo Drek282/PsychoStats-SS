@@ -25,6 +25,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Overwrite option for database in install no longer causes errors.
 * [Fixed] More HTML errors.
 * [Removed] Remnants of XHTML code.
+* [Fixed] Errors associated with early season stats.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

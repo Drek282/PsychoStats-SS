@@ -1269,7 +1269,7 @@ function get_team_list($args = array()) {
 	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND def.season=" . $args['season'] . " ";
 	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND off.season=" . $args['season'] . " ";
 	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 	

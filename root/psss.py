@@ -305,8 +305,24 @@ def generate_psss_team_rosters (season, season_url, season_dir):
     lu_list = season_url.split("/")
 
     # Build the scoresheets url.
-    lu_list[6] = surl_name
-    season_url_s = "/".join(lu_list)
+    i = 6
+    if i in lu_list:
+        lu_list[6] = surl_name
+        season_url_s = "/".join(lu_list)
+    else:
+        print(
+            '''
+            WARNING:  The player stats page for this season does not exist.
+
+                    There will be no team rosters available for this season.
+            '''
+            )
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,The player stats page does not exist.\n"
+        
+        return
 
     # Check to see if player stats page exists.
     request = requests.get(season_url_s)
@@ -321,7 +337,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
 
         # Log entry.
         error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,The season scoresheets page at URL:  " + season_url_s + "  does not exist.\n"
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,The player stats page at URL:  " + season_url_s + "  does not exist.\n"
         
         return
     
@@ -885,7 +901,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     ## Remove team names from working_stats_def and working_stats_wc and create team_names_def variable.
     # working_stats_def
-    my_regex =  r"^((?:[1-9]|[1-9][0-9])  )(.+)( +(?:1[0-9][0-9]| [1-9][0-9]|  [0-9]) (?:1[0-9][0-9]| [1-9][0-9]|  [0-9])  \.[0-9][0-9][0-9] .+)$"
+    my_regex =  r"^((?:[1-9]|[1-9][0-9])  )(.+)( +(?:1[0-9][0-9]| [1-9][0-9]|  [0-9]) (?:1[0-9][0-9]| [1-9][0-9]|  [0-9]) (?:1\.000| \.[0-9][0-9][0-9]) .+)$"
     working_stats_def_nr = re.sub(my_regex, r'\g<1>###\g<3>', working_stats_def, 40, re.MULTILINE)
     team_names_def = re.sub(my_regex, r'\g<1>\g<2>', working_stats_def, 40, re.MULTILINE)
     # Remove whitespace at end of lines in team_names_def.
@@ -1252,6 +1268,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         query = "UPDATE psss_team_adv a SET a.games_back= CASE WHEN games_back='dt' THEN 'dtlc' ELSE 'lc' END WHERE a.season='" + season + "' AND a.team_id='" + league_c + "'"
         cursor.execute(query)
 
+    # Replace NaN with 0.
+    working_stats_def_dfo = working_stats_def_dfo.fillna(0)
+
     ## Create or modify the psss_team_def data table.
     # Iterate through working_stats_def_dfo.
     for index, row in working_stats_def_dfo.iterrows():
@@ -1277,6 +1296,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
             # Add new entry to db.
             query = "INSERT INTO psss_team_def VALUES ('" + str(row['Season']) + "', '" + str(row['Team']) + "', '" + str(row['ERA']) + "', '" + str(row['RA9']) + "', '" + str(row['CG']) + "', '" + str(row['ShO']) + "', '" + str(row['Sv']) + "', '" + str(row['IP']) + "', '" + str(row['RA']) + "', '" + str(row['ER']) + "', '" + str(row['HA']) + "', '" + str(row['BAA']) + "', '" + str(row['BBA']) + "', '" + str(row['WHIP']) + "', '" + str(row['KA']) + "', '" + str(row['OP']) + "', '" + str(row['DP']) + "', '" + str(row['E']) + "', '" + str(row['WP']) + "', '" + str(row['PB']) + "', '" + str(row['OSB']) + "', '" + str(row['OCS']) + "', '" + str(row['DRat']) + "')"
             cursor.execute(query)
+
+    # Replace NaN with 0.
+    working_stats_off_dfo = working_stats_off_dfo.fillna(0)
 
     ## Create or modify the psss_team_off data table.
     # Iterate through working_stats_off_dfo.
@@ -1515,9 +1537,10 @@ else:
 # Check to see if the stats pages have been updated or continue if checkloop is not set.
 if check_loop != 0:
     # Setup month range (April to October).
-    mr = range(4, 10)
+    mr = range(4, 11)
     # Return the current month as an integer.
-    mc = now_utc.strftime("%-m")
+    mc = int(now_utc.strftime("%-m"))
+
     # Only engage check loop if the month is April to October.
     if mc in mr:
         grp_check(check_loop, league_url)

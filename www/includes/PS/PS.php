@@ -1137,7 +1137,7 @@ function get_award($args = array()) {
 	$cmd  = "SELECT $expr awardvalue,$values FROM $this->t_team_adv adv ";
 	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND adv.season = def.season ";
 	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND adv.season = off.season ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen) name ON adv.team_id = name.team_id ";
     
     // to get rid of duplicate team listings
 	$cmd  .= "GROUP BY team_n, season_n ";

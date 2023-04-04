@@ -26,6 +26,7 @@ Version 0.0.4b (in progress)
 * [Fixed] More HTML errors.
 * [Removed] Remnants of XHTML code.
 * [Fixed] Errors associated with early season stats.
+* [Fixed] Most recently used team name not being returned on certain pages.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

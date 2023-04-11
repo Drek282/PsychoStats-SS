@@ -70,10 +70,7 @@ if (($delete or $confirm) and is_array($sel) and count($sel)) {
 						$team = $ps->get_team_profile($id, 'userid');
 
 						// Setup the site url for the notification email.
-						$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
-						array_pop($base_url_array);
-						array_pop($base_url_array);
-						$base_url = implode('/', $base_url_array);
+						$base_url = $ps->conf['main']['base_url'];
 						$login_url = $base_url . "/login.php";
 
 						$cms->theme->assign(array(

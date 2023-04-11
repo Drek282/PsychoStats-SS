@@ -1,8 +1,12 @@
-{if $errors.fatal}
+{if $errors.fatal or $errors.base_url or $errors.username or $errors.password or $errors.password2}
 <h3><#Create Administrator Result#></h3>
-<p class="h3">An error occured while creating the admin user.</p>
-<p class="row"><span class="bad">{$errors.fatal|escape}</span></p>
-{elseif !$errors.fatal}
+<p class="h3">An error occured while creating the base URL and/or the admin user.</p>
+	{if $errors.fatal}<p class="row"><span class="bad">{$errors.fatal|escape}</span></p>{/if}
+	{if $errors.base_url}<p class="row"><span class="bad">{$errors.base_url|escape}</span></p>{/if}
+	{if $errors.username}<p class="row"><span class="bad">{$errors.username|escape}</span></p>{/if}
+	{if $errors.password}<p class="row"><span class="bad">{$errors.password|escape}</span></p>{/if}
+	{if $errors.password2}<p class="row"><span class="bad">{$errors.password2|escape}</span></p>{/if}
+{else}
 <h3><#Administrator Update Result#></h3>
 	{if $action == 'created'}
 	<p class="row"><span class="good">Administrator "<strong>{$username|escape}</strong>" has been created successfully!</span></p>

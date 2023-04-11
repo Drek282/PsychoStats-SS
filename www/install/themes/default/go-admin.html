@@ -1,4 +1,9 @@
-<h2 id="go-hdr"><#Create Administrator#></h2>
+<h2 id="go-hdr"><#Create Base URL and Administrator for PsychoStats#></h2>
+<p>
+	The base URL will be used in registration and confirmation emails, this functionality will break without it.  It should be the base URL for your PsychoStats installation in the following format.<br>
+	Note that there should be no trailing slash.<br>
+	Example:  https://www.mightydingos.org/psychostats
+</p>
 <p>
 	An administrator user will allow you to access the Admin Control Panel (ACP) within the stats website. 
 	In the ACP you will be able to change your configuration and have access to other special features.
@@ -8,6 +13,14 @@
 
 <form id="config-form" action="{$SELF}" method="post">
 <div id='results' style="display: block">
+<div class="config-frame">
+<p class="row">
+	<label><#Base URL#>:</label>
+	<input id="base_url" name="base_url" value="{$base_url|escape}" type="text" class="field">
+	<span class="sub err" style="display: none"><#You must enter a base URL for your stats#></span>
+</p>
+</div>
+
 <div class="config-frame">
 <p class="row">
 	<label><#Username#>:</label>

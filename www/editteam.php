@@ -287,11 +287,8 @@ if ($submit) {
 				);
 
 				// Setup the confirmation url.
-				$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
-				array_pop($base_url_array);
-				$base_url = implode('/', $base_url_array);
+				$base_url = $ps->conf['main']['base_url'];
 				$confirmation_url = $base_url . "/email_confirmation.php?user=" . $user['username'] . "&tpw=" . $user['temp_password'];
-				unset($base_url_array);
 
 				$cms->theme->assign(
 					array(

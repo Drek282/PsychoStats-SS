@@ -290,6 +290,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
     #print(season)
 
     # Globals
+    global season_c
     global pagedate
     global error_no
     global error_log
@@ -298,6 +299,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
     tdtd = time.strftime('%Y-%m-%d', time.localtime(pagedate))
 
     # Get the player stats url name (doesn't always match league name in current url).
+    surl_name = ''
     my_regex = r"^<a href='(.+?_S.htm)?' target=_blank>"
     surl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
 
@@ -305,9 +307,9 @@ def generate_psss_team_rosters (season, season_url, season_dir):
     lu_list = season_url.split("/")
 
     # Build the scoresheets url.
-    i = 6
-    if i in lu_list:
-        lu_list[6] = surl_name
+    i = len(lu_list)-1
+    if surl_name != '':
+        lu_list[i] = surl_name
         season_url_s = "/".join(lu_list)
     else:
         print(

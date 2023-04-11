@@ -198,12 +198,8 @@ if ($submit) {
 					if ($ps->conf['main']['email']['enable'] && !empty($ps->conf['main']['email']['admin_email'])) {
 
 						// Setup the confirmation url.
-						$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
-						array_pop($base_url_array);
-						array_pop($base_url_array);
-						$base_url = implode('/', $base_url_array);
+						$base_url = $ps->conf['main']['base_url'];
 						$confirmation_url = $base_url . "/pwreset_final.php?username=" . $u['username'] . "&tpw=" . $u['temp_password'];
-						unset($base_url_array);
 
 						$cms->theme->assign(array(
 							'confirmation_url'	=> $confirmation_url,

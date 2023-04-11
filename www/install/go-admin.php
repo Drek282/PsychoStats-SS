@@ -26,7 +26,7 @@
 */
 if (!defined("PSYCHOSTATS_INSTALL_PAGE")) die("Unauthorized access to " . basename(__FILE__));
 
-$validfields = array('username','password','password2','del');
+$validfields = array('base_url','username','password','password2','del');
 $cms->theme->assign_request_vars($validfields, true);
 
 // make DB connection
@@ -65,6 +65,15 @@ $cms->theme->assign_by_ref('errors', $errors);
 $cms->theme->assign_by_ref('action', $action);
 $cms->theme->assign_by_ref('admin_list', $admin_list);
 
+// Try to auto create the $base_url variable.
+if (isset($_SERVER['HTTP_REFERER']) && empty($base_url)) {
+	$base_url_array = explode('/', $_SERVER['HTTP_REFERER']);
+	array_pop($base_url_array);
+	array_pop($base_url_array);
+	$base_url = implode('/', $base_url_array);
+	unset($base_url_array);
+}
+
 // delete the specified admin 
 if ($ajax_request and $del != '') {
 	$action = "deleted";
@@ -85,9 +94,14 @@ if ($ajax_request) {
 //	sleep(1);
 
 	if (!$del) {
+		$base_url = trim($base_url);
 		$username = trim($username);
 		$password = trim($password);
 		$password2 = trim($password2);
+
+		if (!empty($base_url) and url_exists($base_url) != true) {
+			$errors['base_url'] = 'The URL is not accessible!  Please verify the url.';
+		}
 
 		if ($username == '') {
 			$errors['username'] = "Please enter a valid username!";
@@ -114,8 +128,15 @@ if ($ajax_request) {
 				'email_confirmed'	=> 1,
 				'confirmed'	=> 1
 			);
+			if (!$cms->db->update($cms->db->table('config'), "`value` = '" . $base_url . "'" , 'var', 'base_url')) {
+				$errors['fatal'] = "Error updating base URL in database.";
+			}
 			if (!$cms->user->insert_user($set)) {
-				$errors['fatal'] = "Error creating user: " . $cms->user->db->errstr;
+				if ($errors['fatal']) {
+					$errors['fatal'] = "<br>Error creating user: " . $cms->user->db->errstr;
+				} else {
+					$errors['fatal'] = "Error creating user: " . $cms->user->db->errstr;
+				}
 			} else {
 				$admin_list = load_admins();
 				$allow_next = true;
@@ -124,7 +145,11 @@ if ($ajax_request) {
 
 	}
     
-    $errors['fatal'] = $errors['fatal'] ?? null;
+    $errors['fatal'] ??= null;
+    $errors['base_url'] ??= null;
+    $errors['username'] ??= null;
+    $errors['password'] ??= null;
+    $errors['password2'] ??= null;
 	$pagename = 'go-admin-results';
 	$cms->tiny_page($pagename, $pagename);
 	exit();

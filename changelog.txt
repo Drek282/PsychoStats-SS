@@ -31,6 +31,7 @@ Version 0.0.4b (in progress)
 * [Changed] Base URL for stats to be used in email notifications is now set during install.
 * [Removed] Use of unreliable $_SERVER['HTTP_REFERER'] for email notifications links.
 * [Added] Note regarding current season awards to awards page.
+* [Improved] Install error message to make it more specific and informative.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -33,7 +33,7 @@ Version 0.0.4b (in progress)
 * [Added] Note regarding current season awards to awards page.
 * [Improved] Install error message to make it more specific and informative.
 * [Fixed] Handle teams with mulitple owners.
-* [Fixed] Broken stats reset functionality for team names.
+* [Fixed] Broken stats reset functionality for owner names.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -365,8 +365,10 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         #print(team)
 
         # Get owner name.
-        my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? |)" + str(team) + "(:?.|\n)+?\n\n<u><span class='heading'>([A-Za-z'-]+ [A-Za-z'-]+) +W  L.+$"
+        my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? |)" + str(team) + "(:?.|\n)+?\n\n<u><span class='heading'>(.+?) +W  L.+$"
         owner_name = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(3)
+        # For teams with multiple owners.
+        owner_name = owner_name.replace("&amp;", "&")
 
         # Add owner names to psss_team_ids_names.
         add_name = True

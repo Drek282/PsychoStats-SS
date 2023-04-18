@@ -2402,8 +2402,8 @@ function reset_stats($keep = array()) {
 	// delete users (except those that are admins)
 	if (!$keep['users']) {
 		$ok = true;
-		if (!$this->db->truncate('t_team_ids_name') and !preg_match("/exist/", $this->db->errstr)) {
-			$errors[] = "t_team_ids_name: " . $this->db->errstr;
+		if (!$this->db->truncate($this->t_team_ids_names) and !preg_match("/exist/", $this->db->errstr)) {
+			$errors[] = "$this->t_team_ids_names: " . $this->db->errstr;
 		}
 		$users = $this->db->fetch_list("SELECT userid FROM $this->t_user WHERE accesslevel < 99");
 		$this->db->begin();

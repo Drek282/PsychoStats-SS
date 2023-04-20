@@ -18,7 +18,7 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id: index.php 506 2008-07-02 14:29:49Z lifo $
+ *	Version: $Id: index.php $
  */
 define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
@@ -117,6 +117,7 @@ if (isset($cms->input['language'])) {
 	previouspage($php_scnm);
 }
 
+// determine the total teams found
 $total = array();
 $results = array();
 if ($q != '') {
@@ -137,8 +138,6 @@ if ($q != '') {
 	// no search, just fetch a list teams
 	$search = '';
 }
-
-// determine the total teams found
 $total['all'] = $ps->get_total_teams(array('allowall' => 1));
 if ($results) {
 	$total['ranked'] = $results['result_total'];
@@ -172,7 +171,7 @@ if ($search) {
 
 // build a dynamic table that plugins can use to add custom columns of data
 $table = $cms->new_table($teams);
-$table->if_no_data($cms->trans("No Teams Found"));
+$table->if_no_data($cms->trans("No Search Results"));
 $table->attr('class', 'ps-table ps-team-table');
 $table->sort_baseurl($search ? array( 'search' => $search ) : array( 'q' => $q ));
 $table->start_and_sort($start, $sort, $order);
@@ -204,7 +203,7 @@ if ($season != $season_c) {
 	$table->remove_columns(array('prevrank'));
 }
 
-# Are there divisions or wilcards in this league?
+// Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
 

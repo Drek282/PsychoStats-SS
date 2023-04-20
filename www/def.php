@@ -18,13 +18,30 @@
  *	You should have received a copy of the GNU General Public License
  *	along with PsychoStats.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	Version: $Id: index.php 506 2008-07-02 14:29:49Z lifo $
+ *	Version: $Id: def.php $
  */
 define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Defensive Team Stats');
+
+// change this if you want the default sort of the team listing to be something else like 'total_runs_against'
+$DEFAULT_SORT = 'team_ra, team_era';
+$DEFAULT_LIMIT = 24;
+
+// collect url parameters ...
+$validfields = array('season','sort','order','start','limit','q','search');
+$cms->theme->assign_request_vars($validfields, true);
+
+// Set global season variable to default if undeclared.
+$season ??= $ps->get_season_c();
+$season_c ??= $ps->get_season_c();
+
+// If a season is passed from GET/POST update $season. 
+if (isset($cms->input['season'])) {
+	$season = $cms->input['season'];
+}
 
 // create the form variable
 $form = $cms->new_form();
@@ -74,18 +91,6 @@ if (empty($results)) {
 }
 unset ($results);
 
-// Set global season variable to default if undeclared.
-$season ??= $ps->get_season_c();
-$season_c ??= $ps->get_season_c();
-
-// change this if you want the default sort of the team listing to be something else like 'wins'
-$DEFAULT_SORT = 'team_ra, team_era';
-$DEFAULT_LIMIT = 24;
-
-// collect url parameters ...
-$validfields = array('sort','order','start','limit','q','search');
-$cms->theme->assign_request_vars($validfields, true);
-
 $sort = trim(strtolower($sort));
 $order = trim(strtolower($order));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
@@ -93,11 +98,6 @@ if (!in_array($order, array('asc','desc'))) $order = 'asc';
 if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = $DEFAULT_LIMIT;
 $q = trim($q);
-
-// If a season is passed from GET/POST update $season. 
-if (isset($cms->input['season'])) {
-	$season = $cms->input['season'];
-}
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {
@@ -117,6 +117,7 @@ if (isset($cms->input['language'])) {
 	previouspage($php_scnm);
 }
 
+// determine the total teams found
 $total = array();
 $results = array();
 if ($q != '') {
@@ -137,8 +138,6 @@ if ($q != '') {
 	// no search, just fetch a list teams
 	$search = '';
 }
-
-// determine the total teams found
 $total['all'] = $ps->get_total_teams(array('allowall' => 1));
 if ($results) {
 	$total['ranked'] = $results['result_total'];
@@ -147,17 +146,6 @@ if ($results) {
 	$total['ranked']   = $ps->get_total_teams(array('allowall' => 0));
 	$total['absolute'] = $total['all'];
 }
-
-// auto-redirect to the exact team matched in the search
-// if a single team was found.
-// fixme
-/*if ($search and $results['abs_total'] == 1 and is_numeric($results['results'])) {
-	gotopage(psss_url_wrapper(array(
-		'_amp' => '&',
-		'_base' => 'team.php',
-		'id' => $results['results']
-	)));
-}*/
 
 // fetch stats, etc...
 $teams = $ps->get_team_list(array(
@@ -194,7 +182,7 @@ if ($search) {
 
 // build a dynamic table that plugins can use to add custom columns of data
 $table = $cms->new_table($teams);
-$table->if_no_data($cms->trans("No Teams Found"));
+$table->if_no_data($cms->trans("No Search Results"));
 $table->attr('class', 'ps-table ps-team-table');
 $table->sort_baseurl($search ? array( 'search' => $search ) : array( 'q' => $q ));
 $table->start_and_sort($start, $sort, $order);
@@ -233,26 +221,26 @@ $table->column_attr('team_drat', 'class', 'right');
 $ps->index_table_mod($table);
 $cms->filter('teams_table_object', $table);
 
-# Are there divisions or wilcards in this league?
+// Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'q'		=> $q,
-	'search'	=> $search,
-	'results'	=> $results,
+	'q'				=> $q,
+	'search'		=> $search,
+	'results'		=> $results,
 	'search_blurb'	=> $cms->trans('Search criteria "<em>%s</em>" matched %d ranked teams out of %d total',
 		psss_escape_html($q), $total['ranked'], $total['absolute']
 	),
 	'la_team_ra'	=> $la_team_ra,
-	'teams'	=> $teams,
+	'teams'			=> $teams,
 	'teams_table'	=> $table->render(),
-	'total'		=> $total,
+	'total'			=> $total,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
-	'language'	=> $cms->theme->language,
-	'lastupdate'		=> $ps->get_lastupdate(),
+	'language'		=> $cms->theme->language,
+	'lastupdate'	=> $ps->get_lastupdate(),
 	'seasons_h'		=> $ps->get_seasons_h(),
 	'season'		=> $season,
 	'season_c'		=> $season_c,

@@ -651,7 +651,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
             row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], 4)
 
             # Get CG number for "Pitcher, AAA".
-            if (row['Player_Name'] == 'Pitcher, AAA'):
+            if (row['Player_Name'] == 'Pitcher AAA'):
                 cg_fix[team] = row['CG']
 
             # Get the rpo team data from the database.

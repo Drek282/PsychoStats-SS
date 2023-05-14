@@ -37,6 +37,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Overall, Defensive and Offensive pages now show "No Search Results" message when search results are empty.
 * [Fixed] Broken variable assignment.
 * [Improved] Handling of theme uninstalls and changes to default themes.
+* [Removed] Redundant admin checks in Admin CP.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

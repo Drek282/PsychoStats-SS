@@ -105,19 +105,16 @@ if ($submit) {
 	// protect against CSRF attacks
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
-	if ($cms->user->is_admin()) {
-		if (!array_key_exists($input['accesslevel'], $cms->user->accesslevels())) {
-			$form->error('accesslevel', $cms->trans("Invalid access level specified"));
-		}
+	if (!array_key_exists($input['accesslevel'], $cms->user->accesslevels())) {
+		$form->error('accesslevel', $cms->trans("Invalid access level specified"));
 	}
+
 	if (!$form->error('username') and $input['username'] != '') {
 		// load the user matching the username
 		$_u = $team_user->load_user($input['username'], 'username');
 		// do not allow a duplicate username if another user has it already
 		if ($_u and $_u['userid']) {
 			$form->error('username', $cms->trans("Username already exists; please try another name"));
-		} else {
-			unset($form->errors['username']);
 		}
 		unset($_u);
 	}

@@ -427,6 +427,7 @@ function theme($new = null, $in_db = true) {
 				));
 			}
 			$this->loaded_themes[$new] = $t;
+            $t['parent'] ??= null;
             $this->loaded_themes[$t['parent']] = $this->loaded_themes[$t['parent']] ?? null;
 			if ($t['parent'] and !$this->loaded_themes[$t['parent']]) { 
 				// load the parent theme ...

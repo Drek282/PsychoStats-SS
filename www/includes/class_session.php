@@ -549,7 +549,7 @@ function save_session_options($opts = null) {
 	$str = serialize($opts);
 	if ($this->config['cookiecompress'] and function_exists('gzdeflate')) $str = gzdeflate($str);
 	$encoded = $this->config['cookieencode'] ? base64_encode($str) : $str;
-	if ($cookieconsent or (isset($ps->conf) and !$ps->conf['main']['security']['enable_cookieconsent'])) $this->send_cookie($encoded, $this->config['cookielifeoptions'] ? time() + $this->config['cookielifeoptions'] : 0, '_opts');
+	if ($cookieconsent or !isset($ps->conf['main']['security']['enable_cookieconsent'])) $this->send_cookie($encoded, $this->config['cookielifeoptions'] ? time() + $this->config['cookielifeoptions'] : 0, '_opts');
 //	$this->send_cookie(strlen($encoded), 0, '_opts_size');	// debug
 
 	// add the modified cookie to memory incase we re-read the options before we exit

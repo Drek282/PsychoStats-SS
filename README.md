@@ -5,7 +5,7 @@ All of the versions in this repository should be considered beta software.  Prio
 This also open source software.  The code can be modified by anyone who wishes to do so.  This means that the code on any given site hosting these stats may not match the code in the repository.  Every effort has been made to ensure that the code is stable and secure, but there are no guarantees.  To the extent allowed by law anyone using this software must do so at their own risk, whether you are hosting the software, or an end user.
 
 
-You can view working demos of PsychoStats at the following links: 
+You can view working demos of PsychoStats for Scoresheet Baseball at the following links: 
 
 * [P-AL145](https://displaced.zone/psss_bb_145/ "P-AL145")
 * [P-AL 152](https://displaced.zone/psss_bb_152/ "P-AL152")

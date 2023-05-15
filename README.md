@@ -5,6 +5,22 @@ All of the versions in this repository should be considered beta software.  Prio
 This also open source software.  The code can be modified by anyone who wishes to do so.  This means that the code on any given site hosting these stats may not match the code in the repository.  Every effort has been made to ensure that the code is stable and secure, but there are no guarantees.  To the extent allowed by law anyone using this software must do so at their own risk, whether you are hosting the software, or an end user.
 
 
+You can view working demos of PsychoStats at the following links: 
+
+* [P-AL145](https://displaced.zone/psss_bb_145/ "P-AL145")
+* [P-AL 152](https://displaced.zone/psss_bb_152/ "P-AL152")
+* [AL Auction](https://displaced.zone/psss_bb_auction/ "AL Auction")
+* [NL Coast to Coast](https://displaced.zone/psss_bb_coast/ "NL Coast to Coast")
+* [NL Crash Davis](https://displaced.zone/psss_bb_crash/ "NL Crash Davis")
+* [NL Brian Fawcett](https://displaced.zone/psss_bb_fawcett/ "NL Brian Fawcett")
+* [NL JENKINS](https://displaced.zone/psss_bb_jenkins/ "NL JENKINS")
+* [NL Justice League](https://displaced.zone/psss_bb_justice/ "NL Justice League")
+* [BL DwMurphy](https://displaced.zone/psss_bb_murphy/ "BL DwMurphy")
+* [AL Phelps](https://displaced.zone/psss_bb_phelps/ "AL Phelps")
+* [BL Mr Mark Ward](https://displaced.zone/psss_bb_ward/ "BL Mr Mark Ward")
+* [AL Bruce Worrall](https://displaced.zone/psss_bb_worrall/ "AL Bruce Worrall")
+
+
 ## **Known Issues**
 
 *The plan for the following issues is to either fix them, or improve them, in future versions:*

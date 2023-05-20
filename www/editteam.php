@@ -31,6 +31,10 @@ $cms->theme->page_title('PsychoStats - Edit Team Profile');
 $season ??= $ps->get_season_c();
 $season_c ??= $ps->get_season_c();
 
+# Are there divisions or wilcards in this league?
+$division = $ps->get_total_divisions() - 1;
+$wildcard = $ps->get_total_wc();
+
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
@@ -81,6 +85,13 @@ if ($id) {
 
 // check privileges to edit this team
 if (!psss_user_can_edit_team($team)) {
+	$cms->theme->assign(array(
+		'lastupdate'		=> $ps->get_lastupdate(),
+		'season_c'		=> null,
+		'division'		=> $division,
+		'wildcard'		=> $wildcard,
+		'cookieconsent'	=> $cookieconsent,
+	));
 	$data = array( 'message' => $cms->trans("Insufficient privileges to edit team!") );
 	$cms->full_page_err(basename(__FILE__, '.php'), $data);
 	exit;
@@ -118,10 +129,6 @@ if ($cms->user->is_admin()) {
 	$form->field('accesslevel');
 //	$form->field('confirmed');
 }
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
 
 // process the form if submitted
 $valid = true;

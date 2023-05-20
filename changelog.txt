@@ -39,6 +39,7 @@ Version 0.0.4b (in progress)
 * [Improved] Handling of theme uninstalls and changes to default themes.
 * [Removed] Redundant admin checks in Admin CP.
 * [Improved] Handle multiple PsychoStats instances with multiple themes installed.
+* [Fixed] Errors when attempting to edit a team when not logged in.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -412,8 +412,9 @@ function theme($new = null, $in_db = true) {
 		return $this->theme;
 	} elseif ($this->is_theme($new)) {
 		$loaded = false;
-		// load the theme from the database
-		if ($in_db) {
+		// load the theme from the database if possible
+		$ps_installed = $this->cms->db->table_exists($this->cms->db->table('config_themes'));
+		if ($ps_installed and $in_db) {
 			$new = $this->cms->session->options['theme'] ??= null;
 			$t = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE theme_name=%s and enabled <> 0", 
 				$this->cms->db->table('config_themes'),
@@ -454,19 +455,19 @@ function theme($new = null, $in_db = true) {
 			// update the user's theme
 			$this->cms->session->opt('theme', $new);
 			$this->cms->session->save_session_options();
-		}
-
-		// if we're not loading a theme from the DB then fudge a loaded record ...
-		$this->loaded_themes[$new] ??= null;
-		if (!$this->loaded_themes[$new] and !$in_db) {
-			$loaded = true;
-			$this->loaded_themes[$new] = array(
-				'theme_name' => $new,
-				'parent' => null,
-				'enabled' => 1, 
-				'title' => $new,
-				'description' => ''
-			);
+		} else {	
+			// if we're not loading a theme from the DB then fudge a loaded record ...
+			$this->loaded_themes[$new] ??= null;
+			if (!$this->loaded_themes[$new] and !$in_db) {
+				$loaded = true;
+				$this->loaded_themes[$new] = array(
+					'theme_name' => $new,
+					'parent' => null,
+					'enabled' => 1, 
+					'title' => $new,
+					'description' => ''
+				);
+			}
 		}
 
 		// load the language for the theme

@@ -121,7 +121,7 @@ function modify($name) {
 	$modifiers = array_merge($this->modifiers, $this->fields[$name]['m']);
 	foreach ($modifiers as $func => $args) {
 		array_unshift($args, $value);
-		if (substr($func ?? '', 0, 1) == '!') {
+		if (substr($func, 0, 1) == '!') {
 			$func = substr($func, 1);
 			$value = call_user_func_array(array(&$this, $func), $args);
 		} else {

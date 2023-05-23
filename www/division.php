@@ -107,7 +107,7 @@ $division = $ps->get_division(array(
 
 $cms->theme->page_title(' for ' . $division['divisionname'], true);
 
-$x = substr($xml,0,1);
+$x = substr($xml ?? '',0,1);
 if ($x == 'd') {		// division
 }
 

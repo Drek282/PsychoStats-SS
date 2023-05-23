@@ -105,7 +105,7 @@ function __construct(&$cms, $args = array()) {
 	}
 
 	// initialize some Smarty variables
-	$this->error_reporting 	= E_ALL & ~E_NOTICE;
+	$this->error_reporting 	= E_ALL & ~E_NOTICE & ~E_DEPRECATED;
 	//$this->error_reporting 	= E_ALL;
 	$this->compile_id	= $args['compile_id'];
 	$this->use_sub_dirs 	= false;
@@ -933,6 +933,7 @@ function load_styles($file = 'styles.xml', $theme = null) {
 
 // basic styles class for loaded theme styles.
 // allows for easy navigation and defaults for styles.
+#[AllowDynamicProperties]
 class PsychoThemeStyles {
 var $xml = '';
 var $styles = array();

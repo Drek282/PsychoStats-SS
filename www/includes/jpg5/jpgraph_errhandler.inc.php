@@ -30,7 +30,7 @@ class ErrMsgText {
 	    die('Internal error: Chosen locale file for error messages does not exist.');
 	}
 	require_once($file);
-	$this->lt = $_jpg_messages;
+	$this->lt = $_jpg_messages ??= null;
     }
     function ErrMsgText() {
         self::__construct();

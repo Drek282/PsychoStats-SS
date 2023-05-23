@@ -1239,4 +1239,21 @@ if (function_exists('curl_init')) {
     }
 }
 
+if (!function_exists('str_contains')) {
+	/**
+	 * Polyfill for 'str_contains()' function added in PHP 8.0. Thanks to PHP.Watch
+	 *
+	 * Performs a case-sensitive check indicating if needle is contained in haystack.
+	 *
+	 * @param string $haystack The string to search in.
+	 * @param string $needle   The substring to search for in the '$haystack'.
+	 * @return bool True if '$needle' is in '$haystack', otherwise false.
+	 *
+	 * If you search for an empty $needle (""), PHP will always return true.
+	 */
+	function str_contains(string $haystack, string $needle): bool {
+		return '' === $needle || false !== mb_strpos($haystack, $needle);
+	}
+}
+
 ?>

@@ -52,6 +52,7 @@
 if (defined("CLASS_PS_PHP")) return 1;
 define("CLASS_PS_PHP", 1);
 
+#[AllowDynamicProperties]
 class PS {
 
 /**
@@ -932,7 +933,7 @@ function get_division($args = array(), $minimal = false) {
 	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_names names, $this->t_team_def def, $this->t_team_off off ";
 	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=" . $args['season'] . " ";
 	$args['where'] ??= null;
-	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
+	if (trim($args['where'] ?? '') != '') $cmd .= "AND (" . $args['where'] . ") ";
 	$cmd .= "GROUP BY adv.divisionname ";
 	$cmd .= $this->getsortorder($args);
 
@@ -1378,6 +1379,7 @@ function get_basic_team_list($args = array()) {
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 
 	// basic filter
+	$args['filter'] ??= '';
 	if (trim($args['filter']) != '') {
 		$cmd .= " AND (name.team_name LIKE '%" . $this->db->escape(trim($args['filter'])) . "%') ";		
 	}
@@ -1623,7 +1625,7 @@ function get_total_teams($args = array()) {
 		'filter'	=> '',
 	);
 	$cmd = "";
-	$filter = trim($args['filter']);
+	$filter = trim($args['filter'] ?? '');
 	if ($filter == '') {
 		$cmd = "SELECT count(*) FROM $this->t_team team WHERE 1 ";
 	} else {

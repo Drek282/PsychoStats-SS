@@ -39,9 +39,8 @@ $cookieconsent = $cms->session->options['cookieconsent'];
 if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
 
-$_GET['ref'] ??= null;
-$_GET['ref'] = htmlspecialchars($_GET['ref']); //XSS Fix. Thanks to JS2007
 $validfields = array('submit','cancel','ref');
+$_GET['ref'] = htmlspecialchars($_GET['ref'] ?? ''); //XSS Fix. Thanks to JS2007
 $cms->theme->assign_request_vars($validfields, true);
 
 if ($cancel or $cms->user->logged_in()) previouspage('index.php');

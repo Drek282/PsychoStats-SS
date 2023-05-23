@@ -91,13 +91,13 @@ if (empty($results)) {
 }
 unset ($results);
 
-$sort = trim(strtolower($sort));
-$order = trim(strtolower($order));
+$sort = trim(strtolower($sort ?? ''));
+$order = trim(strtolower($order ?? ''));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
 if (!in_array($order, array('asc','desc'))) $order = 'desc';
 if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = $DEFAULT_LIMIT;
-$q = trim($q);
+$q = trim($q ?? '');
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {

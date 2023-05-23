@@ -397,6 +397,7 @@ function th($html, $attr = null) {
 
 } // end of PsychoRow
 
+#[AllowDynamicProperties]
 // common methods for all table elements
 class PsychoTableCommon {
 	var $attr = array();

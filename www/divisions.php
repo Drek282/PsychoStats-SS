@@ -91,8 +91,8 @@ if (empty($results)) {
 }
 unset ($results);
 
-$sort = trim(strtolower($sort));
-$order = trim(strtolower($order));
+$sort = trim(strtolower($sort ?? ''));
+$order = trim(strtolower($order ?? ''));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
 if (!in_array($order, array('asc','desc'))) $order = 'desc';
 if (!is_numeric($start) || $start < 0) $start = 0;

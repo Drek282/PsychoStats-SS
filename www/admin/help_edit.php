@@ -313,7 +313,7 @@ $himg = array(
 	'fullfile' 	=> $full,
 	'size'		=> @filesize($full),
 	'is_writeable'	=> is_writeable($full) || is_writeable(rtrim(dirname($full), '/\\')),
-	'basename'	=> basename($help['img']),
+	'basename'	=> basename($help['img'] ?? ''),
 	'path'		=> $dir
 );
 

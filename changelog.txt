@@ -7,7 +7,6 @@ Version 0.0.4b (in progress)
 * [Improved] In single season mode past season data is not deleted until there is data for the current season.
 * [Improved] Numbers, such as batting average, now display in standard baseball format.
 * [Added] Styles and graphics to certain table elements.
-* [Fixed] PHP 8.2 deprecation warning.
 * [Tweaked] PT20X template.
 * [Tweaked] Behaviour of dash_if_empty function.  Removed it where it was serving no purpose.
 * [Tweaked] Default privacy policy updates.
@@ -17,7 +16,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Miscellaneous CSS issues.
 * [Improved] The loop to check league pages for weekly results will now only function from April to October.
 * [Changed] The last update time is now shown in the web client's local time.
-* [Fixed] More PHP 8 related warnings.
+* [Fixed] PHP 8 errors/warnings.
 * [Fixed] The Time Offset setting in the Admin CP Formats / HTML Configuration menu now works as originally intended and can handle minutes.
 * [Removed] The option to configure how teams are identified in the software.
 * [Fixed] Non-functional filter options on certain Admin CP pages.
@@ -42,6 +41,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Errors when attempting to edit team with insufficient permissions.
 * [Fixed] Login errors related to multiple open instances.
 * [Fixed] Theme errors when database is empty.
+* [Added] PHP 7.0 polyfill for 'str_contains()' function added in PHP 8.0
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

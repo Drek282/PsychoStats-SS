@@ -29,6 +29,7 @@ define("PS_INSTALLDIR", __DIR__);
 
 // enable some sane error reporting (ignore notice errors) and turn off the magic. 
 // we also want to to disable E_STRICT.
+//error_reporting(E_ALL); 
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED); 
 //set_magic_quotes_runtime(0);
 /**/

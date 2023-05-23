@@ -106,6 +106,7 @@ function __construct(&$cms, $args = array()) {
 
 	// initialize some Smarty variables
 	$this->error_reporting 	= E_ALL & ~E_NOTICE;
+	//$this->error_reporting 	= E_ALL;
 	$this->compile_id	= $args['compile_id'];
 	$this->use_sub_dirs 	= false;
 	$this->caching 		= false;
@@ -421,7 +422,7 @@ function theme($new = null, $in_db = true) {
 				$this->cms->db->escape($new, true)
 			));
 			if (!$t) {
-				$new = $ps->conf['main']['theme'] ??= null;
+				$new = $ps->conf['main']['theme'] ?? null;
 				$t = $this->cms->db->fetch_row(1, sprintf("SELECT * FROM %s WHERE theme_name=%s and enabled <> 0", 
 					$this->cms->db->table('config_themes'),
 					$this->cms->db->escape($new, true)

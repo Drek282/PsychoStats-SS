@@ -43,6 +43,8 @@ Version 0.0.4b (in progress)
 * [Fixed] Theme errors when database is empty.
 * [Added] PHP 7.0 polyfill for 'str_contains()' function added in PHP 8.0
 * [Fixed] Problem with language class attempting to load multiple times.
+* [Fixed] Broken Smarty debugging—thanks Rosenstein.
+* [Fixed] Annoying ugly links urls.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

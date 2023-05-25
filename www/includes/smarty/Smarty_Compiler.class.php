@@ -1614,6 +1614,11 @@ class Smarty_Compiler extends Smarty {
 
         $this->_parse_vars_props($attrs);
 
+        // destroy empty $attrs keys
+        foreach ($attrs as $a) {
+            if (empty($attrs[$a])) unset($attrs[$a]);
+        }
+
         return $attrs;
     }
 

@@ -490,6 +490,8 @@ function theme($new = null, $in_db = true) {
 				if ($ok and !$err) {
 					$this->lang = new $class();
 				}
+			} elseif (class_exists($class)) {
+				$ok = true;
 			}
 			
 			// if no language file can be loaded then create an

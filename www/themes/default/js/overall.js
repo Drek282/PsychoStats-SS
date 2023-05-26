@@ -4,6 +4,7 @@
 // When the page is loaded this is automatically called
 var psss_popups = new Array();
 var psss_popup_delay = 0.25;
+var jlupdate = null;
 $(document).ready(function() {
 	// setup handlers for the overall login/search popups
 	$('#ps-login-link').click(function(e){  return psss_overall_popup('login'); });
@@ -30,6 +31,9 @@ $(document).ready(function() {
 	$('select.language').change(function(){ 
 		this.form.submit();
 	});
+
+	// client time for lastupdate
+    document.getElementById('lastupdate').innerHTML = psss_cltime(jlupdate);
 });
 
 // popup variables
@@ -114,6 +118,21 @@ function psss_header_handler(header, frame, display, speed) {
 	if (id) {
 		$.post('opt.php', { shade: id, closed: display ? 0 : 1 });
 	}
+}
+	
+// convert lastupdate to client time
+function psss_cltime(jlupdate) {
+    var fjlupdate = new Date(jlupdate * 1000);
+    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(fjlupdate);
+    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(fjlupdate);
+    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(fjlupdate);
+    var ho = new Intl.DateTimeFormat('en', { hour: '2-digit', hourCycle: 'h23' }).format(fjlupdate);
+    var mi = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(fjlupdate);
+    var se = new Intl.DateTimeFormat('en', { second: '2-digit' }).format(fjlupdate);
+
+    fjlupdate = ye+"-"+mo+"-"+da+" "+ho+":"+mi+":"+se;
+
+	return fjlupdate;
 }
 
 var ajax_stopped = true;

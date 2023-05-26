@@ -1,20 +1,4 @@
 <script>var jlupdate = {$lastupdate};</script>
-{literal}
-  <script>
-    // Convert lastupdate to client time
-    var fjlupdate = new Date(jlupdate * 1000);
-    var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(fjlupdate);
-    var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(fjlupdate);
-    var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(fjlupdate);
-    var ho = new Intl.DateTimeFormat('en', { hour: '2-digit', hourCycle: 'h23' }).format(fjlupdate);
-    var mi = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(fjlupdate);
-    var se = new Intl.DateTimeFormat('en', { second: '2-digit' }).format(fjlupdate);
-
-    fjlupdate = ye+"-"+mo+"-"+da+" "+ho+":"+mi+":"+se;
-    document.getElementById("lastupdate").innerHTML = fjlupdate;
-  </script>
-{/literal}
-
 <div id="ps-overall-footer">
 <div id="ps-footer-middle">
 {if $language_list and $cookieconsent}

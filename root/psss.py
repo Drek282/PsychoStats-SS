@@ -284,7 +284,7 @@ def generate_psss_tables (league_name, working_stats_com_dfo):
 #############################################################################
 #### #### #### ####    ***  Process team rosters. ***    #### #### #### #####
 ################################################@############################
-def generate_psss_team_rosters (season, season_url, season_dir):
+def generate_psss_team_rosters (season, season_url, season_dir, games_played):
 
     # debug
     #print(season)
@@ -512,7 +512,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         rpo_dfo['wOBA'] = round((0.69 * rpo_dfo['BB'] + 0.89 * (rpo_dfo['H'] - rpo_dfo['D'] - rpo_dfo['T'] - rpo_dfo['HR']) + 1.27 * rpo_dfo['D'] + 1.62 * rpo_dfo['T'] + 2.10 * rpo_dfo['HR']) / (rpo_dfo['AB'] + rpo_dfo['BB'] + rpo_dfo['SF']), 3)
 
         # Calculate V.
-        rpo_dfo['V'] = round((rpo_dfo['OPS'].astype(float) * rpo_dfo['AB'] * 0.595 / 1000), 2)
+        rpo_dfo['V'] = round((rpo_dfo['OPS'].astype(float) * rpo_dfo['AB'] * 0.595 / 1000 * 162 / games_played), 2)
 
         # If player AAA V = 0, if V < 0, V = 0.
         rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0.00'
@@ -630,7 +630,7 @@ def generate_psss_team_rosters (season, season_url, season_dir):
         rpi_dfo['IP'] = np.trunc(rpi_dfo['IP']) + round((rpi_dfo['IP'] % 1) * 3, 1)
 
         # Calculate V.
-        rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP'].astype(float)) * rpi_dfo['IP'].astype(float) * 1.666 / 1000), 2)
+        rpi_dfo['V'] = round(((2 - rpi_dfo['WHIP'].astype(float)) * rpi_dfo['IP'].astype(float) * 1.666 / 1000 * 162 / games_played), 2)
 
         # Convert decimal player IP to baseball format IP.
         rpi_dfo['IP'] = np.trunc(rpi_dfo['IP']) + round((rpi_dfo['IP'] % 1) / 3, 1)
@@ -1244,8 +1244,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     generate_psss_team_ids_names(season, league_name, working_stats_com_dfo)
     
     # Generate team roster tables.
+    games_played = int(working_stats_adv_dfo['GP'].iloc[0])
     cg_fix = {}
-    cg_fix = generate_psss_team_rosters(season, season_url, season_dir)
+    cg_fix = generate_psss_team_rosters(season, season_url, season_dir, games_played)
 
 
     #### Output to database.

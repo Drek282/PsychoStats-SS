@@ -30,6 +30,8 @@ You can view working demos of PsychoStats for Scoresheet Baseball at the followi
 * [BL Mr Mark Ward](https://displaced.zone/psss_bb_ward/ "BL Mr Mark Ward")
 * [AL Bruce Worrall](https://displaced.zone/psss_bb_worrall/ "AL Bruce Worrall")
 
+Note that these demos are currently hosted on an Intel NUC, which is a mini system that uses a laptop processor.  You can use any old desktop PC, or mini system, to host this software, especially if you use Linux.  Linux will run just fine on very old, very low end hardware.  The monitor, keyboard and mouse for the system hosting these stats pages is on a KVM switch, which is only used for emergency purposes.  Most of the time the system hosting these demos is accessed and managed using SSH.
+
 
 ## **Known Issues**
 

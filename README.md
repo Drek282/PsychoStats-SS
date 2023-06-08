@@ -8,7 +8,7 @@ This version of PsychoStats is not intended to replace the official league stats
 
 ## **Requirements**
 
-You will need access to web hosting.  That can sound intimidating, but if you are interested in hosting these stats for your personal use, all you need to do is set up a traditional "LAMP" stack on your home network, with Python 3 support for the backend.  There is a lot of information on the web on how to do that.  Google is your friend.  If you want to host this software for your league, most web hosting services will offer the necessary components, which are a MySQL database, PHP and Python 3.
+You will need access to web hosting.  That can sound intimidating, but if you are interested in hosting these stats for your personal use, all you need to do is set up a traditional "LAMP stack" on your home network, with Python 3 support for the backend.  There is a lot of information on the web on how to do that.  Google is your friend.  If you want to host this software for your league, most web hosting services will offer the necessary components, which are a MySQL database, PHP and Python 3.
 
 See INSTALL.md for full installation and setup instructions.
 

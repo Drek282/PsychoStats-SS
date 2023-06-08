@@ -10,9 +10,9 @@ This version of PsychoStats is not intended to replace the official league stats
 
 You will need access to web hosting.  That can sound intimidating, but if you are interested in hosting these stats for your personal use, all you need to do is set up a traditional "LAMP stack" on your home network, with Python 3 support for the backend.  There is a lot of information on the web on how to do that.  Google is your friend.  If you want to host this software for your league, most web hosting services will offer the necessary components, which are a MySQL database, PHP and Python 3.
 
-The "L" in "LAMP" refers to Linux, but you don't need to setup a Linux server to host this software.  This software can also be hosted on Windows using something like "[XAMPP](https://www.apachefriends.org/download.html 'XAMPP')", if you don't intend to allow web access.
+The "L" in "LAMP" refers to Linux, but you don't need to setup a Linux server to host this software.  This software can also be hosted on Windows using something like "[XAMPP](https://www.apachefriends.org/download.html 'XAMPP')", if you don't intend to allow wan access.  You can also install all the components individually on Windows, which would be web server software, with MySQL, PHP and Python 3.  Specific instructions on how to do that are beyond the scope of this documentation, but there is a lot of great information available on the web on how to do that, for both Linux and Windows.
 
-See INSTALL.md for full installation and setup instructions.
+See INSTALL.md for full installation and setup instructions—not including instructions on how to setup a web server.
 
 
 You can view working demos of PsychoStats for Scoresheet Baseball at the following links: 

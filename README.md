@@ -4,7 +4,7 @@ All of the versions in this repository should be considered beta software.  Prio
 
 This also open source software.  The code can be modified by anyone who wishes to do so.  This means that the code on any given site hosting these stats may not match the code in the repository.  Every effort has been made to ensure that the code is stable and secure, but there are no guarantees.  To the extent allowed by law anyone using this software must do so at their own risk, whether you are hosting the software, or an end user.
 
-This version of PsychoStats is not intended to replace the official league stats offered by Scoresheet Games.  It's purpose is to offer granular team statistics in a format that allows for quick and easy comparison.  It also provides historical league data in a format that is easy to access and offers that same level of granular comparative context.  If you are joining a new league, this software will allow you to quickly and easily find out who is who in your new league, and what kinds of players they value.  And for nerds such as myself, these stats are fun.
+This version of PsychoStats is not intended to replace the official league stats offered by Scoresheet Games.  It's purpose is to offer granular team statistics in a format that allows for quick and easy comparison.  It also provides historical league data in a format that is easy to access and offers that same level of granular comparative context.  If you are joining a new league, this software will allow you to quickly and easily find out who is who in your new league, and what kinds of players they value.  And for nerds such as myself, these stats are just fun.
 
 ## **Requirements**
 

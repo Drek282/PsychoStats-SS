@@ -10,6 +10,8 @@ This version of PsychoStats is not intended to replace the official league stats
 
 This software scrapes league statistics from the official Scoresheet Baseball league pages and displays them in tables on a web page.  The tables include columns that can be sorted by clicking on the column header.  The software includes multiple themes which look pretty sweet and are intended to, for example, display well in an iframe on an existing website.  They can also exist as a standalone website.
 
+It is also relatively simple to modify current templates, or create new ones, although that does require some ability to work with HTML and/or CSS.
+
 There are separate pages for overall records, offensive and defensive team stats, as well as optional division standings and a Hall of Fame, which can be configured to list historical team records for just about any statistic, but by default displays statistics such as which teams have had the best single season winning percentage, have won the most division titles and league championships, etc. etc.
 
 See the demos below for more details.  Note that the HELP page also provides specific technical information, such as the formulas used to calculate specific advanced statistics.

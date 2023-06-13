@@ -1,0 +1,71 @@
+<!--outermost page container for all content-->
+<div id="ps-page-container">
+
+<!--inner container for the content-->
+<div id="ps-main">
+
+{* *}
+<!--optional navigation block-->
+<div id="ps-main-column">
+	{include file='menu.html'}
+</div>
+
+<!--content block-->
+<div id="ps-main-content">
+
+<form action="go.php" method="post">
+<div id="content">
+<h2><#Welcome to the PsychoStats Installer!#></h2>
+<p>
+	The installer will guide you through the setup process of installing PsychoStats {$local_psss_version} on your computer.
+	<strong>Javascript and cookies</strong> must be enabled in your browser for the installer to work properly.
+	<noscript>You do not have javascript enabled!</noscript>
+</p>
+
+{if $re}{* the install was botched, due to the install key changing for some reason *}
+<div id="bad-install">
+	<h3><#Installation Aborted!#></h3>
+	<p>
+		The most likely cause for this error is that you have not created a database and database user for PsychoStats
+		and/or entered your database name, database username and database user password into the config.php file.
+		You need to create a database and a database user, and give that user full permissions on that database.
+		The other possible reason for this error is that your session either timed out or another installation session was started.  If that was the case you must start over and try again.  Make sure you start the installation from the beginning and do not use your back button to attemp to restart the installation.  Make sure you do not open a
+		second installation window or it will fail again.
+	</p>
+</div>
+{/if}
+<br>
+<p>
+    <strong style="color:red;">
+        DO NOT START THIS PROCESS AND COME BACK TO FINISH IT LATER IF YOUR PSYCHOSTATS IS EXPOSED TO THE WEB!<br>
+        THE "install" FOLDER IN YOUR ROOT PSYCHOSTATS WEB DIRECTORY IS AN EXTREME SECURITY RISK!<br>
+        YOU SHOULD COMPLETE THE INSTALL PROCESS AS QUICKLY AS POSSIBLE!
+    </strong>
+</p>
+<p>
+    <strong style="color:red;">
+        IF YOU ARE NOT PLANNING ON COMPLETING THE INSTALL PROCESS IMMEDIATELY YOU SHOULD DELETE THE "install" FOLDER<br>
+        AND UPLOAD IT AGAIN WHEN YOU PLAN ON COMPLETING THE PROCESS!
+    </strong>
+</p>
+<br>
+<p>
+	PsychoStats is open source software licensed as GPL. See the license below for full details.
+</p>
+<p class="gpl">{include file="license.txt" assign='gpl'}{$gpl|escape|nl2br}</p>
+<p>
+	<strong>When you're ready to begin click the "Install" button below. </strong>
+</p>
+<p class="controls">
+	<input value="Install" type="submit">
+	<input name="s" value="analyze" type="hidden">
+	<input name="install" value="{$install|escape}" type="hidden">
+</p>
+</div>
+</form>
+
+</div> {* end ps-main-content *}
+
+</div> {* end ps-main *}
+
+</div> {* end ps-page-container *}

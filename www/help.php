@@ -27,7 +27,7 @@ $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Help Page');
 
 // collect url parameters ...
-$validfields = array('sort','order','q','search','like');
+$validfields = array('q','search','like');
 $cms->theme->assign_request_vars($validfields, true);
 
 // Default limit.

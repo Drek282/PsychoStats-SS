@@ -8,8 +8,6 @@
 		<div class="inner">
 		<span>
 			<input id='q-hdr' name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field hsearch">
-			<input name="sort" value="{$sort|escape}" type="hidden">
-			<input name="order" value="{$order|escape}" type="hidden">
 		</span>
 		<h1><#Help Page#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>
 		{if $search_blurb}

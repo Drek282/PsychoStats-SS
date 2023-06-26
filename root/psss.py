@@ -1109,6 +1109,33 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     ## Column Headers:
     #  1 Team Number, 2 Team Name, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 ERA, 10 CG, 11 ShO, 12 RS, 13 Sv, 14 IP, 15 RA, 16 ER, 17 HA, 18 BAA, 19 WA, 20 KA, 21 WP
 
+    ## Final check to ensure that stats have not already been updated
+
+    # Get the number of games played for the current season in the database.
+    cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season) + "' LIMIT 1")
+    data = cursor.fetchone()
+    if data and (int(data['games_played']) >= int(working_stats_def_dfo['GP'].iloc[0])):
+        print(
+            '''
+            FATAL:  The number of games played in the database is greater than or equal to
+                    the number of games played indicated on the league page.
+
+                    Either the stats have already been updated or there is a problem with the
+                    data displayed on the league page.
+
+                    This script will exit.
+            '''
+            )
+        print()
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,The stats in the database are as recent or more recent than the stats on the league page."
+
+        # Generate the error log and exit.
+        generate_psss_error_log()
+        sys.exit()
+
     ## Initial processing, working_stats_off_dfo.
     # Read the csv file into a DataFrame objects.
     working_stats_off_dfo = pd.read_csv(off_stats_fname)
@@ -1474,7 +1501,7 @@ else:
 cursor.execute("SELECT lastupdate FROM psss_state LIMIT 1")
 data = cursor.fetchone()
 if data:
-    lastupdate = data['lastupdate']
+    lastupdate = int(data['lastupdate'])
 else:
     lastupdate = 0
 

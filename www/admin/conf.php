@@ -31,7 +31,7 @@ $cms->theme->assign('page', basename(__FILE__, '.php'));
 	q  = search query. if spcified, only conf variables that match will be displayed
 */
 
-$validfields = array('submit', 'cancel', 'new', 'ct', 's', 'q', 'adv');
+$validfields = array('submit', 'cancel', 'reset', 'new', 'ct', 's', 'q', 'adv');
 $cms->theme->assign_request_vars($validfields, true);
 
 $message = '';
@@ -41,6 +41,11 @@ if ($new) {
 	gotopage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'var.php', 'ct' => $ct, 's' => $s )));
 }
 if ($cancel) {
+	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'conf.php', 'ct' => $ct, 's' => $s)));
+}
+if ($reset) {
+	$cmd = "UPDATE $ps->t_state SET lastupdate = 0 LIMIT 1";
+	$ps->db->query($cmd);
 	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'conf.php', 'ct' => $ct, 's' => $s)));
 }
 

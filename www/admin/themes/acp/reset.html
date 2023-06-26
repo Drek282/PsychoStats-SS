@@ -38,6 +38,11 @@
 	<#You can also choose to delete team profiles.#> 
 	<#Deleting users will also empty their team profiles.#>
 	</p>
+	<p>
+	<strong><#NOTE:#></strong> 
+	<#If you are getting the message that stats have already been updated when you know they have not,#> 
+	<#the "<b>Reset Last Update Time</b>" button should allow you to update your stats.#>
+	</p>
 </div>
 
 <div{if $errors.team_profiles} class="err"{/if}>
@@ -63,6 +68,7 @@
 
 	<input class="btn reset" type="submit" value="<#Reset#>">
 	<input class="btn cancel" type="submit" value="<#Cancel#>" name="cancel">
+	<input name="reset" class="btn cancel" type="submit" value="<#Reset Last Update Time#>">
 </div>
 </fieldset>
 </form>

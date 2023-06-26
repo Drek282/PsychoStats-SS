@@ -25,13 +25,18 @@ define("PSYCHOSTATS_ADMIN_PAGE", true);
 include("../includes/common.php");
 include("./common.php");
 
-$validfields = array('ref','cancel','submit');
+$validfields = array('ref','cancel', 'reset', 'submit');
 $cms->theme->assign_request_vars($validfields, true);
 
 $message = '';
 $cms->theme->assign_by_ref('message', $message);
 
 if ($cancel) {
+	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'manage.php' )));
+}
+if ($reset) {
+	$cmd = "UPDATE $ps->t_state SET lastupdate = 0 LIMIT 1";
+	$ps->db->query($cmd);
 	previouspage(psss_url_wrapper(array( '_amp' => '&', '_base' => 'manage.php' )));
 }
 

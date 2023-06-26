@@ -391,8 +391,7 @@ div.ps-theme-install {
 	width: 90%;
 	margin: 0 auto 1em; 
 }
-div.ps-theme-install p.small,
-span.small {
+div.ps-theme-install p.small {
 	font-size: 0.8em;
 	color: gray;
 }

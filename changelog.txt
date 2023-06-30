@@ -51,6 +51,7 @@ Version 0.0.4b (in progress)
 * [Added] Another check to see if stats have already been updated.
 * [Added] The ability to reset the last update time to the Admin CP.
 * [Changed] Pages will now display error message if javascript is disabled.
+* [Fixed] CSS for cookie consent popup.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

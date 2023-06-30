@@ -307,7 +307,7 @@ div#ps-login-inner {
 /* The popup form - hidden by default */
 .form-cookieconsent {
   display: block;
-  height: 45px;
+  height: 55px;
   position: fixed;
   bottom: 0;
   left: 0;

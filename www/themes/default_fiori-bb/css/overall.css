@@ -70,7 +70,7 @@ body.psychostats {
 	padding-left: 0;
 }
 #ps-container #ps-overall-menu a {
-	color: #302d28;
+	color: #11100e;
 }
 #ps-container #ps-overall-menu a:hover {
 	color: #9a816a;
@@ -307,7 +307,7 @@ div#ps-login-inner h4 {
 /* The popup form - hidden by default */
 .form-cookieconsent {
   display: block;
-  height: 45px;
+  height: 55px;
   position: fixed;
   bottom: 0;
   left: 0;

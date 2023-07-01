@@ -326,6 +326,7 @@ span.pos {
 #error {
 	width: 400px;
 	margin: 3em auto;
+	color: #665d56;
 	background: #FFFF00;
 	border: 2px solid #CC0000;
 	padding: 1em;

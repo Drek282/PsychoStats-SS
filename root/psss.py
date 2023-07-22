@@ -27,12 +27,11 @@ def sleep_m (m):
     time.sleep(int(m) * 60)
 
 # Check to see if game results have been published.
-def grp_check (check_loop, league_url):
+def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Globals
     global error_no
     global error_log
-    global raw_lp_dump
 
     # Get the check string from the database.
     cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_string'")
@@ -72,7 +71,7 @@ def grp_check (check_loop, league_url):
         error_no += 1
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
-        return
+        return raw_lp_dump
 
     # Loop to check the url to see if it has been updated.
     for cl in range(int(check_loop)):
@@ -90,7 +89,7 @@ def grp_check (check_loop, league_url):
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
-            return
+            return raw_lp_dump
 
     # Log entry.
     error_no += 1
@@ -1114,27 +1113,32 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Get the number of games played for the current season in the database.
     cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season) + "' LIMIT 1")
     data = cursor.fetchone()
-    if data and (int(data['games_played']) >= int(working_stats_def_dfo['GP'].iloc[0])):
-        print(
-            '''
-            FATAL:  The number of games played in the database is greater than or equal to
-                    the number of games played indicated on the league page.
+    
+    if data:
+        igpdb = int(data['games_played'])
+        igpweb = int(working_stats_def_dfo['GP'].iloc[0])
+    
+        if igpdb >= igpweb:
+            print(
+                '''
+                FATAL:  The number of games played in the database is greater than or equal to
+                        the number of games played indicated on the league page.
 
-                    Either the stats have already been updated or there is a problem with the
-                    data displayed on the league page.
+                        Either the stats have already been updated or there is a problem with the
+                        data displayed on the league page.
 
-                    This script will exit.
-            '''
-            )
-        print()
+                        This script will exit.
+                '''
+                )
+            print()
 
-        # Log entry.
-        error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,The stats in the database are as recent or more recent than the stats on the league page."
+            # Log entry.
+            error_no += 1
+            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,The stats in the database are as recent or more recent than the stats on the league page."
 
-        # Generate the error log and exit.
-        generate_psss_error_log()
-        sys.exit()
+            # Generate the error log and exit.
+            generate_psss_error_log()
+            sys.exit()
 
     ## Initial processing, working_stats_off_dfo.
     # Read the csv file into a DataFrame objects.
@@ -1575,7 +1579,7 @@ if check_loop != 0:
 
     # Only engage check loop if the month is April to October.
     if mc in mr:
-        grp_check(check_loop, league_url)
+        raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
     else:
         print(
             '''

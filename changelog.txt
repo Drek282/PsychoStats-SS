@@ -53,6 +53,7 @@ Version 0.0.4b (in progress)
 * [Changed] Pages will now display error message if javascript is disabled.
 * [Fixed] CSS for cookie consent popup.
 * [Added] Laying the groundwork for automated updates.
+* [Fixed] Error when attempting to access roster.php directly.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

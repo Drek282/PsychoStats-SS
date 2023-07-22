@@ -235,12 +235,12 @@ $cms->theme->assign(array(
 ));
 
 $basename = basename(__FILE__, '.php');
-if ($team['team_id']) {
+if (isset($team['team_id'])) {
 	$cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 } else {
 	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("No Team Found!"),
-		'message'	=> $cms->trans("Invalid team ID specified.") . " " . $cms->trans("Please go back and try again.")
+		'message'	=> $cms->trans("This page cannot be accessed directly.") . " " . $cms->trans("Please go to a team page and access team rosters there.")
 	));
 }
 

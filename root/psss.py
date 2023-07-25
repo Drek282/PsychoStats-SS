@@ -71,6 +71,8 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         error_no += 1
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
+        sleep_m(5)
+
         return raw_lp_dump
 
     # Loop to check the url to see if it has been updated.
@@ -89,11 +91,13 @@ def grp_check (check_loop, league_url, raw_lp_dump):
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
+            sleep_m(5)
+
             return raw_lp_dump
 
     # Log entry.
     error_no += 1
-    error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,Configured limit for checks to determine if game results have been publish exceeded.  The script will exit."
+    error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,Configured limit for checks to determine if game results have been published exceeded.  The script will exit."
     
     # Generate the error log.
     generate_psss_error_log()

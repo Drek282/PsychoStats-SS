@@ -70,8 +70,13 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         # Log entry.
         error_no += 1
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
-
+        
+        # delay and reload the league page
         sleep_m(5)
+
+        # Load the league page into a variable.
+        with urlopen(league_url) as f:
+            raw_lp_dump = f.read().decode()
 
         return raw_lp_dump
 
@@ -91,7 +96,12 @@ def grp_check (check_loop, league_url, raw_lp_dump):
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
+            # delay and reload the league page
             sleep_m(5)
+
+            # Load the league page into a variable.
+            with urlopen(league_url) as f:
+                raw_lp_dump = f.read().decode()
 
             return raw_lp_dump
 

@@ -1459,6 +1459,7 @@ function get_division_list($args = array()) {
 function get_wc_list($args = array()) {
 	global $cms;
 	$args += array(
+		'season_c'	=> null,	
 		'allowall'	=> false,
 		'start'		=> 0,
 		'limit'		=> 100,
@@ -1471,6 +1472,7 @@ function get_wc_list($args = array()) {
 		'results'	=> null,
 		'search'	=> null
 	);
+	$season = $args['season_c'];
 	$values = "";
 	if (trim($args['fields']) == '') {
 		$values .= "MAX(name.lastseen),wc.*,team.*,name.*,prof.*,adv.team_id team_n,adv.*,def.*,off.* ";
@@ -1483,7 +1485,7 @@ function get_wc_list($args = array()) {
 /*	if ($args['joinccinfo']) {
 		$cmd .= "LEFT JOIN $this->t_geoip_cc c ON c.cc=pp.cc ";
 	}*/
-	$cmd .= "WHERE wc.team_id=adv.team_id AND prof.team_id=team.team_id AND name.team_id=team.team_id AND adv.team_id=team.team_id AND def.team_id=team.team_id AND off.team_id=team.team_id ";
+	$cmd .= "WHERE wc.team_id=adv.team_id AND prof.team_id=team.team_id AND name.team_id=team.team_id AND adv.team_id=team.team_id AND def.team_id=team.team_id AND off.team_id=team.team_id AND adv.season=$season AND def.season=$season AND off.season=$season ";
 	if (!$args['allowall']) $cmd .= "AND team.allowrank=1 ";
 	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
 

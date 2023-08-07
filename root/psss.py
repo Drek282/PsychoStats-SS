@@ -896,6 +896,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     # Set the header line for working_stats_wc and remove empty lines.
     if working_stats_wc:
+        # Remove whitespace at end of lines in working_stats_wc.
+        my_regex =  r"( +$)"
+        working_stats_wc = re.sub(my_regex, '', working_stats_wc, 40, re.MULTILINE)
         my_regex =  r"^<u>Wild Card Race "
         working_stats_wc = re.sub(my_regex, 'Team ', working_stats_wc, 1)
         my_regex =  r"</u>$"
@@ -924,7 +927,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     my_regex =  r"( +)"
     working_stats_def = re.sub(my_regex, ',', working_stats_def_nr, 800)
     if working_stats_wc:
-         working_stats_wc = re.sub(my_regex, ',', working_stats_wc, 800)
+        working_stats_wc = re.sub(my_regex, ',', working_stats_wc, 800)
     working_stats_off = re.sub(my_regex, ',', working_stats_off, 1600)
     
     ## Double quote the names in team_names_def.
@@ -1107,38 +1110,6 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     ## Column Headers:
     #  1 Team Number, 2 Team Name, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 ERA, 10 CG, 11 ShO, 12 RS, 13 Sv, 14 IP, 15 RA, 16 ER, 17 HA, 18 BAA, 19 WA, 20 KA, 21 WP
-
-    ## Final check to ensure that stats have not already been updated
-
-    # Get the number of games played for the current season in the database.
-    cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season) + "' LIMIT 1")
-    data = cursor.fetchone()
-    
-    if data:
-        igpdb = int(data['games_played'])
-        igpweb = int(working_stats_def_dfo['GP'].iloc[0])
-    
-        if igpdb >= igpweb:
-            print(
-                '''
-                FATAL:  The number of games played in the database is greater than or equal to
-                        the number of games played indicated on the league page.
-
-                        Either the stats have already been updated or there is a problem with the
-                        data displayed on the league page.
-
-                        This script will exit.
-                '''
-                )
-            print()
-
-            # Log entry.
-            error_no += 1
-            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,The stats in the database are as recent or more recent than the stats on the league page."
-
-            # Generate the error log and exit.
-            generate_psss_error_log()
-            sys.exit()
 
     ## Initial processing, working_stats_off_dfo.
     # Read the csv file into a DataFrame objects.
@@ -1355,15 +1326,15 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     ## Create or modify the psss_team_wc data table if wildcard stats have been published.
     # Truncate the table first the table must be rebuilt every time the script is run.
-    query = "TRUNCATE TABLE psss_team_wc"
-    cursor.execute(query)
+    if season == season_c:
+        query = "TRUNCATE TABLE psss_team_wc"
+        cursor.execute(query)
     if working_stats_wc:
         # Iterate through working_stats_wc_dfo.
         for index, row in working_stats_wc_dfo.iterrows():
             # Add new entry to db.
-            query = "INSERT INTO psss_team_wc VALUES ('" + str(row['Season']) + "', '" + str(row['Team']) + "', '" + str(row['GB']) + "')"
+            query = "INSERT INTO psss_team_wc VALUES ('" + str(season_c) + "', '" + str(row['Team']) + "', '" + str(row['GB']) + "')"
             cursor.execute(query)
-
 
 ############################################################################
 #### #### #### ####    ***  Functions end here.  ***    #### #### #### #####

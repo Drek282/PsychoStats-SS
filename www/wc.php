@@ -118,8 +118,13 @@ if ($results) {
 // Get total number teams listed in wild card standings.
 $totalranked = $ps->get_total_wc();
 
+// Set global season variable to default if undeclared.
+$season ??= $ps->get_season_c();
+$season_c ??= $ps->get_season_c();
+
 // fetch stats, etc...
 $teams = $ps->get_wc_list(array(
+	'season_c'	=> $season_c,
 	'results'	=> $results,
 	'sort'		=> $sort,
 	'order'		=> $order,
@@ -159,6 +164,9 @@ $table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);
 $cms->filter('teams_table_object', $table);
 
+// Are there divisions or wilcards in this league?
+$division = $ps->get_total_divisions() - 1;
+$wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
@@ -173,7 +181,8 @@ $cms->theme->assign(array(
 	'language'	=> $cms->theme->language,
 	'lastupdate'	=> $ps->get_lastupdate(),
 	'season_c'		=> null,
-	'division'		=> $teams[0]['divisionname'],
+	'division'		=> $division,
+	'wildcard'		=> $wildcard,
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 ));

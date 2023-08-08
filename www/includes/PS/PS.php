@@ -2363,6 +2363,7 @@ function flagimg($cc, $args = array()) {
 // returns TRUE if no errors were encountered, or an array of error strings that occured.
 function reset_stats($keep = array()) {
 	$keep += array(
+		'team_rosters'	=> false,
 		'team_profiles'	=> false,
 		'users'			=> false,
 	);
@@ -2375,14 +2376,9 @@ function reset_stats($keep = array()) {
 		't_team_def', 
 		't_team_off', 
 		't_team_wc',
-//		't_team_profile', 
-//		't_plugins',
 		't_search_results',
 		't_state', 
-//		't_user',
 		't_seasons_h',
-		't_team_rpi',
-		't_team_rpo',
 	);
 
 	// delete most of everything
@@ -2395,6 +2391,15 @@ function reset_stats($keep = array()) {
 
 	// delete optional data ...
 	$empty_extra = array();
+	if (!$keep['team_rosters']) array_push($empty_extra, 't_team_rpi', 't_team_rpo');
+	foreach ($empty_extra as $t) {
+		$tbl = $this->$t;
+		if (!$this->db->truncate($tbl) and !preg_match("/exist/", $this->db->errstr)) {
+			$errors[] = "$tbl: " . $this->db->errstr;
+		}
+	} 
+
+	// delete team profiles ...
 	if (!$keep['team_profiles']) array_push($empty_extra, 't_team_profile', 't_team_ids_names');
 	foreach ($empty_extra as $t) {
 		$tbl = $this->$t;

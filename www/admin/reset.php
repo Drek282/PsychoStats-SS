@@ -42,6 +42,7 @@ if ($reset) {
 
 $form = $cms->new_form();
 $form->default_modifier('trim');
+$form->field('team_rosters');
 $form->field('team_profiles');
 $form->field('users');
 
@@ -77,6 +78,7 @@ if ($submit) {
 } else {
 	// default all options to keep
 	$form->input(array(
+		'team_rosters'	=> true,
 		'team_profiles'	=> true,
 		'users'			=> true
 	));

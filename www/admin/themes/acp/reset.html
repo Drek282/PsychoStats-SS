@@ -45,6 +45,13 @@
 	</p>
 </div>
 
+<div{if $errors.team_rosters} class="err"{/if}>
+	<p class="err" id="err-team_rosters">{$errors.team_rosters|escape}</p>
+	<label><#Team Rosters?#></label>
+	<label class="for" for="team_rosters1"><input id="team_rosters1" name="team_rosters" value="0" {if !$form.team_rosters}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
+	<label class="for" for="team_rosters2"><input id="team_rosters2" name="team_rosters" value="1" {if  $form.team_rosters}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
+</div>
+
 <div{if $errors.team_profiles} class="err"{/if}>
 	<p class="err" id="err-team_profiles">{$errors.team_profiles|escape}</p>
 	<label><#Team Profiles?#></label>

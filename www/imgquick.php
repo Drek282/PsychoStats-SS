@@ -34,7 +34,7 @@ $id = strip_tags(trim($_GET['id'])) ?? null;
 $team_id = is_numeric($id) ? $id : 0;
 $_GET['v'] ??= null;
 $var = in_array(strtolower($_GET['v']), array('win_percent','wins')) ? strtolower($_GET['v']) : 'win_percent';
-$_GET = array( 'id' => $team_id, 'v' => $var );
+//$_GET = array( 'id' => $team_id, 'v' => $var );
 
 //list($base,$ext) = explode('.', GenImgName());
 //$imgfilename = $base . "_" . $team_id . '.' . $ext;

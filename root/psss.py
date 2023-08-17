@@ -1107,6 +1107,40 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     working_stats_def_dfo['IP'] = np.trunc(working_stats_def_dfo['IP']) + round((working_stats_def_dfo['IP'] % 1) * 3, 1)
     # Reorder the columns.
     working_stats_def_dfo = working_stats_def_dfo.loc[:, ["Team","Team_Name","Division","GP","W","L","pct.","GB","ERA","CG","ShO","RS","Sv","IP","RA","ER","HA","BAA","BBA","KA","WP"]]
+
+    ## Final check to ensure that stats have not already been updated
+    if season == season_c:
+    
+        # Get the number of games played for the current season in the database.
+        cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season) + "' LIMIT 1")
+        data = cursor.fetchone()
+    
+        if data:
+            igpdb = int(data['games_played'])
+            igpweb = int(working_stats_def_dfo['GP'].iloc[0])
+    
+            if igpdb >= igpweb:
+                print(
+                    '''
+                    FATAL:  The number of games played in the database is greater than or equal to
+                            the number of games played indicated on the league page.
+
+                            Either the stats have already been updated or there is a problem with the
+                            data displayed on the league page.
+
+                            This script will exit.
+                    '''
+                    )
+                print()
+
+                # Log entry.
+                error_no += 1
+                error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,The stats in the database are as recent or more recent than the stats on the league page."
+
+                # Generate the error log and exit.
+                generate_psss_error_log()
+                sys.exit()
+
     
     ## Column Headers:
     #  1 Team Number, 2 Team Name, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 ERA, 10 CG, 11 ShO, 12 RS, 13 Sv, 14 IP, 15 RA, 16 ER, 17 HA, 18 BAA, 19 WA, 20 KA, 21 WP

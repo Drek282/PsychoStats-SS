@@ -29,7 +29,9 @@ include(__DIR__ . "/includes/imgcommon.php");
 include(JPGRAPH_DIR . '/jpgraph_line.php');
 include(JPGRAPH_DIR . '/jpgraph_regstat.php');
 
-$team_id = is_numeric($_GET['id']) ? $_GET['id'] : 0;
+// sanitize $_GET['id']
+$id = strip_tags(trim($_GET['id'])) ?? null;
+$team_id = is_numeric($id) ? $id : 0;
 $_GET['v'] ??= null;
 $var = in_array(strtolower($_GET['v']), array('win_percent','wins')) ? strtolower($_GET['v']) : 'win_percent';
 $_GET = array( 'id' => $team_id, 'v' => $var );

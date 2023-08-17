@@ -30,9 +30,8 @@ include(JPGRAPH_DIR . '/jpgraph_line.php');
 include(JPGRAPH_DIR . '/jpgraph_regstat.php');
 
 $team_id = is_numeric($_GET['id']) ? $_GET['id'] : 0;
-$_GET['v'] ??= null;
-$var = in_array(strtolower($_GET['v']), array('win_percent','wins')) ? strtolower($_GET['v']) : 'win_percent';
-$_GET = array( 'id' => $team_id, 'v' => $var );
+$var = 'win_percent';
+$_GET = array( 'id' => $team_id );
 
 //list($base,$ext) = explode('.', GenImgName());
 //$imgfilename = $base . "_" . $team_id . '.' . $ext;
@@ -99,11 +98,9 @@ if (!count($datay)) {
 if (count($datay)) {
 	$avg = $sum / count($datay);
 
-	if ($var == 'win_percent') {
-		//$interval = imgdef($q['interval'], 3000);
-		$q['interval'] ??= 0.1;
-		$interval = $q['interval'];
-	}
+	//$interval = imgdef($q['interval'], 3000);
+	$q['interval'] ??= 0.1;
+	$interval = $q['interval'];
 
 	if ($interval) {
 		$minlimit = floor(min($datay) / $interval) * $interval;

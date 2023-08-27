@@ -74,9 +74,17 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         return raw_lp_dump
 
     # Loop to check the url to see if it has been updated.
+    # Doing this twice might solve caching issues.
     for cl in range(int(check_loop)):
     
-        sleep_m(10)
+        sleep_m(8)
+
+        # Load the league page into a variable and clear it.
+        with urlopen(league_url) as f:
+            raw_lp_dump = f.read().decode()
+        raw_lp_dump = ''
+    
+        sleep_m(2)
 
         # Load the league page into a variable.
         with urlopen(league_url) as f:
@@ -283,7 +291,7 @@ def generate_psss_tables (league_name, working_stats_com_dfo):
 #############################################################################
 #### #### #### ####    ***  Process team rosters. ***    #### #### #### #####
 ################################################@############################
-def generate_psss_team_rosters (season, season_url, season_dir, games_played):
+def generate_psss_team_rosters (season, season_url, season_dir, games_played, raw_lp_dump):
 
     # debug
     #print(season)
@@ -1282,7 +1290,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Generate team roster tables.
     games_played = int(working_stats_adv_dfo['GP'].iloc[0])
     cg_fix = {}
-    cg_fix = generate_psss_team_rosters(season, season_url, season_dir, games_played)
+    cg_fix = generate_psss_team_rosters(season, season_url, season_dir, games_played, raw_lp_dump)
 
 
     #### Output to database.
@@ -1747,7 +1755,7 @@ for season_h in list(seasons_h):
 
     # Load the league page into a variable.
     with urlopen(season_url) as f:
-        raw_lp_dump = f.read().decode()
+        raw_hp_dump = f.read().decode()
     
     # Log entry.
     error_no += 1
@@ -1755,14 +1763,14 @@ for season_h in list(seasons_h):
 
     # Get the date on the league page.
     my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
-    pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+    pagedate = re.search(my_regex, raw_hp_dump, re.MULTILINE).group(1)
 
     # Convert league page date to epoch time.
     pattern = '%m-%d-%y'
     pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 
     # Process the historical season.
-    process_data (season_url, season_h, league_name, raw_lp_dump)
+    process_data (season_url, season_h, league_name, raw_hp_dump)
 
 
 ## Create or modify the psss_seasons_h data table.

@@ -62,7 +62,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         sys.exit()
 
     # Setup the regex for the check string.
-    my_regex = r"^.+" + check_string + r".+$"
+    my_regex = r"^" + check_string + r".+$"
 
     # Check to see if the game results have been published.
     if re.search(my_regex, raw_lp_dump, re.MULTILINE):
@@ -77,14 +77,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     # Doing this twice might solve caching issues.
     for cl in range(int(check_loop)):
     
-        sleep_m(8)
-
-        # Load the league page into a variable and clear it.
-        with urlopen(league_url) as f:
-            raw_lp_dump = f.read().decode()
-        raw_lp_dump = ''
-    
-        sleep_m(2)
+        sleep_m(10)
 
         # Load the league page into a variable.
         with urlopen(league_url) as f:

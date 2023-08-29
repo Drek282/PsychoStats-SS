@@ -105,6 +105,7 @@ $division = $ps->get_division(array(
 	'ofields'	=> '',
 ));
 
+$division['divisionname'] ??= null;
 $cms->theme->page_title(' for ' . $division['divisionname'], true);
 
 $x = substr($xml ?? '',0,1);

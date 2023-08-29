@@ -1008,6 +1008,17 @@ function get_division($args = array(), $minimal = false) {
 	$division['team_drat'] = 0;
 	$division['team_srat'] = 0;
 	foreach ($division['advanced'] as $tm => $val) {
+		// Declare undeclared array keys
+		$division['advanced'][$tm]['wins'] ??= 0;
+		$division['advanced'][$tm]['losses'] ??= 0;
+		$division['advanced'][$tm]['win_percent'] ??= 0;
+		$division['advanced'][$tm]['team_rdiff'] ??= 0;
+		$division['defence'][$tm]['team_ra'] ??= 0;
+		$division['offence'][$tm]['run_support'] ??= 0;
+		$division['defence'][$tm]['team_whip'] ??= 0;
+		$division['offence'][$tm]['ops'] ??= 0;
+		$division['defence'][$tm]['team_drat'] ??= 0;
+		$division['offence'][$tm]['team_srat'] ??= 0;
 		// Playoff status.
 		if (!is_null($clinch_count)) {
 			$division['advanced'][$tm]['games_back'] = $this->get_playoff_status($division['advanced'][$tm]['games_played'], $division['advanced'][$tm]['games_back']);
@@ -1309,6 +1320,8 @@ function get_team_list($args = array()) {
 			$clinch_count = array();
 			$div_count = array();
 			foreach ($list as $tm => $val) {
+				$list[$tm]['games_back'] ??= null;
+				$list[$tm]['divisionname'] ??= null;
 				$list[$tm]['games_back'] = $this->get_playoff_status($list[$tm]['games_played'], $list[$tm]['games_back']);
 				$clinch_count[$list[$tm]['divisionname']] ??= null;
 				if ($list[$tm]['games_back'] == 'elim')

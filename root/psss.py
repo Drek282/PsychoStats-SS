@@ -62,7 +62,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         sys.exit()
 
     # Setup the regex for the check string.
-    my_regex = r"^" + check_string + r".+$"
+    my_regex = r"^" + check_string + r"$"
 
     # Check to see if the game results have been published.
     if re.search(my_regex, raw_lp_dump, re.MULTILINE):

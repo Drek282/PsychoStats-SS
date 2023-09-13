@@ -267,6 +267,11 @@ function neg_pos_500($val) {
 	return $output;
 }
 
+function rem_zero_decimal($val) {
+	$val = preg_replace('/^0\./', '.', $val);
+	return $val;
+}
+
 function rank_change($args = array()) {
 	global $cms, $ps;
 	if (!is_array($args)) $args['team'] = array( 'team' => $args );

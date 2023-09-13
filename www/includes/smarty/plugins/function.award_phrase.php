@@ -15,7 +15,7 @@ function smarty_function_award_phrase($params, &$smarty) {
 	}
 
 	// create some dynamic values for this award
-	$award['value'] = $ps->award_format($award['topteamvalue'], $award['format']);
+	$award['topteamvalue'] = $ps->award_format($award['topteamvalue'], $award['format']);
 	$award['link'] = psss_table_team_link($award['topteamname'], $award);
 
 	$tokens = array(

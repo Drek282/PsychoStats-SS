@@ -2451,6 +2451,7 @@ function award_format($value, $format = '%s') {
 		case "compacttime": 	return compacttime($value);
 		case "date":		return psss_date_stamp($value);
 		case "datetime":	return psss_datetime_stamp($value);
+		case "remzerodecimal":	return rem_zero_decimal($value);
 	}
 	// the [brackets] will help troubleshoot issues when a invalid format is specified
 	return "[ $value ]";

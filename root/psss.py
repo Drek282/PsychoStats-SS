@@ -84,7 +84,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
             raw_lp_dump = f.read().decode()
 
         # Check to see if the game results have been published.
-        if re.search(my_regex, raw_lp_dump):
+        if re.search(my_regex, raw_lp_dump, re.MULTILINE):
 
             # Log entry.
             error_no += 1

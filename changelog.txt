@@ -60,6 +60,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Errors when attempting to access division.php directly.
 * [Removed] "Final" check to see if stats have already been updated.
 * [Fixed] Awards format not being applied.
+* [Added] Requirement for html2text module for Python backend.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

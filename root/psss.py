@@ -11,6 +11,7 @@ import numpy as np
 import pymysql
 import requests
 import html
+import html2text
 
 
 
@@ -61,11 +62,14 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         generate_psss_error_log()
         sys.exit()
 
+    # Render the html to remove commented lines.
+    rendered_html = html2text.html2text(raw_lp_dump)
+
     # Setup the regex for the check string.
     my_regex = r"^" + check_string + r"$"
 
     # Check to see if the game results have been published.
-    if re.search(my_regex, raw_lp_dump, re.MULTILINE):
+    if re.search(my_regex, rendered_html, re.MULTILINE):
 
         # Log entry.
         error_no += 1
@@ -83,8 +87,11 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         with urlopen(league_url) as f:
             raw_lp_dump = f.read().decode()
 
+        # Render the html to remove commented lines.
+        rendered_html = html2text.html2text(raw_lp_dump)
+
         # Check to see if the game results have been published.
-        if re.search(my_regex, raw_lp_dump, re.MULTILINE):
+        if re.search(my_regex, rendered_html, re.MULTILINE):
 
             # Log entry.
             error_no += 1

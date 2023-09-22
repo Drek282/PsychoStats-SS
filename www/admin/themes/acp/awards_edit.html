@@ -66,7 +66,7 @@ delete_message = "<#Are you sure you want to delete the award?#>";
 	<p class="small">
 		<#The award phrase is what is displayed in the awards listing for the team that won the award and should 
 		contain#> <b>{ldelim}$tokens{rdelim}</b> <#which are specific Smarty variables#>. 
-		<#For example#>: "<em><strong>{ldelim}$team.link{rdelim} <#has the most season wins#> ({ldelim}$award.value{rdelim} total) <#in#> {ldelim}$award.awardseason{rdelim}</strong></em>".
+		<#For example#>: "<em><strong>{ldelim}$team.link{rdelim} <#has the most season wins#> ({ldelim}$award.topteamvalue{rdelim} total) <#in#> {ldelim}$award.awardseason{rdelim}</strong></em>".
 	</p>
 	<p class="small">
 		<#Every award phrase should contain the following tokens.  Note that these are not the same tokens as the tokens used in the#> <em><strong><#Expression#></strong></em>.  <#Those are described in the upper right hint box#>:

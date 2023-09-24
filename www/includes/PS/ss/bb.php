@@ -6,8 +6,8 @@
 	ss::bb mod support for PsychoStats front-end
 */
 if (!defined("PSYCHOSTATS_PAGE")) die("Unauthorized access to " . basename(__FILE__));
-if (defined("CLASS_PS_SS_SS_PHP")) return 1;
-define("CLASS_PS_SS_SS_PHP", 1);
+if (defined("CLASS_PS_SS_BB_PHP")) return 1;
+define("CLASS_PS_SS_BB_PHP", 1);
 
 include_once(rtrim(dirname(__DIR__), '/\\') . '/ss.php');
 

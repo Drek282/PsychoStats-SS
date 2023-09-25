@@ -66,7 +66,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     rendered_html = html2text.html2text(raw_lp_dump)
 
     # Check to see if the game results have been published.
-    if re.search(check_string, rendered_html, re.MULTILINE):
+    if re.search(check_string, rendered_html):
         # Log entry.
         error_no += 1
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"

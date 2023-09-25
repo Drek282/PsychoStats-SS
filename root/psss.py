@@ -65,12 +65,8 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     # Render the html to remove commented lines.
     rendered_html = html2text.html2text(raw_lp_dump)
 
-    # Setup the regex for the check string.
-    my_regex = r"^" + check_string + r"$"
-
     # Check to see if the game results have been published.
-    if re.search(my_regex, rendered_html, re.MULTILINE):
-
+    if re.search(check_string, rendered_html, re.MULTILINE):
         # Log entry.
         error_no += 1
         error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"

@@ -27,7 +27,7 @@ $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Overall Team Stats');
 
 // change this if you want the default sort of the team listing to be something else like 'wins'
-$DEFAULT_SORT = 'win_percent, team_rdiff';
+$DEFAULT_SORT = 'win_percent, pythag';
 $DEFAULT_LIMIT = 24;
 
 // collect url parameters ...
@@ -98,6 +98,19 @@ if (!in_array($order, array('asc','desc'))) $order = 'desc';
 if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = $DEFAULT_LIMIT;
 $q = trim($q ?? '');
+
+# secondary sorts
+if ($sort != 'win_percent, pythag') {
+	switch ($sort) {
+		case 'win_percent':		$sort = $sort . ", pythag"; break;
+		case 'divisionname': 	$sort = $sort . ", win_percent"; break;
+		case 'wins':			$sort = $sort . ", pythag"; break;
+		case 'team_rdiff':		$sort = $sort . ", pythag"; break;
+		case 'pythag':			$sort = $sort . ", team_rdiff"; break;
+		case 'pythag_plus':		$sort = $sort . ", pythag"; break;
+		default:				break;
+	}
+}
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {
@@ -180,7 +193,7 @@ $table->columns(array(
 	'prevrank'		=> array( 'nolabel' => true, 'callback' => 'rankchange' ),
 	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
-	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'nosort' => true, 'callback' => 'psss_table_division_link' ),
+	'divisionname'			=> array( 'label' => $cms->trans("Division"), 'callback' => 'psss_table_division_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
 	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'negpos500' ),

@@ -75,7 +75,7 @@ if (empty($results)) {
 unset ($results);
 
 // change this if you want the default sort of the team listing to be something else like 'wins'
-$DEFAULT_SORT = 'win_percent, team_rdiff';
+$DEFAULT_SORT = 'win_percent, pythag';
 $DEFAULT_LIMIT = 20;
 
 // collect url parameters ...
@@ -88,6 +88,18 @@ if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
 if (!in_array($order, array('asc','desc'))) $order = 'desc';
 if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 20) $limit = $DEFAULT_LIMIT;
+
+# secondary sorts
+if ($sort != 'win_percent, pythag') {
+	switch ($sort) {
+		case 'win_percent':		$sort = $sort . ", pythag"; break;
+		case 'wins':			$sort = $sort . ", pythag"; break;
+		case 'team_rdiff':		$sort = $sort . ", pythag"; break;
+		case 'pythag':			$sort = $sort . ", team_rdiff"; break;
+		case 'pythag_plus':		$sort = $sort . ", pythag"; break;
+		default:				break;
+	}
+}
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {

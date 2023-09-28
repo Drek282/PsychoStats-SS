@@ -99,6 +99,11 @@ if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = $DEFAULT_LIMIT;
 $q = trim($q ?? '');
 
+# secondary sorts
+if ($sort != 'run_support, woba') {
+	($sort == 'run_support') ? $sort = $sort . ", woba" : $sort = $sort . ", run_support";
+}
+
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {
 	if ($cms->theme->is_language($cms->input['language'])) {

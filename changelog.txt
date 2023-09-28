@@ -62,6 +62,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Awards format not being applied.
 * [Added] Requirement for html2text module for Python backend.
 * [Fixed] Incorrect key name in awards phrase.
+* [Added] Fleshed out secondary sorts for all the main stats pages and all relevant columns.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

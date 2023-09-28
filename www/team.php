@@ -86,6 +86,27 @@ foreach ($validfields as $var) {
 	}
 }
 
+## secondary sorts
+# advanced table
+if ($asort != 'season') {
+	switch ($asort) {
+		case 'win_percent':		$asort = $asort . ", pythag"; break;
+		case 'wins':			$asort = $asort . ", pythag"; break;
+		case 'team_rdiff':		$asort = $asort . ", pythag"; break;
+		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
+		case 'pythag_plus':		$asort = $asort . ", pythag"; break;
+		default:				break;
+	}
+}
+# def table
+if ($dsort != 'season') {
+	($dsort == 'team_ra') ? $dsort = $dsort . ", team_era" : $dsort = $dsort . ", team_ra";
+}
+# off table
+if ($osort != 'season') {
+	($osort == 'run_support') ? $osort = $osort . ", woba" : $osort = $osort . ", run_support";
+}
+
 $totalranked  = $ps->get_total_teams(array('allowall' => 0));
 
 $team = $ps->get_team(array(
@@ -112,6 +133,17 @@ $team = $ps->get_team(array(
 ));
 
 $cms->theme->page_title(' for Team #' . $id, true);
+
+// reset sort variables to first sort column
+$sort_arr = explode(", ", $asort);
+$asort = $sort_arr[0];
+unset($sort_arr);
+$sort_arr = explode(", ", $dsort);
+$dsort = $sort_arr[0];
+unset($sort_arr);
+$sort_arr = explode(", ", $osort);
+$osort = $sort_arr[0];
+unset($sort_arr);
 
 $team['totaladvanced'] ??= null;
 $advancedpager = pagination(array(

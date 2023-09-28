@@ -72,7 +72,7 @@ if (isset($cms->input['cookieconsent'])) {
 }
 
 // SET DEFAULTS
-$asort ??= 'win_percent, team_rdiff';
+$asort ??= 'win_percent, pythag';
 $dsort ??= 'team_ra, team_era';
 $osort ??= 'run_support, woba';
 $aorder ??= 'desc';
@@ -84,6 +84,27 @@ $ostart ??= 0;
 $alimit ??= 20;
 $dlimit ??= 20;
 $olimit ??= 20;
+
+## secondary sorts
+# advanced table
+if ($asort != 'win_percent, pythag') {
+	switch ($asort) {
+		case 'win_percent':		$asort = $asort . ", pythag"; break;
+		case 'wins':			$asort = $asort . ", pythag"; break;
+		case 'team_rdiff':		$asort = $asort . ", pythag"; break;
+		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
+		case 'pythag_plus':		$asort = $asort . ", pythag"; break;
+		default:				break;
+	}
+}
+# def table
+if ($dsort != 'team_ra, team_era') {
+	($dsort == 'team_ra') ? $dsort = $dsort . ", team_era" : $dsort = $dsort . ", team_ra";
+}
+# off table
+if ($osort != 'run_support, woba') {
+	($osort == 'run_support') ? $osort = $osort . ", woba" : $osort = $osort . ", run_support";
+}
 
 $division = $ps->get_division(array(
 	'season'	=> $season,

@@ -1537,35 +1537,6 @@ if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
 error_no += 1
 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Initializing data processing for URL:  " + league_url + "  The URL is accessible and is for the correct league.\n"
 
-# Get check loop variable from database.
-cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
-data = cursor.fetchone()
-if  data['value']:
-    check_loop = int(data['value'])
-else:
-    check_loop = 0
-
-# Check to see if the stats pages have been updated or continue if checkloop is not set.
-if check_loop != 0:
-    # Setup month range (April to October).
-    mr = range(4, 11)
-    # Return the current month as an integer.
-    mc = int(now_utc.strftime("%-m"))
-
-    # Only engage check loop if the month is April to October.
-    if mc in mr:
-        raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
-    else:
-        print(
-            '''
-            INFO:   This is the off season, the league page will not be checked for weekly results.
-            '''
-            )
-
-        # Log entry.
-        error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season.  The league page will not be checked for weekly results.\n"
-
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"
 seasons_h_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
@@ -1584,14 +1555,59 @@ pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 pagedate = pagedate + 129600
 
 # Check to see if the stats have already been updated.
-if ((lastupdate > pagedate) and (seasons_h[0] != season_c)):
+# If the stats lastupdate < pagedate and grp check is set start the grp check loop.
+if ((lastupdate < pagedate) and (seasons_h[0] != season_c)):
+
+    # Get check loop variable from database.
+    cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
+    data = cursor.fetchone()
+    if  data['value']:
+        check_loop = int(data['value'])
+    else:
+        check_loop = 0
+
+    # Check to see if the stats pages have been updated or continue if checkloop is not set.
+    if check_loop != 0:
+        # Setup month range (April to October).
+        mr = range(4, 11)
+        # Return the current month as an integer.
+        mc = int(now_utc.strftime("%-m"))
+
+        # Only engage check loop if the month is April to October.
+        if mc in mr:
+            raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
+        else:
+            print(
+                '''
+        INFO:   This is the off season, the league page will not be checked for weekly results.
+
+                The stats have already been updated.
+
+                The script will exit.
+
+                '''
+                )
+
+            # Log entry.
+            error_no += 1
+            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season.  The league page will not be checked for weekly results.\n"
+
+            # Log entry.
+            error_no += 1
+            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,The stats have already been updated.  The league pages will not be processed."
+
+            # Generate the error log and exit.
+            generate_psss_error_log()
+            sys.exit()
+
+else:
 
     print(
-        '''
+            '''
         INFO:   The stats have already been updated.
 
                 The script will exit.
-        '''
+            '''
         )
 
     # Log entry.

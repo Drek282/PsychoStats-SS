@@ -1582,7 +1582,7 @@ if ((check_loop == 0) and (lastupdate < pagedate) and (seasons_h[0] != season_c)
     generate_psss_error_log()
     sys.exit()
 
-else:
+elif ((check_loop != 0) and (seasons_h[0] != season_c)):
 
     # Setup month range (April to October).
     mr = range(4, 11)

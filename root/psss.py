@@ -1554,53 +1554,17 @@ pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 # Add one and a half days to page date.
 pagedate = pagedate + 129600
 
+# Get check loop variable from database.
+cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
+data = cursor.fetchone()
+if  data['value']:
+    check_loop = int(data['value'])
+else:
+    check_loop = 0
+
 # Check to see if the stats have already been updated.
 # If the stats lastupdate < pagedate and grp check is set start the grp check loop.
-if ((lastupdate < pagedate) and (seasons_h[0] != season_c)):
-
-    # Get check loop variable from database.
-    cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
-    data = cursor.fetchone()
-    if  data['value']:
-        check_loop = int(data['value'])
-    else:
-        check_loop = 0
-
-    # Check to see if the stats pages have been updated or continue if checkloop is not set.
-    if check_loop != 0:
-        # Setup month range (April to October).
-        mr = range(4, 11)
-        # Return the current month as an integer.
-        mc = int(now_utc.strftime("%-m"))
-
-        # Only engage check loop if the month is April to October.
-        if mc in mr:
-            raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
-        else:
-            print(
-                '''
-        INFO:   This is the off season, the league page will not be checked for weekly results.
-
-                The stats have already been updated.
-
-                The script will exit.
-
-                '''
-                )
-
-            # Log entry.
-            error_no += 1
-            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season.  The league page will not be checked for weekly results.\n"
-
-            # Log entry.
-            error_no += 1
-            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,The stats have already been updated.  The league pages will not be processed."
-
-            # Generate the error log and exit.
-            generate_psss_error_log()
-            sys.exit()
-
-else:
+if ((check_loop == 0) and (lastupdate < pagedate) and (seasons_h[0] != season_c)):
 
     print(
             '''
@@ -1617,6 +1581,40 @@ else:
     # Generate the error log and exit.
     generate_psss_error_log()
     sys.exit()
+
+else:
+
+    # Setup month range (April to October).
+    mr = range(4, 11)
+    # Return the current month as an integer.
+    mc = int(now_utc.strftime("%-m"))
+
+    # Only engage check loop if the month is April to October.
+    if mc in mr:
+        raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
+    else:
+        print(
+                '''
+        INFO:   This is the off season, the league page will not be checked for weekly results.
+
+                The stats have already been updated.
+
+                The script will exit.
+
+                '''
+            )
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,This is the off season.  The league page will not be checked for weekly results.\n"
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,The stats have already been updated.  The league pages will not be processed."
+
+        # Generate the error log and exit.
+        generate_psss_error_log()
+        sys.exit()
 
 # Update the database with the league page date.
 query = "UPDATE psss_config_sources s SET s.date='" + str(pagedate) + "' WHERE s.league_name='" + league_name + "'"

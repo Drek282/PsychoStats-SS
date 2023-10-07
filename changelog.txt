@@ -64,6 +64,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Incorrect key name in awards phrase.
 * [Added] Fleshed out secondary sorts for all the main stats pages and all relevant columns.
 * [Added] Clear search field button for pages with a search field.
+* [Removed] Redundant theme function calls.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -764,7 +764,7 @@ function parse($filename, $append_buffer = true) {
 	$orig = $this->theme();
 #	print "parse($filename) orig=$orig\n";
 	$out = $this->fetch_compile ? $this->fetch($filename) : $this->fetch_eval($filename);
-	$this->theme($orig);
+	//$this->theme($orig);
 	if ($append_buffer) $this->buffer .= $out;
 	return $out;
 }
@@ -912,9 +912,9 @@ function load_styles($file = 'styles.xml', $theme = null) {
 	}
 
 	$orig = $this->language_tags('{#', '#}');
-	$orig_theme = $this->theme($theme);
+	//$orig_theme = $this->theme($theme);
 	$s->load($this->fetch_compile ? $this->fetch($res) : $this->fetch_eval($res), 'styles');
-	$this->theme($orig_theme);
+	//$this->theme($orig_theme);
 	$this->language_tags($orig);
 
 	$this->styles = $s;

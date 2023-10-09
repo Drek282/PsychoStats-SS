@@ -505,9 +505,8 @@ function theme($new = null, $in_db = true) {
 			}
 		}
 
-		$old = $this->theme;
 		$this->theme = $new;
-		return $old;
+		return $new;
 	} else {
 		return $this->theme;
 	}

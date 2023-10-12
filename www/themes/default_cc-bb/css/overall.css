@@ -86,6 +86,10 @@ body.psychostats {
 	vertical-align: top;
 }
 
+#ps-menu-right select {
+	padding-left: 8px;
+}
+
 /* --- OVERALL FOOTER ------------------------------------- */
 #ps-overall-footer {
 	font-size: 80%;
@@ -307,7 +311,7 @@ div#ps-login-inner {
 /* The popup form - hidden by default */
 .form-cookieconsent {
   display: block;
-  height: 55px;
+  height: 45px;
   position: fixed;
   bottom: 0;
   left: 0;

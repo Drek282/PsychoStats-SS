@@ -37,7 +37,7 @@ $DEFAULT_LIMIT = 5;
 if (strlen($q) > 100) {
 	$cms->full_page_err('awards', array(
 		'message_title'	=> $cms->trans("Invalid Search String"),
-		'message'	=> $cms->trans("Searches are limited to 50 characters in length."),
+		'message'	=> $cms->trans("Searches are limited to 100 characters in length."),
 		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 		'cookieconsent'	=> $cookieconsent,
 	));

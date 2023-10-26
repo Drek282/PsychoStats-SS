@@ -27,10 +27,6 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Edit Team Profile');
 
-// Set global season variable to default if undeclared.
-$season ??= $ps->get_season_c();
-$season_c ??= $ps->get_season_c();
-
 # Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();

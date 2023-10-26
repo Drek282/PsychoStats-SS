@@ -130,8 +130,7 @@ if ($results) {
 // Get total number teams listed in wild card standings.
 $totalranked = $ps->get_total_wc();
 
-// Set global season variable to default if undeclared.
-$season ??= $ps->get_season_c();
+// Set global season_c variable to default if undeclared.
 $season_c ??= $ps->get_season_c();
 
 // fetch stats, etc...

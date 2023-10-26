@@ -29,9 +29,6 @@ $cms->theme->page_title('PsychoStats - Team Registration');
 
 $validfields = array('submit','cancel','ref');
 $cms->theme->assign_request_vars($validfields, true);
-
-// Set global season variable to default if undeclared.
-$season_c ??= $ps->get_season_c();
 		
 $team_id_label = $cms->trans("Team #");
 

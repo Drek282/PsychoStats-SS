@@ -38,13 +38,8 @@ $validfields = array(
 $cms->theme->assign_request_vars($validfields, true);
 
 // Set global season variable to default if undeclared.
-$season ??= $ps->get_season_c();
+if (!isset($season) or !is_numeric($season) or strlen($season) != 4) $season = $ps->get_season_c();
 $season_c ??= $ps->get_season_c();
-
-// If a season is passed from GET/POST update $season. 
-if (isset($cms->input['season'])) {
-	$season = $cms->input['season'];
-}
 
 // create the form variable
 $form = $cms->new_form();

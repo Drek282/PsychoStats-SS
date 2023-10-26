@@ -7,7 +7,7 @@
 	<div id="ps-page-title">
 		<div class="inner">
 		<span>
-			<input id='q-hdr' name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field hsearch">
+			<input id='q-hdr' type="text" name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field hsearch" maxlength="100">
 			<a href="help.php" title="<#Clear Search#>" alt="<#Clear Search#>"><img id="ps-search-clear" src="{theme->url}/img/icons/turd.gif"></a>
 		</span>
 		<h1><#Help Page#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>

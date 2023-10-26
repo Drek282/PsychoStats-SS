@@ -33,6 +33,17 @@ $cms->theme->assign_request_vars($validfields, true);
 // Default limit.
 $DEFAULT_LIMIT = 5;
 
+// if $q is longer than 100 characters we have a problem
+if (strlen($q) > 100) {
+	$cms->full_page_err('awards', array(
+		'message_title'	=> $cms->trans("Invalid Search String"),
+		'message'	=> $cms->trans("Searches are limited to 50 characters in length."),
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+		'cookieconsent'	=> $cookieconsent,
+	));
+	exit();
+}
+
 // create the form variable
 $form = $cms->new_form();
 

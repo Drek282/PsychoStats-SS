@@ -76,7 +76,7 @@ $r = $ps->db->fetch_rows(1, $cmd);
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
-		'message'	=> $cms->trans("There is no data in the database for the season passed to the script.\n\nThe season parameter should not be passed directly to the script."),
+		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,

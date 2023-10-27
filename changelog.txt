@@ -68,6 +68,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Broken cookie consent code when cookie consent disabled in the Admin CP.
 * [Fixed] $_GET and $_POST vulnerability related to season parameter.
 * [Fixed] Search string length limited to 50 characters on stats pages and 100 characters on HELP page.
+* [Added] Added check to ensure season exists in database when passed to scripts as a parameter.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

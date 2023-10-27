@@ -66,6 +66,28 @@ if (isset($cms->input['cookieconsent'])) {
 	}
 }
 
+// Check to see if the season is in the database before we continue.
+$cmd = "SELECT season FROM $ps->t_team_adv WHERE season=$season LIMIT 1";
+
+$r = array();
+$r = $ps->db->fetch_rows(1, $cmd);
+
+// if $r is empty then the season is not in the database and someone is misbehaving
+if (empty($r)) {
+	$cms->full_page_err('awards', array(
+		'message_title'	=> $cms->trans("Season Parameter Invalid"),
+		'message'	=> $cms->trans("There is no data in the database for the season passed to the script.\n\nThe season parameter should not be passed directly to the script."),
+		'lastupdate'	=> $ps->get_lastupdate(),
+		'division'		=> null,
+		'wildcard'		=> null,
+		'season_c'		=> null,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+		'cookieconsent'	=> $cookieconsent,
+	));
+	exit();
+}
+unset ($r);
+
 // SET DEFAULTS
 $dsort ??= $DEFAULT_PITCHER_SORT;
 $osort ??= $DEFAULT_POSITION_SORT;

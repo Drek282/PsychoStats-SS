@@ -2,6 +2,7 @@
 
 
 Version 0.0.4b (in progress)
+* [Added] Help page and infrastructure.
 * [Added] Owner email to team profile.
 * [Improved] Leagues where the league name has changed can now be fully processed.
 * [Improved] In single season mode past season data is not deleted until there is data for the current season.
@@ -69,6 +70,8 @@ Version 0.0.4b (in progress)
 * [Fixed] $_GET and $_POST vulnerability related to season parameter.
 * [Fixed] Search string length limited to 50 characters on stats pages and 100 characters on HELP page.
 * [Added] Checks to ensure season exists in database when passed to scripts as a parameter.
+* [Changed] Default image on HELP page.
+* [Improved] Clarified focus for PsychoStats for Scoresheet Baseball default HELP entry.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -831,8 +831,8 @@ function get_team($args = array(), $minimal = false) {
 	$team['league_cs'] = $count;
 
 	// Get playoff status.
-	$team['games_back'] = isset($team['games_played']) && isset($team['games_back']) ? $this->get_playoff_status($team['games_played'], $team['games_back']) : 'na';
-	$team['games_back_wc'] = isset($team['games_played']) && isset($team['games_back_wc']) ? $this->get_playoff_status($team['games_played'], $team['games_back_wc']) : 'na';
+	$team['games_back'] = isset($team['games_played']) && isset($team['games_back']) ? $this->get_playoff_status($season_c, $team['games_played'], $team['games_back']) : 'na';
+	$team['games_back_wc'] = isset($team['games_played']) && isset($team['games_back_wc']) ? $this->get_playoff_status($season_c, $team['games_played'], $team['games_back_wc']) : 'na';
 
 	// Load team names.
 	if (!$args['minimal']) {
@@ -917,6 +917,12 @@ function get_division($args = array(), $minimal = false) {
 		'dfields'	=> '',
 		'ofields'	=> '',
 	);
+	$season = $args['season'];
+
+	# Set season length, if MLB changes the length of the season
+	# this will need to be changed 
+	$season_l = ($season == 2020) ? 120 : 162;
+
 	$division = array();
 	$id = $this->db->escape($args['divisionname']);
 	#if (!is_numeric($id)) $id = 0;
@@ -931,7 +937,7 @@ function get_division($args = array(), $minimal = false) {
 
 	$cmd  = "SELECT $values ";
 	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_names names, $this->t_team_def def, $this->t_team_off off ";
-	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=$season ";
 	$args['where'] ??= null;
 	if (trim($args['where'] ?? '') != '') $cmd .= "AND (" . $args['where'] . ") ";
 	$cmd .= "GROUP BY adv.divisionname ";
@@ -944,7 +950,7 @@ function get_division($args = array(), $minimal = false) {
         $s ??= null;
 		$division['advanced'] = $this->get_team_list(array(
 			'where' => "AND adv.divisionname='$id'",
-			'season'	=> $args['season'],
+			'season'	=> $season,
 			'sort'	=> $args['asort'],
 			'order' => $args['aorder'],
 			'start' => $args['astart'],
@@ -960,7 +966,7 @@ function get_division($args = array(), $minimal = false) {
         $s ??= null;
 		$division['defence'] = $this->get_team_list(array(
 			'where' => "AND adv.divisionname='$id'",
-			'season'	=> $args['season'],
+			'season'	=> $season,
 			'sort'	=> $args['dsort'],
 			'order' => $args['dorder'],
 			'start' => $args['dstart'],
@@ -976,7 +982,7 @@ function get_division($args = array(), $minimal = false) {
         $s ??= null;
 		$division['offence'] = $this->get_team_list(array(
 			'where' => "AND adv.divisionname='$id'",
-			'season'	=> $args['season'],
+			'season'	=> $season,
 			'sort'	=> $args['osort'],
 			'order' => $args['oorder'],
 			'start' => $args['ostart'],
@@ -992,7 +998,7 @@ function get_division($args = array(), $minimal = false) {
 
 	// Generate games_played and games_remaining
 	$division['advanced'][0]['games_played'] ??= 0;
-	$division['advanced'][0]['games_remaining'] = 162 - $division['advanced'][0]['games_played'];
+	$division['advanced'][0]['games_remaining'] = $season_l - $division['advanced'][0]['games_played'];
 
 	// Get playoff status and stat totals.
 	$clinch_count = ($division['advanced'][0]['games_remaining'] != 0) ? 0 : null;
@@ -1021,7 +1027,7 @@ function get_division($args = array(), $minimal = false) {
 		$division['offence'][$tm]['team_srat'] ??= 0;
 		// Playoff status.
 		if (!is_null($clinch_count)) {
-			$division['advanced'][$tm]['games_back'] = $this->get_playoff_status($division['advanced'][$tm]['games_played'], $division['advanced'][$tm]['games_back']);
+			$division['advanced'][$tm]['games_back'] = $this->get_playoff_status($season, $division['advanced'][$tm]['games_played'], $division['advanced'][$tm]['games_back']);
 			if ($division['advanced'][$tm]['games_back'] == 'elim') $clinch_count++;
 		}
 		// Stat totals.
@@ -1268,6 +1274,12 @@ function get_team_list($args = array()) {
 		'results'	=> null,
 		'search'	=> null
 	);
+	$season = $args['season'];
+
+	# Set season length, if MLB changes the length of the season
+	# this will need to be changed 
+	$season_l = ($season == 2020) ? 120 : 162;
+
 	$values = "";
 	if (trim($args['fields']) == '') {
 		$values .= "name.*,adv.team_id team_n,adv.*,team.*,def.*,off.*,prof.icon,prof.cc ";
@@ -1278,10 +1290,10 @@ function get_team_list($args = array()) {
 
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
 	$cmd .= "LEFT JOIN $this->t_team team ON adv.team_id = team.team_id ";
-	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND def.season=" . $args['season'] . " ";
-	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND off.season=" . $args['season'] . " ";
+	$cmd .= "LEFT JOIN $this->t_team_def def ON adv.team_id = def.team_id AND def.season=$season ";
+	$cmd .= "LEFT JOIN $this->t_team_off off ON adv.team_id = off.team_id AND off.season=$season ";
 	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen WHERE team_name <> '' GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen WHERE team_name <> '' GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=$season ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 	
@@ -1313,7 +1325,7 @@ function get_team_list($args = array()) {
 
 		// Generate games_played and games_remaining
 		$list[0]['games_played'] ??= 0;
-		$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
+		$list[0]['games_remaining'] = $season_l - $list[0]['games_played'];
 
 		// Get playoff status if the season has not ended.
 		if ($list[0]['games_remaining'] != 0) {
@@ -1322,7 +1334,7 @@ function get_team_list($args = array()) {
 			foreach ($list as $tm => $val) {
 				$list[$tm]['games_back'] ??= null;
 				$list[$tm]['divisionname'] ??= null;
-				$list[$tm]['games_back'] = $this->get_playoff_status($list[$tm]['games_played'], $list[$tm]['games_back']);
+				$list[$tm]['games_back'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back']);
 				$clinch_count[$list[$tm]['divisionname']] ??= null;
 				if ($list[$tm]['games_back'] == 'elim')
 					$clinch_count[$list[$tm]['divisionname']]++;
@@ -1349,7 +1361,7 @@ function get_team_list($args = array()) {
 
 		// Generate games_played and games_remaining
 		$list[0]['games_played'] ??= 0;
-		$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
+		$list[0]['games_remaining'] = $season_l - $list[0]['games_played'];
 
 		// Set divisionname if it has not been set.
 		$list[0]['divisionname'] ??= 'na';
@@ -1535,7 +1547,7 @@ function get_wc_list($args = array()) {
 
 	// Generate games_played and games_remaining
 	$list[0]['games_played'] ??= null;
-	$list[0]['games_remaining'] = 162 - $list[0]['games_played'];
+	$list[0]['games_remaining'] = $season_l - $list[0]['games_played'];
 
 	// Get playoff status.
 	$clinch_count = 0;
@@ -1543,7 +1555,7 @@ function get_wc_list($args = array()) {
 	foreach ($list as $tm => $val) {
 		$list[$tm]['games_back_wc'] ??= null;
 		if ($list[$tm]['games_back_wc'] == '-') $in_count++;
-		$list[$tm]['games_back_wc'] = $this->get_playoff_status($list[$tm]['games_played'], $list[$tm]['games_back_wc']);
+		$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
 		if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
 	}
 
@@ -1696,8 +1708,13 @@ function get_total_wc() {
 	return $total;
 }
 
-function get_playoff_status($gp = 0, $gb = 0) {
-	$gr = 162 - $gp;
+function get_playoff_status($season, $gp = 0, $gb = 0) {
+
+	# Set season length, if MLB changes the length of the season
+	# this will need to be changed 
+	$season_l = ($season == 2020) ? 120 : 162;
+
+	$gr = $season_l - $gp;
 	if (is_numeric($gb)) {
 		$gb_i = $gb;
 		$playoff_status = (($gr - $gb_i) < 0) ? "elim" : $gb;

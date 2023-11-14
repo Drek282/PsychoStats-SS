@@ -310,6 +310,7 @@ $cms->theme->assign(array(
 	'offencepager'		=> $offencepager,
 	'totalranked'		=> $totalranked,
 	'lastupdate'		=> $ps->get_lastupdate(),
+	'season'			=> null,
 	'season_c'			=> null,
 	'division'			=> $division,
 	'wildcard'			=> $wildcard,

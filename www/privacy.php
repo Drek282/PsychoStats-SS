@@ -58,6 +58,7 @@ $wildcard = $ps->get_total_wc();
 
 $cms->theme->assign(array(
 	'lastupdate'	=> $ps->get_lastupdate(),
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

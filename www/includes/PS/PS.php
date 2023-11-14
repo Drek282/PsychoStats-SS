@@ -1498,6 +1498,11 @@ function get_wc_list($args = array()) {
 		'search'	=> null
 	);
 	$season = $args['season_c'];
+
+	# Set season length, if MLB changes the length of the season
+	# this will need to be changed 
+	$season_l = ($season == 2020) ? 120 : 162;
+	
 	$values = "";
 	if (trim($args['fields']) == '') {
 		$values .= "MAX(name.lastseen),wc.*,team.*,name.*,prof.*,adv.team_id team_n,adv.*,def.*,off.* ";

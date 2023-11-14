@@ -129,6 +129,7 @@ if (empty($results)) {
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
+		'season'		=> null,
 		'season_c'		=> null,
 		'cookieconsent'	=> $cookieconsent,
 	));
@@ -180,6 +181,7 @@ $cms->theme->assign(array(
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,
 	'lastupdate'	=> $ps->get_lastupdate(),
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

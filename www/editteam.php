@@ -83,6 +83,7 @@ if ($id) {
 if (!psss_user_can_edit_team($team)) {
 	$cms->theme->assign(array(
 		'lastupdate'		=> $ps->get_lastupdate(),
+		'season'		=> null,
 		'season_c'		=> null,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
@@ -365,6 +366,7 @@ $cms->theme->assign(array(
 	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'allow_username_change' => $allow_username_change, 
 	'lastupdate'		=> $ps->get_lastupdate(),
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

@@ -68,6 +68,7 @@ $cms->theme->assign(array(
 	'themes'	=> $themes,
 	'theme'		=> $cms->theme->theme,
 	'lastupdate'	=> $ps->get_lastupdate(),
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

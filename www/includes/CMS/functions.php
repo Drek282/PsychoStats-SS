@@ -281,13 +281,11 @@ if (!function_exists('psss_table_br_search_link')) {
 if (!function_exists('psss_table_division_link')) {
 	/**
 	Called from the dynamic table class when creating a table that has a division <a> link.
-	@param: $division contains stats for the current division. But mainly the $id is only needed.
 	*/
-	function psss_table_division_link($name, $division, $inc_icon = true) {
-		global $ps;
-		$division['divisionname'] ??= null;
-		$url = psss_url_wrapper(array( '_base' => 'division.php', 'id' => $division['divisionname'] ));
-		return "<a class='division' href='$url'>" . psss_escape_html($name != '' ? $name : '-') . "</a>";
+	function psss_table_division_link($division, $inc_icon = true) {
+		global $season;
+		$url = psss_url_wrapper(array( '_base' => 'division.php', 'id' => $division, 'season' => $season));
+		return "<a class='division' href='$url'>" . psss_escape_html($division) . "</a>";
 	}
 }
 

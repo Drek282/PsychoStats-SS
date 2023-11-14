@@ -80,6 +80,7 @@ if (empty($r)) {
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
+		'season'		=> null,
 		'season_c'		=> null,
 		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 		'cookieconsent'	=> $cookieconsent,

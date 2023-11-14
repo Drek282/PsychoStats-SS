@@ -99,6 +99,7 @@ if ($valid) {
 			'team'	=> $team,
 			'reg'	=> $userinfo,
 			'lastupdate'	=> $lastupdate,
+			'season'		=> null,
 			'season_c'		=> null,
 			'division'		=> $division,
 			'wildcard'		=> $wildcard,
@@ -145,6 +146,7 @@ if (isset($message)) {
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
+		'season'		=> null,
 		'season_c'		=> null,
 		'cookieconsent'	=> $cookieconsent,
 	));
@@ -154,6 +156,7 @@ if (isset($message)) {
 // assign variables to the theme
 $cms->theme->assign(array(
 	'lastupdate'	=> $lastupdate,
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

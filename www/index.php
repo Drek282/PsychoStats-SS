@@ -164,6 +164,7 @@ if ($q != '') {
 	// a new search was requested (a query string was given)
 	$search = $ps->init_search();
 	$matched = $ps->search_teams($search, array(
+		'season'	=> $season,
 		'phrase'	=> $q,
 		'mode'		=> 'contains',
 		'status'	=> 'ranked',
@@ -178,6 +179,7 @@ if ($q != '') {
 	// no search, just fetch a list teams
 	$search = '';
 }
+
 $total['all'] = $ps->get_total_teams(array('allowall' => 1));
 if ($results) {
 	$total['ranked'] = $results['result_total'];
@@ -202,7 +204,7 @@ $sort_arr = explode(", ", $sort);
 $sort = $sort_arr[0];
 unset($sort_arr);
 
-$baseurl = array('sort' => $sort, 'order' => $order, 'limit' => $limit);
+$baseurl = array('season' => $season, 'sort' => $sort, 'order' => $order, 'limit' => $limit);
 if ($search) {
 	$baseurl['search'] = $search;
 } else if ($q != '') {

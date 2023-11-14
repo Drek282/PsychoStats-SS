@@ -74,6 +74,7 @@ Version 0.0.4b (in progress)
 * [Improved] Clarified focus for PsychoStats for Scoresheet Baseball default HELP entry.
 * [Improved] Season with differing number of games (2020 for now) handled.
 * [Improved] Season selection preserved when changing pages.
+* [Fixed] Season selection preserved in searches.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

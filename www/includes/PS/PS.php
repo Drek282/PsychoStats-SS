@@ -241,10 +241,12 @@ function search_teams($search_id, $criteria) {
 
 	// assign criteria defaults
 	$criteria += array(
+		'season'	=> null,
 		'phrase'	=> null,
 		'mode'		=> 'contains', 	// 'contains', 'begins', 'ends', 'exact'
 		'status'	=> '',		// empty, 'ranked', 'unranked'
 	);
+	$season = $criteria['season'];
 	// 'limit' is forced based on current configuration
 	$criteria['limit'] = coalesce($this->conf['main']['security']['search_limit'], 1000);
 	if (!$criteria['limit']) $criteria['limit'] = 1000;
@@ -304,10 +306,11 @@ function search_teams($search_id, $criteria) {
 	// changed for other databases.
 	$cmd  = "SELECT SQL_CALC_FOUND_ROWS DISTINCT adv.team_id " .
 		"FROM $this->t_team_ids_names names, $this->t_team_adv adv, $this->t_team_profile prof " .
-		"WHERE adv.team_id=names.team_id AND adv.team_id=prof.team_id ";
+		"WHERE adv.season=$season AND adv.team_id=names.team_id AND adv.team_id=prof.team_id ";
 	
 	$cmd .= "AND ($where) ";
 	$cmd .= "LIMIT " . $criteria['limit'];
+
 	$team_ids = $this->db->fetch_list($cmd);
 	$total = $this->db->fetch_item("SELECT FOUND_ROWS()");
 
@@ -316,14 +319,15 @@ function search_teams($search_id, $criteria) {
 
 	// psss_search_results record for insertion
 	$search = array(
-		'search_id'	=> $search_id,
+		'search_id'		=> $search_id,
 		'session_id'	=> $cms->session->sid(),
-		'phrase'	=> $criteria['phrase'],
+		'season'		=> $season,
+		'phrase'		=> $criteria['phrase'],
 		'result_total'	=> count($team_ids),
-		'abs_total'	=> $total,
-		'results'	=> join(',', $team_ids),
-		'query'		=> $cmd,
-		'updated'	=> date('Y-m-d H:i:s'),
+		'abs_total'		=> $total,
+		'results'		=> join(',', $team_ids),
+		'query'			=> $cmd,
+		'updated'		=> date('Y-m-d H:i:s'),
 		
 	);
 	$ok = $this->save_search($search);

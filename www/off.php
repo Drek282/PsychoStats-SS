@@ -145,6 +145,7 @@ if ($q != '') {
 	// a new search was requested (a query string was given)
 	$search = $ps->init_search();
 	$matched = $ps->search_teams($search, array(
+		'season'	=> $season,
 		'phrase'	=> $q,
 		'mode'		=> 'contains',
 		'status'	=> 'ranked',

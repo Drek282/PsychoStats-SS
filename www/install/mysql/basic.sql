@@ -126,6 +126,7 @@ CREATE TABLE `psss_plugins` (
 CREATE TABLE `psss_search_results` (
   `search_id` char(32) NOT NULL,
   `session_id` char(32) NOT NULL,
+  `season` smallint unsigned default NULL,
   `phrase` varchar(191) NOT NULL,
   `result_total` int unsigned NOT NULL default '0',
   `abs_total` int unsigned NOT NULL default '0',

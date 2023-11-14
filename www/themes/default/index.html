@@ -17,6 +17,7 @@
 	<div id="ps-page-title">
 		<div class="inner">
 		<span>
+			<input name="season" value="{$season|escape}" type="hidden">
 			<input id='q-hdr' type="text" name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field search" maxlength="50">
 			<input name="sort" value="{$sort|escape}" type="hidden">
 			<input name="order" value="{$order|escape}" type="hidden">

@@ -62,6 +62,13 @@
 .ps-table-frame { 
 	margin: 0 0.5em 1em 0.5em;
 }
+.ps-table-frame-small {
+	width: 500px;
+	margin-left: 0.5em;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 1em;
+}
 .ps-table-inner {
 	border: 1px solid gray;
 /*	float: left !important;	/* FF */

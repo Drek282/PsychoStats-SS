@@ -72,9 +72,10 @@ Version 0.0.4b (in progress)
 * [Added] Checks to ensure season exists in database when passed to scripts as a parameter.
 * [Changed] Default image on HELP page.
 * [Improved] Clarified focus for PsychoStats for Scoresheet Baseball default HELP entry.
-* [Improved] Season with differing number of games (2020 for now) handled.
 * [Improved] Season selection preserved when changing pages.
 * [Fixed] Season selection preserved in searches.
+* [Improved] Season with differing number of games handled.
+* [Improved] Season length now configurable in the ACP.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

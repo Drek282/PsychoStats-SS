@@ -923,9 +923,11 @@ function get_division($args = array(), $minimal = false) {
 	);
 	$season = $args['season'];
 
-	# Set season length, if MLB changes the length of the season
-	# this will need to be changed 
-	$season_l = ($season == 2020) ? 120 : 162;
+	# Get season length.
+	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
+	$season_l = $this->db->fetch_row(1, $cmd);
+	if (is_array($season_l)) $season_l = implode($season_l);
+	$season_l ??= '162';
 
 	$division = array();
 	$id = $this->db->escape($args['divisionname']);
@@ -1280,9 +1282,11 @@ function get_team_list($args = array()) {
 	);
 	$season = $args['season'];
 
-	# Set season length, if MLB changes the length of the season
-	# this will need to be changed 
-	$season_l = ($season == 2020) ? 120 : 162;
+	# Get season length.
+	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
+	$season_l = $this->db->fetch_row(1, $cmd);
+	if (is_array($season_l)) $season_l = implode($season_l);
+	$season_l ??= '162';
 
 	$values = "";
 	if (trim($args['fields']) == '') {
@@ -1503,9 +1507,11 @@ function get_wc_list($args = array()) {
 	);
 	$season = $args['season_c'];
 
-	# Set season length, if MLB changes the length of the season
-	# this will need to be changed 
-	$season_l = ($season == 2020) ? 120 : 162;
+	# Get season length.
+	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
+	$season_l = $this->db->fetch_row(1, $cmd);
+	if (is_array($season_l)) $season_l = implode($season_l);
+	$season_l ??= '162';
 	
 	$values = "";
 	if (trim($args['fields']) == '') {

@@ -245,6 +245,9 @@ dd.cog a {
 dd.sources a {
 	background-image: url(../img/icons/page_white_text.png);
 }
+dd.seasons a {
+	background-image: url(../img/icons/calendar.webp);
+}
 dd.auto a {
 	background-image: url(../img/icons/clock.png);
 }

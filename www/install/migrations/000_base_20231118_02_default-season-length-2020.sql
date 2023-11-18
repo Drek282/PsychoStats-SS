@@ -1,0 +1,1 @@
+UPDATE `psss_seasons_h` SET `season_l` = 120 WHERE `season_h` = 2020;

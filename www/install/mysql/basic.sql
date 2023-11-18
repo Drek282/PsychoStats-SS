@@ -1,5 +1,6 @@
 CREATE TABLE `psss_seasons_h` (
   `season_h` int unsigned NOT NULL default '1900',
+  `season_l` int unsigned NOT NULL default '162',
   PRIMARY KEY  (`season_h`),
   UNIQUE KEY `season_h` (`season_h`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;

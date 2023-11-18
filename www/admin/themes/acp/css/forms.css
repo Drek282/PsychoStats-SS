@@ -276,6 +276,10 @@ div.submit input.email_test {
 	text-align: left;
 	font-weight: bold;
 }
+.ps-table tr td.item-center {
+	text-align: center;
+	font-weight: bold;
+}
 .ps-table tr td.item div.sub,
 .ps-table tr td.item span.sub {
 	font-weight: normal;

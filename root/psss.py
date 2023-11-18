@@ -1758,8 +1758,15 @@ for season_h in seasons_h:
     data = cursor.fetchone()
     # Is the table empty?
     if not data:
+        # Set season_l value.
+        # The only season with a different season length currently is 2020.
+        if (int(season_h) == 2020):
+            season_l = 120
+        else:
+            season_l = 162
+
         # Add new entry to db.
-        query = "INSERT INTO psss_seasons_h VALUES ('" + str(season_h) + "')"
+        query = "INSERT INTO psss_seasons_h VALUES ('" + str(season_h) + "', '" + str(season_l) + "')"
         cursor.execute(query)
 
 ## Output the current season and update timestamp to the database.

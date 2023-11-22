@@ -190,6 +190,13 @@ div.ps-team-profile #map {
 	width: 100%;
 	text-align: left;
 	border-collapse: collapse;
+	position: relative;
+}
+#ps-container .ps-pitcher-table tr.hdr,
+#ps-container .ps-position-table tr.hdr {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 }
 #ps-container .ps-table th {
 	line-height: 20px;

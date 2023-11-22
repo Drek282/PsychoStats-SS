@@ -76,6 +76,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Season selection preserved in searches.
 * [Improved] Season with differing number of games handled.
 * [Improved] Season length now configurable in the ACP.
+* [Improved] Table headers sticky at top of tables on roster pages when page is scrolled.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

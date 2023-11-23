@@ -50,18 +50,18 @@
 <ul>
 {if $conf.main.site_url}
 	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_name|escape}"><#Home#></a></li>
-	<li><a href="index.php{if $season}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
+	<li><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
 {else}
-	<li class="first"><a href="index.php{if $season}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
+	<li class="first"><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
 {/if}
 {if $division}
-	<li><a href="divisions.php{if $season}?season={$season}{/if}" title="Divisions Standings"><#Divisions#></a></li>
+	<li><a href="divisions.php{if $season and $season != $season_c}?season={$season}{/if}" title="Divisions Standings"><#Divisions#></a></li>
 {/if}
 {if $wildcard}
 	<li><a href="wc.php" title="Wild Card Standings"><#Wild Card#></a></li>
 {/if}
-	<li><a href="def.php{if $season}?season={$season}{/if}" title="Teams Defensive Statistics"><#Defensive#></a></li>
-	<li><a href="off.php{if $season}?season={$season}{/if}" title="Teams Offensive Statistics"><#Offensive#></a></li>
+	<li><a href="def.php{if $season and $season != $season_c}?season={$season}{/if}" title="Teams Defensive Statistics"><#Defensive#></a></li>
+	<li><a href="off.php{if $season and $season != $season_c}?season={$season}{/if}" title="Teams Offensive Statistics"><#Offensive#></a></li>
 {if $conf.main.awards.enable}
 	<li><a href="awards.php" title="Hall of Fame"><#HoF#></a></li>
 {/if}

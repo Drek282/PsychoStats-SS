@@ -193,6 +193,9 @@ div.ps-team-profile #map {
 	position: relative;
 }
 #ps-container .ps-team-table tr.hdr,
+#ps-container .ps-advanced-table tr.hdr,
+#ps-container .ps-defence-table tr.hdr,
+#ps-container .ps-offence-table tr.hdr,
 #ps-container .ps-pitcher-table tr.hdr,
 #ps-container .ps-position-table tr.hdr {
 	position: sticky;

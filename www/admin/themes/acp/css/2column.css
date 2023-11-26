@@ -233,6 +233,9 @@ dd.user-green a {
 dd.user-red a {
 	background-image: url(../img/icons/user_red.png);
 }
+dd.user-gray a {
+	background-image: url(../img/icons/user_gray.png);
+}
 dd.h_entry a {
 	background-image: url(../img/icons/h_entry.webp);
 }

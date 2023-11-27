@@ -26,7 +26,7 @@ include("../includes/common.php");
 include("./common.php");
 $cms->theme->assign('page', 'owners');
 
-$validfields = array('ref','team_id','submit','cancel');
+$validfields = array('ref','team_id','edit','new','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 
 $message = '';
@@ -64,7 +64,7 @@ $form->field('owner_name','blank');
 
 // process the form if submitted
 $valid = true;
-if ($submit) {
+if ($new) {
 	$form->validate();
 	$input = $form->values();
 
@@ -80,13 +80,14 @@ if ($submit) {
 		$ok = false;
 		$current_date = date('Y-m-d');
 		$id = $ps->db->next_id($ps->t_team_ids_names);
-
-		// First update all the lastseen dates for current
-		// owner names and team names with the current date
+		
+		// get most recent lastseen date
 		$cmd  = "SELECT MAX(lastseen) lastseen FROM $ps->t_team_ids_names LIMIT 1";
-
 		$lastseen = $ps->db->fetch_row(1, $cmd);
 		if (is_array($lastseen)) $lastseen = implode($lastseen);
+
+		// update all the lastseen dates for current
+		// owner names and team names with the current date
 		
 		$ok = $ps->db->update($ps->t_team_ids_names, 
 			array( 'lastseen' => $current_date), 
@@ -94,7 +95,7 @@ if ($submit) {
 		);
 		if (!$ok) $form->error('fatal', $cms->trans("Error updating team dates: " . $ps->db->errstr));
 		
-		// reset the team names with matching team_id to the previous date
+		// reset the team names with matching team_id to the lastseen date
 		$cmd = "UPDATE $ps->t_team_ids_names SET lastseen = '$lastseen' WHERE team_id=$team_id AND owner_name='" . $team['owner_name'] . "' AND lastseen='$current_date'";
 
 		$ok = $ps->db->query($cmd);
@@ -109,6 +110,34 @@ if ($submit) {
 			'lastseen'		=> $current_date
 		);
 		$ok = $ps->db->insert($ps->t_team_ids_names, $team_ids_names);
+		if (!$ok) {
+			$form->error('fatal', "Error updating database: " . $ps->db->errstr);
+		} else {
+			previouspage(psss_url_wrapper('owners.php'));
+		}
+	}
+
+} elseif ($edit) {
+	$form->validate();
+	$input = $form->values();
+
+	$valid = !$form->has_errors();
+	// protect against CSRF attacks
+	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
+
+	$valid = ($valid and !$form->has_errors());
+	if ($valid) {
+		$ok = false;
+
+		// get most recent lastseen date
+		$cmd  = "SELECT MAX(lastseen) lastseen FROM $ps->t_team_ids_names LIMIT 1";
+		$lastseen = $ps->db->fetch_row(1, $cmd);
+		if (is_array($lastseen)) $lastseen = implode($lastseen);
+
+		// update owner name for given team
+		$cmd = "UPDATE $ps->t_team_ids_names SET owner_name = '". $input['owner_name'] . "' WHERE team_id=$team_id AND owner_name='" . $team['owner_name'] . "' AND lastseen='$lastseen'";
+
+		$ok = $ps->db->query($cmd);
 		if (!$ok) {
 			$form->error('fatal', "Error updating database: " . $ps->db->errstr);
 		} else {

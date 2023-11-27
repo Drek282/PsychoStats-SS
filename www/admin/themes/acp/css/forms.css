@@ -232,6 +232,9 @@ div.submit input.cancel {
 div.submit input.delete { 
 	background-image: url(../img/icons/delete.png);
 }
+div.submit input.edit { 
+	background-image: url(../img/icons/page_edit.png);
+}
 div.submit input.save { 
 	background-image: url(../img/icons/accept.png);
 }

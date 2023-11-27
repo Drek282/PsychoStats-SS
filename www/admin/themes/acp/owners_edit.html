@@ -19,19 +19,19 @@
 {if $errors.fatal}<div class="err fatal"><h4><#Fatal Error#></h4><p>{$errors.fatal}</p></div>{/if}
 
 <div>
-	<label><#Current Owner#>:</label>
+	<label><#Current Name#>:</label>
 	<span class="nomodify">{$team.owner_name}</span>
 </div>
 
 <div{if $errors.owner_name} class="err"{/if}>
 	<p class="err">{$errors.owner_name|escape}</p>
-	<label><#New Owner#>:</label>
+	<label><#New Name#>:</label>
 	<input name="owner_name" value="{$form.owner_name|escape}" type="text" class="field medium">
 
 	<div id="ln-notes" class="inline-notes">
 		<h4><#A Note on New Owner Names#></h4>
 		<p>
-			<#The new owner name cannot already exist in the database and <strong><em>absolutely must match the new owner name exactly as shown on the Scoresheet league pages</em></strong>.  If the name entered is incorrect the only solution will be to edit the name in the database or reset the stats, including team profiles, and regenerate the stats.#>
+			<#A new owner name cannot already exist in the database and <strong><em>absolutely must match the new owner name exactly as shown on the Scoresheet league pages</em></strong>.  If an owner name has been entered incorrectly you can choose to edit the name.#>
 		</p>
 	</div>
 </div>
@@ -43,7 +43,8 @@
 	<input name="ref" value="{$ref}" type="hidden">
 	<input name="key" value="{$form_key}" type="hidden">
 	<input name="team_id" value="{$team_id}" type="hidden">
-	<input class="btn save" type="submit" value="<#Save#>">
+	<input name="edit" class="btn edit" type="submit" value="<#Edit Current#>">
+	<input name="new" class="btn save" type="submit" value="<#Save New#>">
 	<input name="cancel" class="btn cancel" type="submit" value="<#Cancel#>">
 </div>
 </fieldset>

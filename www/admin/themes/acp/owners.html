@@ -32,7 +32,7 @@
 		</tr>
 {foreach from=$owners item='o'}
 		<tr{cycle values=", class='even'"}>
-			<td class="item-center"><a href="{url _base='owners_edit.php' team_id=$o.team_id}">{$o.team_id|escape}</a></td>
+			<td class="item-center"><a href="{url _base='owners_edit.php' team_id=$o.team_id}"><div class="link">{$o.team_id|escape}</div></a></td>
 			<td class="item">{$o.owner_name|escape}</td>
 			<td class="item-center">{$o.firstseen|escape}</td>
 			<td class="item-center">{$o.lastseen|escape}</td>

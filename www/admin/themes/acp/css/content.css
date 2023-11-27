@@ -110,6 +110,9 @@
 	text-align: center;
 	line-height: 1.5em;
 }
+.ps-table td .link{
+	width: 100%;
+}
 .ps-table td.smaller {
 	font-size: 90%;
 }

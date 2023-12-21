@@ -78,6 +78,7 @@ Version 0.0.4b (in progress)
 * [Improved] Season length now configurable in the ACP.
 * [Improved] Table headers sticky at top of tables on roster pages when page is scrolled.
 * [Improved] Can now edit and add owner names in the ACP.
+* [Improved] Format for Baseball Reference search link.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -181,59 +181,6 @@ if (!function_exists('psss_time_stamp')) {
 	}
 }
 
-if (!function_exists('psss_table_map_link')) {
-	/**
-	Called from the dynamic table class when creating a table that has a map <a> link.
-	@param: $map contains stats for the current map. But mainly the $id is only needed.
-	*/
-	function psss_table_map_link($name, $map) {
-		global $ps;
-		$url = psss_url_wrapper(array( '_base' => 'map.php', 'id' => $map['mapid'] ));
-		$img = $ps->mapimg($map, array( 'width' => 32, 'noimg' => '' ));
-		return "<a class='map' href='$url'>$img</a>";
-	}
-}
-
-if (!function_exists('psss_table_map_text_link')) {
-	/**
-	Called from the dynamic table class when creating a table that has a map <a> link.
-	@param: $map contains stats for the current map. But mainly the $id is only needed.
-	*/
-	function psss_table_map_text_link($name, $map) {
-		global $ps;
-		$url = psss_url_wrapper(array( '_base' => 'map.php', 'id' => $map['mapid'] ));
-//		$img = $ps->mapimg($map, array( 'width' => 32, 'height' => 24, 'noimg' => ''));
-		return "<a class='map' href='$url'>" . psss_escape_html($name) . "</a>";
-	}
-}
-
-if (!function_exists('psss_table_session_map_link')) {
-	/**
-	Called from the dynamic table class when creating a team session table that has a 
-	map <a> link.
-	@param: $team contains stats for the current team. But mainly the $name is only needed.
-	*/
-	function psss_table_session_map_link($name, $sess) {
-		global $ps;
-		$url = psss_url_wrapper(array( '_base' => 'map.php', 'id' => $sess['mapid'] ));
-//		$img = $ps->mapimg($map, array( 'width' => 32, 'height' => 24, 'noimg' => ''));
-		return "<a class='map' href='$url'>" . psss_escape_html($name) . "</a>";
-	}
-}
-
-if (!function_exists('psss_table_session_time_link')) {
-	/**
-	Called from the dynamic table class when creating a team session table that has a timestamp
-	@param: $sess contains stats for the current team session.
-	*/
-	function psss_table_session_time_link($time, $sess) {
-		global $ps;
-		$time = psss_date_stamp($sess['sessionstart']);
-		$time .= " @ " . psss_time_stamp($sess['sessionstart'],'H:i') . " - " . psss_time_stamp($sess['sessionend'],'H:i');
-		return $time;
-	}
-}
-
 if (!function_exists('psss_table_team_link')) {
 	/**
 	Called from the dynamic table class when creating a table that has a team <a> link.
@@ -266,13 +213,15 @@ if (!function_exists('psss_table_team_roster_link')) {
 
 if (!function_exists('psss_table_br_search_link')) {
 	/**
-	Called from the dynamic table class when creating a table that has a team <a> link.
-	@param: $team contains stats for the current team. But mainly the $id is only needed.
+	Called from the dynamic table class when creating a table that has a player <a> link.
 	*/
 	function psss_table_br_search_link($player_name) {
 		global $ps;
 		if (preg_match('/AAA/', $player_name)) return $player_name;
-		$html_player_name = str_replace(' ', '%20', $player_name);
+		// put first name first
+		$a = array_reverse(explode(', ', $player_name));
+		$html_player_name = implode(" ", $a);
+		$html_player_name = str_replace(' ', '%20', $html_player_name);
 		$url = 'https://www.baseball-reference.com/search/search.fcgi?search=%22' . $html_player_name . '%22';
 		return "<a class='team' href='$url' target='_blank' rel='noopener noreferrer'>" . $player_name . "</a>";
 	}

@@ -226,7 +226,7 @@ span.neg {
 	color: #a25140;
 }
 span.pos {
-	color: #516d34;
+	color: #2d6d22;
 }
 .ps-table tr { background-color: #FFFF66; }
 .ps-table tr.even { background-color: #FFF; }
@@ -297,9 +297,34 @@ span.pos {
 	padding: 0.5em 0;
 }
 
-#ps-container .ps-table .left   { text-align: left; }
+#ps-container .ps-table .first {
+	background-color: #ecec5e;
+	color: #737373;
+	text-align: center;
+}
+#ps-container .ps-table tr.even .first {
+	background-color: #f5f5f5;
+}
+#ps-container .ps-table .left  {
+	background-color: #f0f060;
+	text-align: left;
+}
+#ps-container .ps-table tr.even .left { background-color: #f0f0f0; }
 #ps-container .ps-table .right  { text-align: center; }
 #ps-container .ps-table .center { text-align: center; }
+#ps-container .ps-table .primary,
+#ps-container .ps-table .secondary {
+	background-color: #d8d856;
+	color: #693737;
+	font-weight: bold;
+	text-align: center;
+}
+#ps-container .ps-table .secondary {
+	background-color: #f0f060;
+	font-weight: normal;
+}
+#ps-container .ps-table tr.even .primary { background-color: #ebebeb; }
+#ps-container .ps-table tr.even .secondary { background-color: #f0f0f0; }
 
 /* --- Style for flag and icon images in the team list */
 #ps-container .ps-table .left img  {

@@ -171,6 +171,8 @@ $table->columns(array(
 ));
 $table->column_attr('divisionname', 'class', 'left');
 $table->column_attr('team_srat', 'class', 'right');
+$table->column_attr('win_percent', 'class', 'primary');
+$table->column_attr('team_rdiff', 'class', 'secondary');
 $ps->divisions_table_mod($table);
 $cms->filter('divisions_table_object', $table);
 

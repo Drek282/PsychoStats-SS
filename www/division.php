@@ -183,6 +183,8 @@ $atable->columns(array(
 $atable->column_attr('rank', 'class', 'first');
 $atable->column_attr('team_name', 'class', 'left');
 $atable->column_attr('pythag_plus', 'class', 'right');
+$atable->column_attr('win_percent', 'class', 'primary');
+$atable->column_attr('pythag', 'class', 'secondary');
 $ps->division_teams_table_mod($atable);
 $atable->header_attr('rank', 'colspan', '2');
 $cms->filter('division_advanced_table_object', $atable);
@@ -226,6 +228,7 @@ $dtable->columns(array(
 ));
 $dtable->column_attr('team_n', 'class', 'left');
 $dtable->column_attr('team_drat', 'class', 'right');
+$dtable->column_attr('team_ra', 'class', 'primary');
 $ps->division_defence_table_mod($dtable);
 $cms->filter('division_defence_table_object', $dtable);
 
@@ -264,6 +267,7 @@ $otable->columns(array(
 ));
 $otable->column_attr('team_n', 'class', 'left');
 $otable->column_attr('team_srat', 'class', 'right');
+$otable->column_attr('run_support', 'class', 'primary');
 $ps->division_offence_table_mod($otable);
 $cms->filter('division_offence_table_object', $otable);
 

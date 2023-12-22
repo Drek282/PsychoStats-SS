@@ -79,6 +79,7 @@ Version 0.0.4b (in progress)
 * [Improved] Table headers sticky at top of tables on roster pages when page is scrolled.
 * [Improved] Can now edit and add owner names in the ACP.
 * [Improved] Format for Baseball Reference search link.
+* [Improved] CSS tweaks, including primary and secondary column highlighting.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -154,7 +154,6 @@ $positionpager = pagination(array(
 	'prev'          => $cms->trans("Previous"),
 	'pergroup'	=> 5,
 ));
-
 // build team pitchers table
 $dtable = $cms->new_table($roster['pitcher']);
 $dtable->if_no_data($cms->trans("No Pitcher Stats Found"));
@@ -186,6 +185,7 @@ $dtable->columns(array(
 ));
 $dtable->column_attr('player_name', 'class', 'left');
 $dtable->column_attr('pi_v', 'class', 'right');
+$dtable->column_attr('pi_era', 'class', 'primary');
 $ps->team_pitcher_table_mod($dtable);
 $cms->filter('roster_pitcher_table_object', $dtable);
 
@@ -226,6 +226,7 @@ $otable->columns(array(
 ));
 $otable->column_attr('player_name', 'class', 'left');
 $otable->column_attr('po_v', 'class', 'right');
+$otable->column_attr('po_ops', 'class', 'primary');
 $ps->team_position_table_mod($otable);
 $cms->filter('roster_position_table_object', $otable);
 

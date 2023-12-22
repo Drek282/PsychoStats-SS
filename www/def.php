@@ -238,6 +238,8 @@ $table->columns(array(
 $table->column_attr('rank', 'class', 'first');
 $table->column_attr('team_name', 'class', 'left');
 $table->column_attr('team_drat', 'class', 'right');
+$table->column_attr('team_ra', 'class', 'primary');
+$table->column_attr('team_era', 'class', 'secondary');
 //$table->column_attr('rank', 'class', 'left');
 //$table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);

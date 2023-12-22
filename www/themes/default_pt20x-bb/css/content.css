@@ -202,6 +202,13 @@ div.ps-team-profile #map {
 	top: 0;
 	z-index: 1000;
 }
+#ps-container .ps-table th {
+	line-height: 20px;
+	background: url(../img/table-header-bg.gif) repeat;
+	border-bottom: 1px solid #666;
+	text-align: center;
+	padding: 0;
+}
 #ps-container .ps-table td {
 	padding: 0 0.5em 0 0.4em;
 	border-right: 1px solid #999;
@@ -288,9 +295,34 @@ span.pos {
 	padding: 0.5em 0;
 }
 
-#ps-container .ps-table .left   { text-align: left; }
+#ps-container .ps-table .first {
+	background-color: #414141;
+	color: #afafaf;
+	text-align: center;
+}
+#ps-container .ps-table tr.even .first {
+	background-color: #555555;
+}
+#ps-container .ps-table .left {
+	background-color: #181818;
+	text-align: left;
+}
+#ps-container .ps-table tr.even .left { background-color: #3a3a3a; }
 #ps-container .ps-table .right  { text-align: center; }
 #ps-container .ps-table .center { text-align: center; }
+#ps-container .ps-table .primary,
+#ps-container .ps-table .secondary {
+	background-color: #0f0f0f;
+	color: #f5a55f;
+	font-weight: bold;
+	text-align: center;
+}
+#ps-container .ps-table .secondary {
+	background-color: #181818;
+	font-weight: normal;
+}
+#ps-container .ps-table tr.even .primary { background-color: #303030; }
+#ps-container .ps-table tr.even .secondary { background-color: #3a3a3a; }
 
 /* --- Style for flag and icon images in the team list */
 #ps-container .ps-table .left img  {

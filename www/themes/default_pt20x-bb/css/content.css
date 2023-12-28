@@ -321,7 +321,7 @@ span.pos {
 	background-color: #181818;
 	font-weight: normal;
 }
-#ps-container .ps-table tr.even .primary { background-color: #303030; }
+#ps-container .ps-table tr.even .primary { background-color: #343434; }
 #ps-container .ps-table tr.even .secondary { background-color: #3a3a3a; }
 
 /* --- Style for flag and icon images in the team list */

@@ -312,7 +312,7 @@ span.pos {
 #ps-container .ps-table .center { text-align: center; }
 #ps-container .ps-table .primary,
 #ps-container .ps-table .secondary {
-	background-color: #14130c;
+	background-color: #090905;
 	color: #7dcdff;
 	font-weight: bold;
 	text-align: center;
@@ -321,7 +321,7 @@ span.pos {
 	background-color: #1e1c13;
 	font-weight: normal;
 }
-#ps-container .ps-table tr.even .primary { background-color: #322e24; }
+#ps-container .ps-table tr.even .primary { background-color: #3d382c; }
 #ps-container .ps-table tr.even .secondary { background-color: #3d382c; }
 
 /* --- Style for flag and icon images in the team list */

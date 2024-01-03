@@ -27,6 +27,7 @@
 <div id="ps-overall-menu">
 <div id="ps-menu-right">
 <!--#SEASONS_H_DROPDOWN#-->
+{if $season_c or isset($seasons_h)}
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
@@ -42,6 +43,7 @@
 	</select>
 </div>
 </form>
+{/if}
 {if $show_login and $cookieconsent}
 <a id="ps-login-link" href="login.php" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.gif" alt="<#Login#>"></a>
 {/if}

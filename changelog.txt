@@ -81,6 +81,7 @@ Version 0.0.4b (in progress)
 * [Improved] Format for Baseball Reference search link.
 * [Improved] CSS tweaks, including primary and secondary column highlighting.
 * [Improved] Historical seasons dropdown menu removed from pages where it is not relevant.
+* [Fixed] Behaviour when function theme call is empty.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

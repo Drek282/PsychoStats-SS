@@ -310,7 +310,7 @@ function table_exists($tbl) {
 
 // returns true if a column exists in a table or tables based on the key=id given
 function column_exists($tbls, $cols) {
-	$ca = explode(', ', $cols);
+	$ca = (str_contains($cols, ', ')) ? explode(', ', $cols) : $cols;
 	if (is_array($ca)) {
 		$f = 0;
 		foreach ($ca as $c) {

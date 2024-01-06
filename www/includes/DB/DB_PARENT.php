@@ -308,7 +308,7 @@ function table_exists($tbl) {
 	return ($check->num_rows) ? true : false;
 }
 
-// returns true if a column exists in a table or tables based on the key=id given
+// returns true if a column exists in a table or tables
 function column_exists($tbls, $cols) {
 	$ca = (str_contains($cols, ', ')) ? explode(', ', $cols) : $cols;
 	if (is_array($ca)) {

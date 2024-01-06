@@ -96,12 +96,12 @@ if (!isset($osort) or strlen($osort) > 64) $osort = 'team_ra, team_era';
 if (!isset($aorder) or ($aorder != 'desc' || $aorder != 'asc')) $aorder = 'desc';
 if (!isset($dorder) or ($dorder != 'desc' || $dorder != 'asc')) $dorder = 'asc';
 if (!isset($oorder) or ($oorder != 'desc' || $oorder != 'asc')) $oorder = 'desc';
-if (!isset($astart) or !is_numeric($astart) or strlen($astart) != 6) $astart = 0;
-if (!isset($dstart) or !is_numeric($dstart) or strlen($dstart) != 6) $dstart = 0;
-if (!isset($ostart) or !is_numeric($ostart) or strlen($ostart) != 6) $ostart = 0;
-if (!isset($alimit) or !is_numeric($alimit) or strlen($alimit) != 6) $alimit = 20;
-if (!isset($dlimit) or !is_numeric($dlimit) or strlen($dlimit) != 6) $dlimit = 20;
-if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) != 6) $olimit = 20;
+if (!isset($astart) or !is_numeric($astart) or strlen($astart) <= 6) $astart = 0;
+if (!isset($dstart) or !is_numeric($dstart) or strlen($dstart) <= 6) $dstart = 0;
+if (!isset($ostart) or !is_numeric($ostart) or strlen($ostart) <= 6) $ostart = 0;
+if (!isset($alimit) or !is_numeric($alimit) or strlen($alimit) <= 6) $alimit = 20;
+if (!isset($dlimit) or !is_numeric($dlimit) or strlen($dlimit) <= 6) $dlimit = 20;
+if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) <= 6) $olimit = 20;
 
 ## secondary sorts
 # advanced table

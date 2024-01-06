@@ -107,6 +107,7 @@ if (empty($r)) {
 }
 unset ($r);
 
+// SET DEFAULTS—santized
 $sort = trim(strtolower($sort ?? ''));
 $order = trim(strtolower($order ?? ''));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;

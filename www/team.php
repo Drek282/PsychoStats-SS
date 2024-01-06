@@ -66,7 +66,7 @@ if (isset($cms->input['cookieconsent'])) {
 	}
 }
 
-// SET DEFAULTS. Since they're basically the same for each list, we do this in a loop
+// SET DEFAULTS—sanitized. Since they're basically the same for each list, we do this in a loop
 foreach ($validfields as $var) {
 	switch (substr($var, 1)) {
 		case 'sort':

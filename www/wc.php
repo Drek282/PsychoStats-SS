@@ -83,6 +83,7 @@ $DEFAULT_LIMIT = 20;
 $validfields = array('sort','order','start','limit','q','search');
 $cms->theme->assign_request_vars($validfields, true);
 
+// SET DEFAULTS—sanitized
 $sort = trim(strtolower($sort));
 $order = trim(strtolower($order));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;

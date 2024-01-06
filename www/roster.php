@@ -89,11 +89,11 @@ if (empty($r)) {
 }
 unset ($r);
 
-// SET DEFAULTS
+// SET DEFAULTS—sanitized
 $dsort ??= $DEFAULT_PITCHER_SORT;
 $osort ??= $DEFAULT_POSITION_SORT;
 
-// SET DEFAULTS. Since they're basically the same for each list, we do this in a loop
+// Since they're basically the same for each list, we do this in a loop
 foreach ($validfields as $var) {
 	switch (substr($var, 1)) {
 		case 'order':

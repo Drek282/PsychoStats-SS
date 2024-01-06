@@ -107,11 +107,11 @@ if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) != 6) $olimit = 2
 # advanced table
 if ($asort != 'win_percent, pythag') {
 	switch ($asort) {
-		case 'win_percent':		$asort = $asort . ", pythag"; break;
-		case 'wins':			$asort = $asort . ", pythag"; break;
-		case 'team_rdiff':		$asort = $asort . ", pythag"; break;
-		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
+		case 'win_percent':
+		case 'wins':
+		case 'team_rdiff':
 		case 'pythag_plus':		$asort = $asort . ", pythag"; break;
+		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
 		default:				break;
 	}
 }

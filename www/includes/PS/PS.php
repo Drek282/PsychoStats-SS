@@ -1282,6 +1282,9 @@ function get_team_list($args = array()) {
 	);
 	$season = $args['season'];
 
+	// sanitize sort
+	$args['sort'] = ($this->db->column_exists(array($this->t_team_adv, $this->t_team_def, $this->t_team_off), $args['sort'])) ? $args['sort'] : 'win_percent';
+
 	# Get season length.
 	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
 	$season_l = $this->db->fetch_row(1, $cmd);

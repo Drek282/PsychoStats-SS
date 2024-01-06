@@ -86,15 +86,20 @@ foreach ($validfields as $var) {
 	}
 }
 
+// sanitize sorts
+$asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $asort)) ? $asort : 'season';
+$dsort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $dsort)) ? $dsort : 'season';
+$osort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $osort)) ? $osort : 'season';
+
 ## secondary sorts
 # advanced table
 if ($asort != 'season') {
 	switch ($asort) {
-		case 'win_percent':		$asort = $asort . ", pythag"; break;
-		case 'wins':			$asort = $asort . ", pythag"; break;
-		case 'team_rdiff':		$asort = $asort . ", pythag"; break;
-		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
+		case 'win_percent':
+		case 'wins':
+		case 'team_rdiff':
 		case 'pythag_plus':		$asort = $asort . ", pythag"; break;
+		case 'pythag':			$asort = $asort . ", team_rdiff"; break;
 		default:				break;
 	}
 }

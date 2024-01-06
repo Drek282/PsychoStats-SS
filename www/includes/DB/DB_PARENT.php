@@ -308,6 +308,41 @@ function table_exists($tbl) {
 	return ($check->num_rows) ? true : false;
 }
 
+// returns true if a column exists in a table or tables based on the key=id given
+function column_exists($tbls, $cols) {
+	$ca = explode(', ', $cols);
+	if (is_array($ca)) {
+		$f = 0;
+		foreach ($ca as $c) {
+			if  (is_array($tbls)) {
+				foreach ($tbls as $t) {
+					$cmd = "SHOW COLUMNS FROM $t LIKE '$c'";
+					$check = $this->query($cmd);
+					if ($check->num_rows) {
+						$f++;
+						break;
+					}
+				}
+			} else {
+				$cmd = "SHOW COLUMNS from $tbls LIKE '$c'";
+				$check = $this->query($cmd);
+				if ($check->num_rows) $f++;
+			}
+		}
+		return ($f == 2) ? true : false; 
+	}
+	if  (is_array($tbls)) {
+		foreach ($tbls as $t) {
+			$cmd = "SHOW COLUMNS FROM $t LIKE '$ca'";
+			$check = $this->query($cmd);
+			if ($check->num_rows) return true;
+		}
+	}
+	$cmd = "SHOW COLUMNS from $tbls LIKE $ca";
+	$check = $this->query($cmd);
+	return ($check->num_rows) ? true : false;
+}
+
 // returns true if a row exists based on the key=id given
 function exists($tbl, $key, $id=NULL) {
 	if ($id === NULL) {		// assume $key is in the form: 'mykey=value'

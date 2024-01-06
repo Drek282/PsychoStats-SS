@@ -83,6 +83,8 @@ Version 0.0.4b (in progress)
 * [Improved] Historical seasons dropdown menu removed from pages where it is not relevant.
 * [Fixed] Behaviour when function theme call is empty.
 * [Fixed] Sanitized input from GET and POST.
+* [Added] column_exists DB function.
+* [Fixed] Sanitized sort parameters.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

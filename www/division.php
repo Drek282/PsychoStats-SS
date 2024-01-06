@@ -103,6 +103,11 @@ if (!isset($alimit) or !is_numeric($alimit) or strlen($alimit) <= 6) $alimit = 2
 if (!isset($dlimit) or !is_numeric($dlimit) or strlen($dlimit) <= 6) $dlimit = 20;
 if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) <= 6) $olimit = 20;
 
+// sanitize sorts
+$asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $asort)) ? $asort : 'win_percent, team_rdiff';
+$dsort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $dsort)) ? $dsort : 'team_ra, team_era';
+$osort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $osort)) ? $osort : 'run_support, woba';
+
 ## secondary sorts
 # advanced table
 if ($asort != 'win_percent, pythag') {

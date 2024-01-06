@@ -311,6 +311,7 @@ function table_exists($tbl) {
 // returns true if a column exists in a table or tables based on the key=id given
 function column_exists($tbls, $cols) {
 	$ca = (str_contains($cols, ', ')) ? explode(', ', $cols) : $cols;
+	
 	if (is_array($ca)) {
 		$f = 0;
 		foreach ($ca as $c) {
@@ -337,8 +338,9 @@ function column_exists($tbls, $cols) {
 			$check = $this->query($cmd);
 			if ($check->num_rows) return true;
 		}
+		return false;
 	}
-	$cmd = "SHOW COLUMNS from $tbls LIKE $ca";
+	$cmd = "SHOW COLUMNS from $tbls LIKE '$ca'";
 	$check = $this->query($cmd);
 	return ($check->num_rows) ? true : false;
 }

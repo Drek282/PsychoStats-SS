@@ -94,7 +94,7 @@ unset ($r);
 // SET DEFAULTS—sanitized
 if (!isset($asort) or strlen($asort) > 64) $asort = 'win_percent, pythag';
 if (!isset($dsort) or strlen($dsort) > 64) $dsort = 'team_ra, team_era';
-if (!isset($osort) or strlen($osort) > 64) $osort = 'team_ra, team_era';
+if (!isset($osort) or strlen($osort) > 64) $osort = 'run_support, woba';
 if (!isset($aorder) or ($aorder != 'desc' || $aorder != 'asc')) $aorder = 'desc';
 if (!isset($dorder) or ($dorder != 'desc' || $dorder != 'asc')) $dorder = 'asc';
 if (!isset($oorder) or ($oorder != 'desc' || $oorder != 'asc')) $oorder = 'desc';

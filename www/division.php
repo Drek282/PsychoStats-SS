@@ -95,15 +95,15 @@ unset ($r);
 $asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : 'win_percent, pythag';
 $dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : 'team_ra, team_era';
 $osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : 'run_support, woba';
-if (!isset($aorder) or ($aorder != 'desc' || $aorder != 'asc')) $aorder = 'desc';
-if (!isset($dorder) or ($dorder != 'desc' || $dorder != 'asc')) $dorder = 'asc';
-if (!isset($oorder) or ($oorder != 'desc' || $oorder != 'asc')) $oorder = 'desc';
-if (!isset($astart) or !is_numeric($astart) or strlen($astart) <= 6) $astart = 0;
-if (!isset($dstart) or !is_numeric($dstart) or strlen($dstart) <= 6) $dstart = 0;
-if (!isset($ostart) or !is_numeric($ostart) or strlen($ostart) <= 6) $ostart = 0;
-if (!isset($alimit) or !is_numeric($alimit) or strlen($alimit) <= 6) $alimit = 20;
-if (!isset($dlimit) or !is_numeric($dlimit) or strlen($dlimit) <= 6) $dlimit = 20;
-if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) <= 6) $olimit = 20;
+if (!in_array($aorder, array('asc','desc'))) $aorder = 'desc';
+if (!in_array($dorder, array('asc','desc'))) $dorder = 'desc';
+if (!in_array($oorder, array('asc','desc'))) $oorder = 'desc';
+if (!is_numeric($astart) || $astart < 0) $astart = 0;
+if (!is_numeric($dstart) || $dstart < 0) $dstart = 0;
+if (!is_numeric($ostart) || $ostart < 0) $ostart = 0;
+if (!is_numeric($alimit) || $alimit < 0 || $alimit > 100) $alimit = 20;
+if (!is_numeric($dlimit) || $dlimit < 0 || $dlimit > 100) $dlimit = 20;
+if (!is_numeric($olimit) || $olimit < 0 || $olimit > 100) $olimit = 20;
 
 // sanitize sorts
 $asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $asort)) ? $asort : 'win_percent, team_rdiff';

@@ -86,7 +86,7 @@ $validfields = array('sort','order','start','limit','q','search');
 $cms->theme->assign_request_vars($validfields, true);
 
 // SET DEFAULTS—sanitized
-$sort = trim(strtolower($sort));
+$sort = (isset($sort) and strlen($sort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $sort) : $DEFAULT_SORT;
 $order = trim(strtolower($order));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
 if (!in_array($order, array('asc','desc'))) $order = 'desc';
@@ -104,6 +104,9 @@ if ($sort != 'win_percent, pythag') {
 		default:				break;
 	}
 }
+
+// sanitize sorts
+$sort = ($ps->db->column_exists(array($ps->t_team, $ps->t_team_wc, $ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $sort)) ? $sort : $DEFAULT_SORT;
 
 // If a language is passed from GET/POST update the user's cookie. 
 if (isset($cms->input['language'])) {

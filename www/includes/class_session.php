@@ -655,6 +655,7 @@ function save_login($userid, $password) {
 	global $cookieconsent;
 	$token = substr(md5(md5($_SERVER["UNIQUE_ID"] . uniqid(mt_rand(), true)) . $userid . $password), mt_rand(0,24), 8);
 	$ary = array('userid' => $userid, 'password' => $password, 'token' => $token);
+	//$data = $this->encrypt(base64_encode(serialize($ary)));
 	// save the auto-login key to the user table so we can verify it later when the user tries to auto-login again
 	if (!empty($this->config['db_user_table'])) {
 		$cmd = $this->db->update($this->config['db_user_table'], array( $this->config['db_user_login_key'] => $token ), 

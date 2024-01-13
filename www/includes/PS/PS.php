@@ -1282,9 +1282,6 @@ function get_team_list($args = array()) {
 	);
 	$season = $args['season'];
 
-	// sanitize sort
-	$args['sort'] = ($this->db->column_exists(array($this->t_team, $this->t_team_adv, $this->t_team_def, $this->t_team_off, $this->t_team_ids_names), $args['sort'])) ? $args['sort'] : 'win_percent';
-
 	# Get season length.
 	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
 	$season_l = $this->db->fetch_row(1, $cmd);
@@ -1460,9 +1457,6 @@ function get_division_list($args = array()) {
 		'where'		=> '',
 		'allowall'	=> 0,
 	);
-
-	// sanitize sort
-	$args['sort'] = ($this->db->column_exists(array($this->t_team_adv, $this->t_team_def, $this->t_team_off), $args['sort'])) ? $args['sort'] : 'win_percent';
 
 	$cmd  = "SELECT COUNT(DISTINCT adv.team_id) totalmembers,adv.season,adv.team_id,adv.divisionname,SUM(adv.win_percent) win_percent,SUM(adv.team_rdiff) team_rdiff,";
 	$cmd .= "def.season,def.team_id,SUM(def.team_ra) team_ra,SUM(def.team_whip) team_whip,SUM(def.team_drat) team_drat,";

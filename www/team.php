@@ -29,6 +29,7 @@ $cms->theme->page_title('PsychoStats for Scoresheet - Individual Team Stats');
 
 // maximum team ID's to load for ipaddr, name, and worldid
 $MAX_TEAM_IDS = 10;
+$DEFAULT_SORT = 'season';
 
 $validfields = array(
 	'id',
@@ -68,12 +69,14 @@ if (isset($cms->input['cookieconsent'])) {
 	}
 }
 
+// SET DEFAULT sorts—sanitized
+$asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : $DEFAULT_SORT;
+$dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : $DEFAULT_SORT;
+$osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : $DEFAULT_SORT;
+
 // SET DEFAULTS—sanitized. Since they're basically the same for each list, we do this in a loop
 foreach ($validfields as $var) {
 	switch (substr($var, 1)) {
-		case 'sort':
-			if (!$$var) $$var = 'season';
-			break;
 		case 'order':
 			if (!$$var or !in_array($$var, array('asc', 'desc'))) $$var = 'desc';
 			break;

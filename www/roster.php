@@ -92,8 +92,8 @@ if (empty($r)) {
 unset ($r);
 
 // SET DEFAULTS—sanitized
-$dsort ??= $DEFAULT_PITCHER_SORT;
-$osort ??= $DEFAULT_POSITION_SORT;
+$dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : $DEFAULT_PITCHER_SORT;
+$osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : $DEFAULT_POSITION_SORT;
 
 // Since they're basically the same for each list, we do this in a loop
 foreach ($validfields as $var) {
@@ -111,6 +111,10 @@ foreach ($validfields as $var) {
 		        break;
 	}
 }
+
+// sanitize sorts
+$dsort = ($ps->db->column_exists(array($ps->t_team_rpi), $dsort)) ? $dsort : $DEFAULT_PITCHER_SORT;
+$osort = ($ps->db->column_exists(array($ps->t_team_rpo), $osort)) ? $osort : $DEFAULT_POSITION_SORT;
 
 $roster = $ps->get_team_roster(array(
 	'season'		=> $season,

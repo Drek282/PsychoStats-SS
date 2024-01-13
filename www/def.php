@@ -110,13 +110,16 @@ if (empty($r)) {
 unset ($r);
 
 // SET DEFAULTS—santized
-$sort = trim(strtolower($sort ?? ''));
+$sort = (isset($sort) and strlen($sort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $sort) : $DEFAULT_SORT;
 $order = trim(strtolower($order ?? ''));
 if (!preg_match('/^\w+$/', $sort)) $sort = $DEFAULT_SORT;
 if (!in_array($order, array('asc','desc'))) $order = 'asc';
 if (!is_numeric($start) || $start < 0) $start = 0;
 if (!is_numeric($limit) || $limit < 0 || $limit > 100) $limit = $DEFAULT_LIMIT;
 $q = trim($q ?? '');
+
+// sanitize sorts
+$sort = ($ps->db->column_exists(array($ps->t_team, $ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $sort)) ? $sort : $DEFAULT_SORT;
 
 # secondary sorts
 if ($sort != 'team_ra, team_era') {

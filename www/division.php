@@ -106,9 +106,9 @@ if (!isset($dlimit) or !is_numeric($dlimit) or strlen($dlimit) <= 6) $dlimit = 2
 if (!isset($olimit) or !is_numeric($olimit) or strlen($olimit) <= 6) $olimit = 20;
 
 // sanitize sorts
-$asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $asort)) ? $asort : 'win_percent, team_rdiff';
-$dsort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $dsort)) ? $dsort : 'team_ra, team_era';
-$osort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $osort)) ? $osort : 'run_support, woba';
+$asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $asort)) ? $asort : 'win_percent, team_rdiff';
+$dsort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $dsort)) ? $dsort : 'team_ra, team_era';
+$osort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $osort)) ? $osort : 'run_support, woba';
 
 ## secondary sorts
 # advanced table

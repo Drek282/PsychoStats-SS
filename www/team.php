@@ -69,14 +69,13 @@ if (isset($cms->input['cookieconsent'])) {
 	}
 }
 
-// SET DEFAULT sorts—sanitized
-$asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : $DEFAULT_SORT;
-$dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : $DEFAULT_SORT;
-$osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : $DEFAULT_SORT;
-
 // SET DEFAULTS—sanitized. Since they're basically the same for each list, we do this in a loop
 foreach ($validfields as $var) {
 	switch (substr($var, 1)) {
+		case 'sort':
+			$$var = ($$var and strlen($$var) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $$var) : $DEFAULT_SORT;
+			$$var = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $$var)) ? $$var : $DEFAULT_SORT;
+			break;
 		case 'order':
 			if (!$$var or !in_array($$var, array('asc', 'desc'))) $$var = 'desc';
 			break;
@@ -90,11 +89,6 @@ foreach ($validfields as $var) {
 		        break;
 	}
 }
-
-// sanitize sorts
-$asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $asort)) ? $asort : 'season';
-$dsort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $dsort)) ? $dsort : 'season';
-$osort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off), $osort)) ? $osort : 'season';
 
 ## secondary sorts
 # advanced table

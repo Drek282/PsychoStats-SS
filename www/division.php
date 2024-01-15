@@ -95,15 +95,23 @@ unset ($r);
 $asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : 'win_percent, pythag';
 $dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : 'team_ra, team_era';
 $osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : 'run_support, woba';
-if (!in_array($aorder, array('asc','desc'))) $aorder = 'desc';
-if (!in_array($dorder, array('asc','desc'))) $dorder = 'desc';
-if (!in_array($oorder, array('asc','desc'))) $oorder = 'desc';
-if (!is_numeric($astart) || $astart < 0) $astart = 0;
-if (!is_numeric($dstart) || $dstart < 0) $dstart = 0;
-if (!is_numeric($ostart) || $ostart < 0) $ostart = 0;
-if (!is_numeric($alimit) || $alimit < 0 || $alimit > 100) $alimit = 20;
-if (!is_numeric($dlimit) || $dlimit < 0 || $dlimit > 100) $dlimit = 20;
-if (!is_numeric($olimit) || $olimit < 0 || $olimit > 100) $olimit = 20;
+
+// SET DEFAULTS—sanitized. Since they're basically the same for each list, we do this in a loop
+foreach ($validfields as $var) {
+	switch (substr($var, 1)) {
+		case 'order':
+			if (!$$var or !in_array($$var, array('asc', 'desc'))) $$var = 'desc';
+			break;
+		case 'start':
+			if (!is_numeric($$var) || $$var < 0) $$var = 0;
+			break;
+		case 'limit':
+			if (!is_numeric($$var) || $$var < 0 || $$var > 100) $$var = 10;
+			break;
+		default:
+		        break;
+	}
+}
 
 // sanitize sorts
 $asort = ($ps->db->column_exists(array($ps->t_team_adv, $ps->t_team_def, $ps->t_team_off, $ps->t_team_ids_names), $asort)) ? $asort : 'win_percent, team_rdiff';

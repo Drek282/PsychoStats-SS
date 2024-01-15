@@ -6,6 +6,9 @@
 
 	<div id="ps-page-title">
 		<div class="inner">
+			<span>
+				<a href="roster.php?id={$id}{if $season}&season={$season}{/if}" title="<#Clear Sorts#>" alt="<#Clear Sorts#>"><img id="ps-search-clear" src="{theme->url}/img/icons/turd.gif"></a>
+			</span>
 			<h1><#Team Roster Statistics#> :: Team # {$team.team_id} :: <a href="team.php?id={$team.team_id}">{$team.team_name|escape}</a></h1>
 
 			<h3><#these tables reflect the player rosters as of the last Scoresheet update for season#>: <strong>{$season}</strong></h3>

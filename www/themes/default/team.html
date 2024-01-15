@@ -6,6 +6,9 @@
 
 	<div id="ps-page-title">
 		<div class="inner">
+			<span>
+				<a href="team.php?id={$id}" title="<#Clear Sorts#>" alt="<#Clear Sorts#>"><img id="ps-search-clear" src="{theme->url}/img/icons/turd.gif"></a>
+			</span>
             {if psss_user_can_edit_team($team) && $team.userid}
 			<span>[ <a href="{url _base='editteam.php' _ref=1  id=$team.team_id}"><#Edit Team#></a> ]</span>
             {/if}

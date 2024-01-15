@@ -85,6 +85,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Sanitized input from GET and POST.
 * [Added] column_exists DB function.
 * [Fixed] Sanitized sort parameters.
+* [Added] Clear sorts button for pages without search functionality.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

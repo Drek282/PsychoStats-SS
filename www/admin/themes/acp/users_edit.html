@@ -124,7 +124,9 @@ delete_message = "<#Are you sure you want to delete the user?#>";
 	<p class="err" id="err-password2">{$errors.password2|escape}</p>
 	<label><#Retype Password#>:</label>
 	<input name="password2" type="password" class="field" autocomplete="off">
+	{if $id}
 	<p class="small"><strong><#IMPORTANT#>:</strong>  <#If you use a password manager that fills in passwords automatically, or your browser does the same thing, make sure the passwords fields are blank or you will change the password for your user.#></p>
+	{/if}
 </div>
 
 <div>

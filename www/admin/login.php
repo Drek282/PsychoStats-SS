@@ -34,12 +34,8 @@ $form = $cms->new_form();
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
 
-// save a new form key in the users session cookie
-// this will also be put into a 'hidden' field in the form
-if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
-
 $validfields = array('submit','cancel','ref');		
-$_GET['ref'] = htmlspecialchars($_GET['ref']); //XSS Fix. Thanks to JS2007
+$_GET['ref'] = htmlspecialchars($_GET['ref'] ?? null); //XSS Fix. Thanks to JS2007
 $cms->theme->assign_request_vars($validfields, true);
 
 if ($cancel) {

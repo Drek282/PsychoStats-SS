@@ -86,6 +86,10 @@ Version 0.0.4b (in progress)
 * [Added] column_exists DB function.
 * [Fixed] Sanitized sort parameters.
 * [Added] Clear sorts button for pages without search functionality.
+* [Improved] openssl cookie encryption, thanks to jangazata.
+* [Fixed] CSRF protection.
+* [Fixed] Persistent login failures.
+* [Improved] For multiple instances of PSSS hosted on an individual domain, cookies are no longer shared.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

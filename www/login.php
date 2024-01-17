@@ -34,9 +34,6 @@ $form = $cms->new_form();
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
 
-// save a new form key in the users session cookie
-// this will also be put into a 'hidden' field in the form
-if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
 
 
 $validfields = array('submit','cancel','ref');
@@ -60,7 +57,7 @@ if ($submit) {
 	// Wait a minute, I can't do this for logins, otherwise the overall
 	// login popup window won't work with CSRF enabled. This should be fine,
 	// CSRF is more targeted at user requests and not logins, I think.
-//	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
+	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
 	if ($valid) {
 		// attempt to authenticate

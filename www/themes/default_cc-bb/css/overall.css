@@ -249,6 +249,7 @@ div#ps-login-inner {
 	border: 1px solid black;
 	width: 300px;
 	font-size: 110%;
+	z-index: 10000;
 }
 
 /* --- OVERALL SEARCH POPUP --------------------------------------------- */

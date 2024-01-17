@@ -34,8 +34,6 @@ $form = $cms->new_form();
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
 
-
-
 $validfields = array('submit','cancel','ref');
 $_GET['ref'] = htmlspecialchars($_GET['ref'] ?? ''); //XSS Fix. Thanks to JS2007
 $cms->theme->assign_request_vars($validfields, true);
@@ -54,9 +52,6 @@ if ($submit) {
 	$input = $form->values();
 	$valid = !$form->has_errors();
 	// protect against CSRF attacks
-	// Wait a minute, I can't do this for logins, otherwise the overall
-	// login popup window won't work with CSRF enabled. This should be fine,
-	// CSRF is more targeted at user requests and not logins, I think.
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
 	if ($valid) {

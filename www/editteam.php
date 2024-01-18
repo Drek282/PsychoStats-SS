@@ -62,7 +62,13 @@ if ($id) {
 	}
 
 	if (!$team) {
-		$data = array( 'message' => $cms->trans("Invalid team ID Specified") );
+		$data = array(
+			'oscript'		=> $oscript,
+			'division'		=> $division,
+			'wildcard'		=> $wildcard,
+			'cookieconsent'	=> $cookieconsent,
+			'message' => $cms->trans("Invalid team ID Specified")
+		);
 		$cms->full_page_err(basename(__FILE__, '.php'), $data);
 		exit();
 	}
@@ -75,14 +81,21 @@ if ($id) {
 		}
 	}
 } else {
-	$data = array( 'message' => $cms->trans("Invalid team ID Specified") );
+	$data = array(
+		'oscript'		=> $oscript,
+		'division'		=> $division,
+		'wildcard'		=> $wildcard,
+		'cookieconsent'	=> $cookieconsent,
+		'message' => $cms->trans("Invalid team ID Specified")
+	);
 	$cms->full_page_err(basename(__FILE__, '.php'), $data);
 }
 
 // check privileges to edit this team
 if (!psss_user_can_edit_team($team)) {
 	$cms->theme->assign(array(
-		'lastupdate'		=> $ps->get_lastupdate(),
+		'oscript'		=> $oscript,
+		'lastupdate'	=> $ps->get_lastupdate(),
 		'season'		=> null,
 		'season_c'		=> null,
 		'division'		=> $division,
@@ -356,22 +369,23 @@ $uid = $team['team_id'];
 $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowed_html_tags']);
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';
 $cms->theme->assign(array(
-	'page'		=> basename(__FILE__, '.php'), 
-	'errors'	=> $form->errors(),
-	'team'		=> $team,
-	'team_user'	=> $team_user->to_form_input(),
-	'team_team_id'	=> $uid,
-	'allowed_html_tags' => $allowed_html_tags,
-	'accesslevels'	=> $team_user->accesslevels(),
-	'form'		=> $form->values(),
-	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'oscript'				=> $oscript,
+	'page'					=> basename(__FILE__, '.php'), 
+	'errors'				=> $form->errors(),
+	'team'					=> $team,
+	'team_user'				=> $team_user->to_form_input(),
+	'team_team_id'			=> $uid,
+	'allowed_html_tags' 	=> $allowed_html_tags,
+	'accesslevels'			=> $team_user->accesslevels(),
+	'form'					=> $form->values(),
+	'form_key'				=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'allow_username_change' => $allow_username_change, 
-	'lastupdate'		=> $ps->get_lastupdate(),
-	'season'		=> null,
-	'season_c'		=> null,
-	'division'		=> $division,
-	'wildcard'		=> $wildcard,
-	'cookieconsent'	=> $cookieconsent,
+	'lastupdate'			=> $ps->get_lastupdate(),
+	'season'				=> null,
+	'season_c'				=> null,
+	'division'				=> $division,
+	'wildcard'				=> $wildcard,
+	'cookieconsent'			=> $cookieconsent,
 ));
 
 // display the output

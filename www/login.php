@@ -112,9 +112,10 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'errors'	=> $form->errors(),
-	'form'		=> $form->values(),
-	'form_key'	=> '', //$ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'oscript'		=> $oscript,
+	'errors'		=> $form->errors(),
+	'form'			=> $form->values(),
+	'form_key'		=> '', //$ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'lastupdate'	=> $ps->get_lastupdate(),
 	'season'		=> null,
 	'season_c'		=> null,

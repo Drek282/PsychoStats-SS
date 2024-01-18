@@ -96,6 +96,7 @@ if (is_dir(PS_ROOTDIR . "/install")) {
 $ps		= null;				// global PsychoStats object
 $cms 		= null;				// global PsychoCMS object
 $php_scnm = $_SERVER['SCRIPT_NAME'];		// this is used so much we make sure it's global
+list($oscript) = array_reverse(explode('/', $php_scnm));	// originating script variable
 // Sanitize PHP_SELF and avoid XSS attacks.
 // We use the constant in places we know we'll be outputting $PHP_SELF to the user
 define("SAFE_PHP_SCNM", htmlentities($_SERVER['SCRIPT_NAME'], ENT_QUOTES, "UTF-8"));

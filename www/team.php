@@ -310,6 +310,7 @@ $shades = array(
 
 $cms->theme->assign_by_ref('team', $team);
 $cms->theme->assign(array(
+	'oscript'			=> $oscript,
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),
@@ -337,7 +338,7 @@ if ($team['team_id']) {
 } else {
 	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("No Team Found!"),
-		'message'	=> $cms->trans("Invalid team ID specified.") . " " . $cms->trans("Please go back and try again.")
+		'message'		=> $cms->trans("Invalid team ID specified.") . " " . $cms->trans("Please go back and try again.")
 	));
 }
 

@@ -164,9 +164,9 @@ if ($submit) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-//	'team'		=> $ps->get_team(6375, true),
-	'errors'	=> $form->errors(),
-	'form'		=> $form->values(),
+	'oscript'		=> $oscript,
+	'errors'		=> $form->errors(),
+	'form'			=> $form->values(),
 	'lastupdate'	=> $lastupdate,
 	'season_c'		=> null,
 	'division'		=> $division,

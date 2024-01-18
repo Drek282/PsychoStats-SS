@@ -63,8 +63,9 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no data in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Stats Found"),
-		'message'	=> $cms->trans("psss.py must be run before any stats will be shown."),
+		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -126,8 +127,9 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no awards in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Awards Found"),
-		'message'	=> $cms->trans("There are currently no awards to display."),
+		'message'		=> $cms->trans("There are currently no awards to display."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
@@ -177,6 +179,7 @@ $shades = array(
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'oscript'		=> $oscript,
 	'page'			=> basename(__FILE__,'.php'),
 	'awards'		=> $awards,
 	'language_list'	=> $cms->theme->get_language_list(),

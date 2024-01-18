@@ -75,8 +75,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then we have no data in the database
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Stats Found"),
-		'message'	=> $cms->trans("psss.py must be run before any stats will be shown."),
+		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -256,6 +257,7 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'oscript'		=> $oscript,
 	'q'				=> $q,
 	'search'		=> $search,
 	'results'		=> $results,

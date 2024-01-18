@@ -75,8 +75,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then we have no data in the database
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Stats Found"),
-		'message'	=> $cms->trans("psss.py must be run before any stats will be shown."),
+		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -95,8 +96,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
-		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
+		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -186,20 +188,21 @@ $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
 
 $cms->theme->assign(array(
-	'divisions'		=> $divisions,
+	'oscript'			=> $oscript,
+	'divisions'			=> $divisions,
 	'divisions_table'	=> $table->render(),
 	'totaldivisions'	=> $totaldivisions,
-	'language_list'	=> $cms->theme->get_language_list(),
-	'theme_list'	=> $cms->theme->get_theme_list(),
-	'language'	=> $cms->theme->language,
+	'language_list'		=> $cms->theme->get_language_list(),
+	'theme_list'		=> $cms->theme->get_theme_list(),
+	'language'			=> $cms->theme->language,
 	'lastupdate'		=> $ps->get_lastupdate(),
-	'seasons_h'		=> $ps->get_seasons_h(),
-	'season'		=> $season,
-	'season_c'		=> $season_c,
-	'division'		=> $division,
-	'wildcard'		=> $wildcard,
-	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-	'cookieconsent'	=> $cookieconsent,
+	'seasons_h'			=> $ps->get_seasons_h(),
+	'season'			=> $season,
+	'season_c'			=> $season_c,
+	'division'			=> $division,
+	'wildcard'			=> $wildcard,
+	'form_key'			=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'cookieconsent'		=> $cookieconsent,
 ));
 
 // display the output

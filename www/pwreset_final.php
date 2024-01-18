@@ -50,8 +50,9 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no data in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Teams in the Database"),
-		'message'	=> $cms->trans("There must be teams in the database before anyone can register."),
+		'message'		=> $cms->trans("There must be teams in the database before anyone can register."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -148,8 +149,9 @@ if ($submit and !isset($message)) {
 // if $message then we have an error
 if (isset($message)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Password Reset Failed"),
-		'message'	=> $message,
+		'message'		=> $message,
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -162,8 +164,9 @@ if (isset($message)) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'errors'	=> $form->errors(),
-	'form'		=> $form->values(),
+	'oscript'		=> $oscript,
+	'errors'		=> $form->errors(),
+	'form'			=> $form->values(),
 	'team_id_label' => $team_id_label,
 	'lastupdate'	=> $lastupdate,
 	'season'		=> null,

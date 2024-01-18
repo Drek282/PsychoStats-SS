@@ -75,8 +75,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then we have no data in the database
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Stats Found"),
-		'message'	=> $cms->trans("psss.py must be run before any stats will be shown."),
+		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -95,8 +96,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
-		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
+		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -256,6 +258,7 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'oscript'		=> $oscript,
 	'q'				=> $q,
 	'search'		=> $search,
 	'results'		=> $results,

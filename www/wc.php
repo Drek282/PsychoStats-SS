@@ -63,6 +63,7 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no data in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Stats Found"),
 		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -189,21 +190,22 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'search'	=> $search,
-	'results'	=> $results,
-	'totalranked'		=> $totalranked,
-	'teams'	=> $teams,
+	'oscript'		=> $oscript,
+	'search'		=> $search,
+	'results'		=> $results,
+	'totalranked'	=> $totalranked,
+	'teams'			=> $teams,
 	'teams_table'	=> $table->render(),
-	'total'		=> $total,
+	'total'			=> $total,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
-	'language'	=> $cms->theme->language,
+	'language'		=> $cms->theme->language,
 	'lastupdate'	=> $ps->get_lastupdate(),
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
-	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 ));
 

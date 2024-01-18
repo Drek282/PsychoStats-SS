@@ -141,8 +141,9 @@ if ($valid) {
 // if $message then we have an error
 if (isset($message)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Email Confirmation Failed"),
-		'message'	=> $message,
+		'message'		=> $message,
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -155,6 +156,7 @@ if (isset($message)) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'oscript'		=> $oscript,
 	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,

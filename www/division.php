@@ -77,8 +77,9 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
-		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
+		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'division'		=> null,
 		'wildcard'		=> null,
@@ -307,18 +308,19 @@ $shades = array(
 $team_ra = $division['team_ra'];
 $run_support = $division['run_support'];
 $cms->theme->assign(array(
+	'oscript'			=> $oscript,
 	'division'			=> $division,
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),
 	'lastupdate'		=> $ps->get_lastupdate(),
-	'seasons_h'		=> $ps->get_seasons_h(),
-	'season'		=> $season,
-	'season_c'		=> $season_c,
-	'wildcard'		=> $wildcard,
-	'shades'		=> $shades,
-	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-	'cookieconsent'	=> $cookieconsent,
+	'seasons_h'			=> $ps->get_seasons_h(),
+	'season'			=> $season,
+	'season_c'			=> $season_c,
+	'wildcard'			=> $wildcard,
+	'shades'			=> $shades,
+	'form_key'			=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'cookieconsent'		=> $cookieconsent,
 ));
 
 $basename = basename(__FILE__, '.php');
@@ -331,7 +333,7 @@ if ($division['divisionname']) {
 } else {
 	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("No Division Found!"),
-		'message'	=> $cms->trans("Invalid division ID specified.") . " " . $cms->trans("Please go back and try again.")
+		'message'		=> $cms->trans("Invalid division ID specified.") . " " . $cms->trans("Please go back and try again.")
 	));
 }
 

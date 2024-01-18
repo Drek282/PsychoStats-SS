@@ -248,6 +248,7 @@ $shades = array(
 
 $cms->theme->assign_by_ref('roster', $roster);
 $cms->theme->assign(array(
+	'oscript'			=> $oscript,
 	'pitcher_table'		=> $dtable->render(),
 	'position_table'	=> $otable->render(),
 	'pitcherpager'		=> $pitcherpager,
@@ -269,6 +270,7 @@ if (isset($team['team_id'])) {
 	$cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 } else {
 	$cms->full_page_err($basename, array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Team Found!"),
 		'message'	=> $cms->trans("This page cannot be accessed directly.") . " " . $cms->trans("Please go to a team page and access team rosters there.")
 	));

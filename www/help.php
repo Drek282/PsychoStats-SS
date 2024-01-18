@@ -36,8 +36,9 @@ $DEFAULT_LIMIT = 5;
 // if $q is longer than 100 characters we have a problem
 if (strlen($q) > 100) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("Invalid Search String"),
-		'message'	=> $cms->trans("Searches are limited to 100 characters in length."),
+		'message'		=> $cms->trans("Searches are limited to 100 characters in length."),
 		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 		'cookieconsent'	=> $cookieconsent,
 	));
@@ -107,6 +108,7 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no help entries in the database
 if (empty($results)) {
 	$cms->full_page_err('help', array(
+		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Help Entries Found"),
 		'message'	=> $cms->trans("There are currently no help entries to display."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -212,6 +214,7 @@ $shades = array(
 
 // assign variables to the theme
 $cms->theme->assign(array(
+	'oscript'		=> $oscript,
 	'search'		=> $search,
 	'results'		=> $results,
 	'search_blurb'	=> $search_blurb,

@@ -43,7 +43,7 @@
 </div>
 </form>
 {/if}
-{if $show_login and $cookieconsent}
+{if $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
 <a id="ps-login-link" href="login.php" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.gif" alt="<#Login#>"></a>
 {/if}
 <a id="ps-help-link" href="help.php" title="<#Help#>"><img id="ps-help-img" src="{theme->url}/img/menu-help-icon.gif" alt="<#Help#>"></a>
@@ -69,10 +69,10 @@
 {if $show_admin and $cookieconsent}
 	<li><a href="admin/index.php"><#Admin#></a></li>
 {/if}
-{if !psss_user_logged_in() and $show_login and $cookieconsent}
+{if !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
 	<li><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
 {/if}
-{if psss_user_logged_in()}
+{if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
 	<li><a href="logout.php"><#Logout#></a></li>
 {/if}
 </ul>
@@ -81,7 +81,7 @@
 
 {if !psss_user_logged_in() and $cookieconsent}
 <!--#LOGIN_POPUP#-->
-<form method="post" action="login.php">
+<form method="post" action="{url _base='login.php' _ref=1}">
 <div id="ps-login-popup" style="display: none">
 <div id="ps-login-inner">
 	{if $show_register}<div id="ps-login-reg"><#Newbie?#> -- <a href="register.php"><#Register!#></a></div>{/if}
@@ -112,7 +112,7 @@
 <div id="ps-login-popup" style="display: none">
 <div id="ps-login-inner">
 	<h4><#Logged in as#> <b>{$user.username|escape}</b></h4>
-	<p><a href="logout.php"><#Click here to logout!#></a></p>
+	<p><a href="{url _base='logout.php' _ref=1}"><#Click here to logout!#></a></p>
 </div>
 </div>
 <!---->

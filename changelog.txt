@@ -91,6 +91,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Persistent login failures.
 * [Improved] For multiple instances of PSSS hosted on an individual domain, cookies are no longer shared.
 * [Replaced] Broken Smarty include on team page.
+* [Improved] Login/logout behaviour.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

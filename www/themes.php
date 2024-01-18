@@ -65,14 +65,15 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'themes'	=> $themes,
-	'theme'		=> $cms->theme->theme,
+	'oscript'		=> $oscript,
+	'themes'		=> $themes,
+	'theme'			=> $cms->theme->theme,
 	'lastupdate'	=> $ps->get_lastupdate(),
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
-	'form_key'	=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 ));
 

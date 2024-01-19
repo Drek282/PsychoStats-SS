@@ -93,6 +93,7 @@ Version 0.0.4b (in progress)
 * [Replaced] Broken Smarty include on team page.
 * [Improved] Login/logout behaviour.
 * [Improved] When a session is expired a new session is generated.
+* [Changed] New session no longer generated on login.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

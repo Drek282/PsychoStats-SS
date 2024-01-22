@@ -74,8 +74,9 @@ Thank you to Jason Morriss, a.k.a. Stormtrooper, for all his original work. This
 
 Credit to wakachamo, Rosenstein, Solomenka and janzagata for their contributions.  Thanks also to RoboCop from APG for his support and encouragement.
 
-The basic text for the default privacy policy has been copied from the default WordPress privacy policy.
+Credit to Alessandro Poli for the most excellet rat used in the VRAT logo.
+Credit to Gustavo Ferreira for the bat used in the VRAT logo.
 
-The generic Hall of Fame Plaque image is a modified version of a creative commons licensed image downloaded from https://www.flickr.com/.
+The basic text for the default privacy policy has been copied from the default WordPress privacy policy.
 
 PsychoStats makes use of various open source libraries, some precompiled.  Among these libraries are jQuery, the Smarty Template Engine and JpGraph.  Most of the versions used in PsychoStats are obsolete but still functional and secure.  PsychoStats would not function without them and a special debt of gratitude is owed to the creators and maintainers of those libraries.

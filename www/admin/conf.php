@@ -60,7 +60,8 @@ $list = $ps->db->fetch_rows(1,
 	"HAVING COUNT(*) > 0 " .
 	"ORDER BY conftype"
 );
-$sections = array();
+
+$sections = array();	// sections order
 foreach ($list as $c) {
     $sections[ $c['conftype'] ] = $sections[ $c['conftype'] ] ?? null;
 	if (!$sections[ $c['conftype'] ]) {
@@ -88,11 +89,13 @@ foreach ($list as $l) {
 		'value'	=> $l['value'],
 	);
 }
+//print "<pre>"; print_r($section_labels); print "</pre>";
+//exit;
 
 // load the full config for the current conftype.
 // but we need to massage it into a slightly different format for easier use.
 $list = $ps->load_config_layout($ct, $where);
-$config_layout = array( 'general' => array() );	// we want 'general' first
+$config_layout = array( 'general' => array() );	// we want general to be first
 if (is_array($sections[$ct])) {
 	foreach ($sections[$ct] as $sec) {
         $list[$ct][$sec] = $list[$ct][$sec] ?? null;
@@ -114,7 +117,6 @@ if (!is_array($config_layout[$s])) {
 	$s = $sections[$ct][0];		// default to first section found
 }
 
-
 $cms->crumb("Config", psss_url_wrapper(array( '_base' => $php_scnm, 'ct' => $ct )));
 $cms->crumb($ct);
 
@@ -130,6 +132,18 @@ foreach ($config_layout as $sec => $list) {
 		$form->field($o['id'], $o['verifycodes']);
 	}
 }
+
+// we want the credits at the end of the theme section
+foreach ($sections['theme'] as $st => $val) {
+	if ($val != 'credits') continue;
+	$mv = $val;
+	unset($sections['theme'][$st]);
+	$sections['theme'] = array_values($sections['theme']);
+	array_push($sections['theme'],$mv);
+	unset($mv);
+	break;
+}
+//print "<pre>"; print_r($sections['theme']); print "</pre>";
 
 $section_errors = array();
 $section_errors['general'] = false;

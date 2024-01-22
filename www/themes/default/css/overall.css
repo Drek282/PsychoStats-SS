@@ -70,6 +70,12 @@ body.psychostats {
 	line-height: 28px;	/* Setting the line-height allows the menu to vertically align */
 	background: url(../img/header-menu-bg.png) repeat;
 }
+#ps-overall-menu a img.ps-ssicon {
+	position: relative;
+	top: 6px;
+	height: 16px;
+	width: 16px;
+}
 #ps-overall-menu ul {
 	margin: 0 1em;
 }
@@ -146,7 +152,7 @@ body.psychostats {
 /* --- HISTORICAL SEASONS DROP DOWN --------------------------------------------- */
 #ps-seasons_h-dropdown {
 	position: absolute;
-	right: 116px;
+	right: 132px;
 	top: 110px;
 	overflow: hidden;
 	z-index: 65535;

@@ -6,11 +6,14 @@
 
 <!--content block-->
 <div id="ps-main-content" class="ps-page-divisions">
-	<div id="ps-title-logo">
-		<img src="{theme->url}/img/v_bats_comp_64X64.webp" alt="The VRat" width="64" height="64">
-	</div>
 	<div id="ps-page-title">
+		<div id="ps-title-logo">
+			<img src="{theme->url}/img/v_bats_comp_64X64.webp" alt="The VRat" width="64" height="64">
+		</div>
 		<div class="inner">
+		<span>
+			<a href="divisions.php{if $season}?season={$season}{/if}" title="<#Clear Sorts#>" alt="<#Clear Sorts#>"><img id="ps-search-clear" src="{theme->url}/img/icons/turd.gif"></a>
+		</span>
 		<h1><#Divisions Statistics#></h1>
 		<h2><#season#> <strong>{$season}</strong> :: <#there are#> <strong>{$totaldivisions|commify}</strong> <#divisions in this league#></h2>
 		</div>

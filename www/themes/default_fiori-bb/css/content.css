@@ -88,19 +88,23 @@
 	text-align: left;
 	background: #fae5d2;
 }
-
 #ps-page-privacy div, #ps-page-privacy p {
 	padding: 5px;
 }
-
 #ps-page-privacy h1, #ps-page-privacy h2, #ps-page-privacy h3, #ps-page-privacy h4 {
     color: #2f2d30;
     font-weight: bold;
 	padding-top: 20px;
 }
-
 #ps-page-privacy p {
 	padding: 5px;
+}
+#ps-page-privacy ul {
+	margin-left: 20px;
+	background: #f0dbc9;
+}
+#ps-page-privacy li {
+	margin: 10px;
 }
 
 #ps-container div.ps-team-profile div.row {

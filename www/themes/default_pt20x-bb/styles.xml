@@ -17,6 +17,7 @@
 		<!-- Define overall stylesheets for all pages -->
 		<css href="css/overall.css" />
 		<css href="css/content.css" />
+		<css href="css/pt20x-bb.css" loadlast="1" />
 		<!-- Define overall javascripts for all pages -->
 		<script>
 			{* these variables are used in various js routines throughout the stats *}
@@ -36,15 +37,5 @@
 				<right>M d @ H:i:s</right>
 			</footer>
 		</common>
-		<!-- Team sessions ghantt chart image -->
-		<session interval="2" font="FF_FONT0" showfooter="1">
-			<margin top="5" right="5" bottom="" left="6" />
-			<title></title>
-			<frame margin="#EEEEEE" color="gray" width="0" />
-			<header color="black" bgcolor="#E4DCCE" hourstyle="HOURSTYLE_H24" />
-			<hgrid show="1" color1="#EEEEFF@0.5" color2="#DDDDFF@0.5" />
-			<hgrid2 show="1" color1="gray@0.7" color2="#E4DCCE@0.6" />
-			<bar showempty="0" vmargin="0.4" patternfill="#E4DCCE" fill="darkgreen" pattern="BAND_SOLID" shadow="" />
-		</session>
 	</image>
 </styles>

@@ -636,7 +636,6 @@ em.add-friend a {
 }
 #gallery div.theme .preview img {
 	max-width: 300px;					/* FF  */
-	width: expression(this.width > 300 ? '300px' : true);	/* IE6 */
 }
 #gallery div.theme .website a 	{ padding-left: 20px; background: url(../img/icons/house.png) no-repeat 0 50%; }
 #gallery div.theme .author  	{ padding-left: 20px; background: url(../img/icons/user_green.png) no-repeat 0 50%; }

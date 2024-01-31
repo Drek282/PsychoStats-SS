@@ -95,6 +95,7 @@ Version 0.0.4b (in progress)
 * [Improved] When a session is expired a new session is generated.
 * [Added] Credits page.
 * [Improved] Streamlined the CSS of child themes.
+* [Fixed] Compile to disk option no longer errors out.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -90,7 +90,6 @@ Version 0.0.4b (in progress)
 * [Fixed] CSRF protection.
 * [Fixed] Persistent login failures.
 * [Improved] For multiple instances of PSSS hosted on an individual domain, cookies are no longer shared.
-* [Replaced] Broken Smarty include on team page.
 * [Improved] Login/logout behaviour.
 * [Improved] When a session is expired a new session is generated.
 * [Added] Credits page.

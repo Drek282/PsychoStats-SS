@@ -31,7 +31,7 @@
 			{/if}
 		</div>
 		{if $conf.theme.permissions.show_team_profile and psss_user_logged_in()}
-			 <div w3-include-html="{theme->url}/team_profile.html"></div> 
+			{include file="../default/team_profile.html"}
 		{/if}
 	</div>
 

@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Reset Password');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 $validfields = array('submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 
@@ -48,6 +54,8 @@ $results = $ps->db->fetch_rows(1, $cmd);
 // if $results is empty then we have no data in the database
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("No Teams in the Database"),
 		'message'	=> $cms->trans("If there are no teams in the database, there are no users."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -165,6 +173,7 @@ if ($submit) {
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'lastupdate'	=> $lastupdate,

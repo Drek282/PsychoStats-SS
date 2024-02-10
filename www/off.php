@@ -26,6 +26,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Offensive Team Stats');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 // change this if you want the default sort of the team listing to be something else like 'batting_average'
 $DEFAULT_SORT = 'run_support, woba';
 $DEFAULT_LIMIT = 24;
@@ -76,6 +82,7 @@ $r = $ps->db->fetch_rows(1, $cmd);
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("No Stats Found"),
 		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -96,6 +103,8 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -258,6 +267,7 @@ $wildcard = $ps->get_total_wc();
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'q'				=> $q,
 	'search'		=> $search,
 	'results'		=> $results,

@@ -26,7 +26,7 @@
 <div id="ps-overall-menu">
 <div id="ps-menu-right">
 <!--#SEASONS_H_DROPDOWN#-->
-{if $season_c or isset($seasons_h)}
+{if !$maintenance and $season_c or isset($seasons_h)}
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
@@ -43,13 +43,16 @@
 </div>
 </form>
 {/if}
-{if $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
+{if !$maintenance and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
 <a id="ps-login-link" href="login.php" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.gif" alt="<#Login#>"></a>
 {/if}
+{if !$maintenance}
 <a id="ps-help-link" href="help.php" title="<#Help#>"><img id="ps-help-img" src="{theme->url}/img/menu-help-icon.gif" alt="<#Help#>"></a>
 <a href="credits.php" title="<#Credits#>"><img class="ps-ssicon" src="{theme->url}/img/icons/ss_bb_icon.gif" alt="Credits"></a>
+{/if}
 </div>
 <ul>
+{if !$maintenance}
 {if $conf.main.site_url}
 	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_name|escape}"><#Home#></a></li>
 	<li><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
@@ -76,11 +79,14 @@
 {if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
 	<li><a href="logout.php"><#Logout#></a></li>
 {/if}
+{else}
+	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
+{/if}
 </ul>
 </div>
 <!---->
 
-{if !psss_user_logged_in() and $cookieconsent}
+{if !$maintenance and !psss_user_logged_in() and $cookieconsent}
 <!--#LOGIN_POPUP#-->
 <form method="post" action="{url _base='login.php' _ref=1}">
 <div id="ps-login-popup" style="display: none">

@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Edit Team Profile');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 # Are there divisions or wilcards in this league?
 $division = $ps->get_total_divisions() - 1;
 $wildcard = $ps->get_total_wc();
@@ -64,6 +70,7 @@ if ($id) {
 	if (!$team) {
 		$data = array(
 			'oscript'		=> $oscript,
+			'maintenance'	=> $maintenance,
 			'division'		=> $division,
 			'wildcard'		=> $wildcard,
 			'cookieconsent'	=> $cookieconsent,
@@ -83,6 +90,7 @@ if ($id) {
 } else {
 	$data = array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
 		'cookieconsent'	=> $cookieconsent,
@@ -95,6 +103,7 @@ if ($id) {
 if (!psss_user_can_edit_team($team)) {
 	$cms->theme->assign(array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'lastupdate'	=> $ps->get_lastupdate(),
 		'season'		=> null,
 		'season_c'		=> null,
@@ -370,6 +379,7 @@ $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowe
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';
 $cms->theme->assign(array(
 	'oscript'				=> $oscript,
+	'maintenance'			=> $maintenance,
 	'page'					=> basename(__FILE__, '.php'), 
 	'errors'				=> $form->errors(),
 	'team'					=> $team,

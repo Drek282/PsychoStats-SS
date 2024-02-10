@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Theme Gallery');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
@@ -66,6 +72,7 @@ $wildcard = $ps->get_total_wc();
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'themes'		=> $themes,
 	'theme'			=> $cms->theme->theme,
 	'lastupdate'	=> $ps->get_lastupdate(),

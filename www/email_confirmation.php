@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Email Confirmation');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 $validfields = array('user','tpw');
 $cms->theme->assign_request_vars($validfields, true);
 
@@ -142,6 +148,7 @@ if ($valid) {
 if (isset($message)) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Email Confirmation Failed"),
 		'message'		=> $message,
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -157,6 +164,7 @@ if (isset($message)) {
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,

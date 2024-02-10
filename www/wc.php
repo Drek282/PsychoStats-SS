@@ -26,6 +26,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Wild Card Standings');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 // create the form variable
 $form = $cms->new_form();
 
@@ -64,6 +70,7 @@ $results = $ps->db->fetch_rows(1, $cmd);
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("No Stats Found"),
 		'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -191,6 +198,7 @@ $wildcard = $ps->get_total_wc();
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'search'		=> $search,
 	'results'		=> $results,
 	'totalranked'	=> $totalranked,

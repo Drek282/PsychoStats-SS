@@ -26,6 +26,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Team Roster');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 // change this if you want the default sort of the player listing to be something else like 'wins'
 $DEFAULT_PITCHER_SORT = 'pi_innings_pitched';
 $DEFAULT_POSITION_SORT = 'po_at_bats';
@@ -77,6 +83,8 @@ $r = $ps->db->fetch_rows(1, $cmd);
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($r)) {
 	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -249,6 +257,7 @@ $shades = array(
 $cms->theme->assign_by_ref('roster', $roster);
 $cms->theme->assign(array(
 	'oscript'			=> $oscript,
+	'maintenance'		=> $maintenance,
 	'pitcher_table'		=> $dtable->render(),
 	'position_table'	=> $otable->render(),
 	'pitcherpager'		=> $pitcherpager,

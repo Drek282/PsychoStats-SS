@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats for Scoresheet - Individual Team Stats');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 // maximum team ID's to load for ipaddr, name, and worldid
 $MAX_TEAM_IDS = 10;
 $DEFAULT_SORT = 'season';
@@ -311,6 +317,7 @@ $shades = array(
 $cms->theme->assign_by_ref('team', $team);
 $cms->theme->assign(array(
 	'oscript'			=> $oscript,
+	'maintenance'		=> $maintenance,
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),

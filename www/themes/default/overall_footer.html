@@ -1,7 +1,7 @@
 <script>var jlupdate = {$lastupdate};</script>
 <div id="ps-overall-footer">
 <div id="ps-footer-middle">
-{if $language_list and $cookieconsent}
+{if !$maintenance and $language_list and $cookieconsent}
 	<div class="language">
 		<form action="index.php" method="post">
 	    <input name="key" value="{$form_key}" type="hidden">
@@ -13,7 +13,7 @@
 		</form>
 	</div>
 {/if}
-{if $theme_list and count($theme_list) > 1 and $cookieconsent}
+{if !$maintenance and $theme_list and count($theme_list) > 1 and $cookieconsent}
 	<div class="theme">
 		[ <a href="themes.php"><#Change Theme#></a> ]
 	</div>
@@ -27,7 +27,7 @@
     {if ! $conf.theme.permissions.show_admin and $cookieconsent}
         <strong>[ <a href="admin/index.php"><#Admin Control Panel#></a> ]</strong>
     {/if}
-    {if $conf.main.security.show_privacy_policy}
+    {if !$maintenance and $conf.main.security.show_privacy_policy}
         <strong>
             [ <a href="privacy.php"><#Privacy Policy#></a> ]
         </strong>

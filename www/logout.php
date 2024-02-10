@@ -68,6 +68,7 @@ $wildcard = $ps->get_total_wc();
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,

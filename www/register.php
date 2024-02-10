@@ -27,6 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PsychoStats - Team Registration');
 
+// Is PsychoStats in maintenance mode?
+$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// Page cannot be viewed if the site is in maintenance mode.
+if ($maintenance) previouspage('index.php');
+
 $validfields = array('submit','cancel','ref');
 $cms->theme->assign_request_vars($validfields, true);
 		
@@ -51,6 +57,7 @@ $results = $ps->db->fetch_rows(1, $cmd);
 if (empty($results)) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("No Teams in the Database"),
 		'message'		=> $cms->trans("There must be teams in the database before anyone can register."),
 		'lastupdate'	=> $ps->get_lastupdate(),
@@ -89,6 +96,7 @@ if ($submit) {
 	if ($ps->conf['main']['registration'] == 'closed') {
 		$cms->full_page_err('awards', array(
 			'oscript'		=> $oscript,
+			'maintenance'	=> $maintenance,
 			'message_title'	=> $cms->trans("Teams Cannot Be Registered"),
 			'message'		=> $cms->trans("Team registration is currently disabled."),
 			'lastupdate'	=> $ps->get_lastupdate(),
@@ -225,6 +233,7 @@ if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->
 // assign variables to the theme
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
+	'maintenance'	=> $maintenance,
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'team_id_label' => $team_id_label,

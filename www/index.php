@@ -66,10 +66,10 @@ if (isset($cms->input['cookieconsent'])) {
 	previouspage($php_scnm);
 }
 
-// Is PSSS in maintenance mode?
+// Is PsychoStats in maintenance mode?
 $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
-// If PSVRAT is in maintenance mode display a message
+// If PschoStats is in maintenance mode display a message
 if ($maintenance) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,

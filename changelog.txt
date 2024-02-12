@@ -98,6 +98,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Security issues.
 * [Added] Maintenance mode.
 * [Removed] The substring "base_" from migrations sql file names.
+* [Improved] Current season function.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

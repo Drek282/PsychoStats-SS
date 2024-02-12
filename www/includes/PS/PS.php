@@ -542,26 +542,27 @@ function get_lastupdate() {
 
 /*
     * function get_season_c
-    * Returns the current season
+    * Returns the current season and updates it.
 */
 function get_season_c() {
+	// Get $season_c from $this->t_state.
 	$cmd = "SELECT season_c FROM $this->t_state LIMIT 1";
 	$season_c = $this->db->fetch_row(1, $cmd);
 	if (is_array($season_c)) $season_c = implode($season_c);
-	$season_c ??= '1900';
+	$season_c ??= null;
 
-	// Make sure that data exists for the current season.
-	// if it doesn't set current season to most recent season with data.
+	// Check to see that data exists for $season_c.
 	$cmd = "SELECT season FROM $this->t_team_adv WHERE season=$season_c LIMIT 1";
-	$data = $this->db->fetch_row(1, $cmd);
-	if (!$data) {
-		$cmd = "SELECT season FROM $this->t_team_adv ORDER BY season DESC LIMIT 1";
-		$season_c = $this->db->fetch_row(1, $cmd);
-		if (is_array($season_c)) $season_c = implode($season_c);
+	$check = $this->db->fetch_row(1, $cmd);
+	if (is_array($check)) $check = implode($check);
+
+	// If $season_c and $check don't match, update $this->t_state.
+	if ($check and $check != $season_c) {
+		$season_c = $check;
+		$this->db->query("UPDATE $this->t_state SET season_c=$season_c");
 	}
 	
-	$season_c ??= '1900';
-	return $season_c;
+	return $season_c ?? '1900';
 }
 
 /*

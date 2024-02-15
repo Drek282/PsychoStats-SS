@@ -1088,11 +1088,12 @@ function get_division_members($divisionname) {
 function get_tc_count($type, $limit) {
 
 
-	$values = "name.*,adv.team_id team_n,adv.divisionname,adv.games_back";
+	$values = "name.*,adv.season,adv.team_id team_n,adv.divisionname,adv.games_back";
 
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
 	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id=name.team_id ";
-	$cmd .= "HAVING games_back='$type' OR games_back='dtlc'";
+	$cmd .= "HAVING games_back='$type' OR games_back='dtlc' ";
+	$cmd .= "ORDER BY adv.season DESC ";
 
 	$results = array();
 	$results = $this->db->fetch_rows(1, $cmd);
@@ -1100,6 +1101,7 @@ function get_tc_count($type, $limit) {
 	// Count the number of division titles.
 	foreach ($results as $r => $v1) {
 		$titles[$results[$r]['team_id']]['count'] ??= 0;
+		if (!isset($titles[$results[$r]['team_id']]['lastseason'])) $titles[$results[$r]['team_id']]['lastseason'] = $results[$r]['season'];
 		if (!isset($titles[$results[$r]['team_id']]['team_id'])) $titles[$results[$r]['team_id']]['team_id'] = $results[$r]['team_id'];
 		if (!isset($titles[$results[$r]['team_id']]['team_name'])) $titles[$results[$r]['team_id']]['team_name'] = psss_table_team_link($results[$r]['team_name'], $titles[$results[$r]['team_id']]);
 		if (!isset($titles[$results[$r]['team_id']]['divisionname'])) $titles[$results[$r]['team_id']]['divisionname'] = $results[$r]['divisionname'];
@@ -1109,7 +1111,8 @@ function get_tc_count($type, $limit) {
 
 	// Sort the array by count.
 	$count = array_column($titles, 'count');
-	array_multisort($count, SORT_DESC, $titles);
+
+	array_multisort($count, SORT_DESC, array_column($titles, 'lastseason'), SORT_DESC, $titles);
 	unset ($count);
 
 	// Return the first keys of the array by $limit.
@@ -1169,7 +1172,7 @@ function get_award($args = array()) {
 
 	$cmd .= $where;
 
-	$cmd .= "ORDER BY 1 $order ";
+	$cmd .= "ORDER BY 1 $order, adv.season DESC ";
 	$cmd .= "LIMIT $limit ";
 	
 	$award = array(

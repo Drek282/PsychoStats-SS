@@ -753,6 +753,7 @@ function fetch_eval($tpl) {
 	}
 
 	$source = $res['source_content'] ?? '';
+
 	$compiled = '';
 
 	$this->_compile_source('eval-template', $source, $compiled);

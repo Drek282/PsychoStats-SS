@@ -105,6 +105,8 @@ if ($submit) {
 		$cms->session->online_status(1, $u->userid());
 		if ($cms->input['autologin']) $cms->session->save_login($u->userid(), $u->password());
 		if (!empty($_REQUEST['ref']) and strpos($_REQUEST['ref'], 'loggedin') === false) {
+			$_REQUEST['ref']  = str_replace("pwreset","index",$_REQUEST['ref']);
+			$_REQUEST['ref']  = str_replace("index_final","index",$_REQUEST['ref']);
 			$_REQUEST['ref'] .= strpos($_REQUEST['ref'], '?') === false ? '?' : '&';
 			$_REQUEST['ref'] .= 'loggedin=1';
 		}

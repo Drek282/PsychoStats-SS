@@ -88,7 +88,7 @@ if ($submit) {
 	$input = $form->values();
 	$valid = !$form->has_errors();
 	// protect against CSRF attacks
-	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
+	//if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
 	$u =& $cms->new_user();
 
@@ -119,9 +119,12 @@ if ($submit) {
 			$ps->db->commit();
 
 			$cms->theme->assign(array(
-				'team'	=> $team,
-				'reg'	=> $userinfo,
+				'oscript'		=> $oscript,
+				'maintenance'	=> $maintenance,
+				'team'			=> $team,
+				'reg'			=> $userinfo,
 				'lastupdate'	=> $lastupdate,
+				'season'		=> null,
 				'season_c'		=> null,
 				'division'		=> $division,
 				'wildcard'		=> $wildcard,
@@ -177,6 +180,7 @@ $cms->theme->assign(array(
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'lastupdate'	=> $lastupdate,
+	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,

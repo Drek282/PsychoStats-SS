@@ -36,6 +36,8 @@ if ($maintenance) previouspage('index.php');
 $validfields = array('user','tpw');
 $cms->theme->assign_request_vars($validfields, true);
 
+if ($cms->user->logged_in()) previouspage('index.php');
+
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
@@ -50,11 +52,8 @@ $valid = true;
 if ($valid) {
 	$u = & $cms->new_user();
 
-	// lookup the username 
-	if (!$u->username_exists($user)) {
-		$message = $cms->trans("The user does not exist!");
-		$valid = false;
-	}
+	// lookup the username if it doesn't exist go to index page.
+	if (!$u->username_exists($user)) previouspage('index.php');
 }
 
 if ($valid) {
@@ -102,13 +101,16 @@ if ($valid) {
 		$cms->session->online_status(0, $userinfo['userid']);
 
 		$cms->theme->assign(array(
-			'team'	=> $team,
-			'reg'	=> $userinfo,
+			'oscript'		=> $oscript,
+			'maintenance'	=> $maintenance,
+			'team'			=> $team,
+			'reg'			=> $userinfo,
 			'lastupdate'	=> $lastupdate,
 			'season'		=> null,
 			'season_c'		=> null,
 			'division'		=> $division,
 			'wildcard'		=> $wildcard,
+			'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 			'cookieconsent'	=> $cookieconsent,
 			'admin_users_url'	=> $admin_users_url,
 		));
@@ -156,6 +158,7 @@ if (isset($message)) {
 		'wildcard'		=> null,
 		'season'		=> null,
 		'season_c'		=> null,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 		'cookieconsent'	=> $cookieconsent,
 	));
 	exit();
@@ -170,6 +173,7 @@ $cms->theme->assign(array(
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
+	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 ));
 

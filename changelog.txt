@@ -100,6 +100,7 @@ Version 0.0.4b (in progress)
 * [Removed] The substring "base_" from migrations sql file names.
 * [Improved] Current season function.
 * [Improved] Where award results are tied most recent is listed first.
+* [Fixed] Broken registration and password reset.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

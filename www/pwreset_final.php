@@ -25,7 +25,7 @@ define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
-$cms->theme->page_title('PsychoStats - Email Confirmation');
+$cms->theme->page_title('PsychoStats - Password Reset');
 
 // Is PsychoStats in maintenance mode?
 $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
@@ -33,7 +33,7 @@ $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
 
-$validfields = array('username','tpw','submit','cancel');
+$validfields = array('userid','tpw','submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
 		
 $team_id_label = $cms->trans("Team #");
@@ -78,7 +78,7 @@ $wildcard = $ps->get_total_wc();
 $lastupdate	= $ps->get_lastupdate();
 
 $form->default_modifier('trim');
-$form->field('username', 'blank');
+$form->field('userid', 'blank');
 $form->field('tpw', 'blank');
 $form->field('password', 'blank,password_match');
 $form->field('password2', 'blank');
@@ -89,7 +89,8 @@ if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 $u = & $cms->new_user();
 
 // load the userinfo
-$userinfo = $u->load_user($username, 'username');
+$userinfo = $u->load_user($userid, 'userid');
+
 if (!$userinfo) {
 	$message = $cms->trans("The user does not exist!");
 }
@@ -176,6 +177,7 @@ if (isset($message)) {
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
 	'maintenance'	=> $maintenance,
+	'username'		=> $userinfo['username'],
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'team_id_label' => $team_id_label,

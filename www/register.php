@@ -33,15 +33,17 @@ $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
 
-$validfields = array('submit','cancel','ref');
+$validfields = array('submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);
+
+// Set global season variable to default if undeclared.
+$season_c ??= $ps->get_season_c();
 		
 $team_id_label = $cms->trans("Team #");
 
 $form = $cms->new_form();
 
-//if ($cancel or $cms->user->logged_in()) previouspage('index.php');
-if ($cancel) previouspage('index.php');
+if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
@@ -174,8 +176,10 @@ if ($submit) {
 			$team = $ps->get_team(array('season_c' => $season_c, 'team_id' => $id));
 
 			$cms->theme->assign(array(
-				'team'	=> $team,
-				'reg'	=> $userinfo,
+				'oscript'		=> $oscript,
+				'maintenance'	=> $maintenance,
+				'team'			=> $team,
+				'reg'			=> $userinfo,
 				'lastupdate'	=> $lastupdate,
 				'season'		=> null,
 				'season_c'		=> null,

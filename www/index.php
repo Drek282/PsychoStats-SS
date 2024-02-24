@@ -24,7 +24,7 @@ define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
-$cms->theme->page_title('PsychoStats for Scoresheet - Overall Team Stats');
+$cms->theme->page_title('Standings—PSSS');
 
 // change this if you want the default sort of the team listing to be something else like 'wins'
 $DEFAULT_SORT = 'win_percent, pythag';

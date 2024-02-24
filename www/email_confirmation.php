@@ -25,18 +25,16 @@ define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
-$cms->theme->page_title('PsychoStats - Email Confirmation');
+$cms->theme->page_title('Email Confirmation—PSSS');
 
 // Is PsychoStats in maintenance mode?
 $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
-// Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+// Page cannot be viewed if the site is in maintenance mode or the user is logged in.
+if ($maintenance or $cms->user->logged_in()) previouspage('index.php');
 
 $validfields = array('user','tpw');
 $cms->theme->assign_request_vars($validfields, true);
-
-if ($cms->user->logged_in()) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;

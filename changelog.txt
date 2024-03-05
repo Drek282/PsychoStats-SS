@@ -103,6 +103,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Broken registration and password reset.
 * [Fixed] Broken ACP search functionality.
 * [Improved] Display of page names on browser tabs.
+* [Added] Note to "Reset Cookie Consent" button indicating that cookies will be deleted.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

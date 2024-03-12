@@ -26,48 +26,13 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Credits—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
-
-// create the form variable
-$form = $cms->new_form();
-
-// Get cookie consent status from the cookie if it exists.
-$cms->session->options['cookieconsent'] ??= false;
-($ps->conf['main']['security']['enable_cookieconsent']) ? $cookieconsent = $cms->session->options['cookieconsent'] : $cookieconsent = 1;
-if (isset($cms->input['cookieconsent'])) {
-	$cookieconsent = $cms->input['cookieconsent'];
-
-	// Update cookie consent status in the cookie if they are accepted.
-	// Delete coolies if they are rejected.
-	if ($cookieconsent) {
-		$cms->session->opt('cookieconsent', $cms->input['cookieconsent']);
-		$cms->session->save_session_options();
-
-		// save a new form key in the users session cookie
-		// this will also be put into a 'hidden' field in the form
-		if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
-		
-	} else {
-		$cms->session->delete_cookie();
-		$cms->session->delete_cookie('_id');
-		$cms->session->delete_cookie('_opts');
-		$cms->session->delete_cookie('_login');
-	}
-	previouspage($php_scnm);
-}
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
 
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,
 	'maintenance'	=> $maintenance,
-	'lastupdate'	=> $ps->get_lastupdate(),
+	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,

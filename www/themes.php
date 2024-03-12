@@ -27,22 +27,12 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Themes—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
-
-// create the form variable
-$form = $cms->new_form();
-
-// save a new form key in the users session cookie
-// this will also be put into a 'hidden' field in the form
-if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());	
 
 // collect url parameters ...
 $validfields = array('t');

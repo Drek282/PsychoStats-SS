@@ -27,9 +27,6 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Email Confirmation—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode or the user is logged in.
 if ($maintenance or $cms->user->logged_in()) previouspage('index.php');
 
@@ -39,11 +36,6 @@ $cms->theme->assign_request_vars($validfields, true);
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
-
-// Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
-$lastupdate	= $ps->get_lastupdate();
 
 $valid = true;
 
@@ -151,7 +143,7 @@ if (isset($message)) {
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Email Confirmation Failed"),
 		'message'		=> $message,
-		'lastupdate'	=> $ps->get_lastupdate(),
+		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,

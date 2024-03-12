@@ -27,14 +27,8 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Login—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
-
-// create the form variable
-$form = $cms->new_form();
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
@@ -113,10 +107,6 @@ if ($submit) {
 		previouspage(psss_url_wrapper('index.php'));
 	}
 }
-
-// Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(

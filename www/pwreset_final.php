@@ -27,9 +27,6 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('PW Reset—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
 
@@ -38,44 +35,12 @@ $cms->theme->assign_request_vars($validfields, true);
 		
 $team_id_label = $cms->trans("Team #");
 
-$form = $cms->new_form();
-
 //if ($cancel or $cms->user->logged_in()) previouspage('index.php');
 if ($cancel) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
 $cookieconsent = $cms->session->options['cookieconsent'];
-
-// Check to see if there is any data in the database before we continue.
-$cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
-
-$results = array();
-$results = $ps->db->fetch_rows(1, $cmd);
-
-// if $results is empty then we have no data in the database
-if (empty($results)) {
-	$cms->full_page_err('awards', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
-		'message_title'	=> $cms->trans("No Teams in the Database"),
-		'message'		=> $cms->trans("There must be teams in the database before anyone can register."),
-		'lastupdate'	=> $ps->get_lastupdate(),
-		'division'		=> null,
-		'wildcard'		=> null,
-		'season'		=> null,
-		'season_c'		=> null,
-		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-		'cookieconsent'	=> $cookieconsent,
-	));
-	exit();
-}
-unset ($results);
-
-// Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
-$lastupdate	= $ps->get_lastupdate();
 
 $form->default_modifier('trim');
 $form->field('userid', 'blank');
@@ -163,7 +128,7 @@ if (isset($message)) {
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Password Reset Failed"),
 		'message'		=> $message,
-		'lastupdate'	=> $ps->get_lastupdate(),
+		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,

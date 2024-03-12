@@ -27,9 +27,6 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Division—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
 
@@ -47,47 +44,20 @@ $cms->theme->assign_request_vars($validfields, true);
 if (!isset($season) or !is_numeric($season) or strlen($season) != 4) $season = $ps->get_season_c();
 $season_c ??= $ps->get_season_c();
 
-// create the form variable
-$form = $cms->new_form();
-
-// Get cookie consent status from the cookie if it exists.
-$cms->session->options['cookieconsent'] ??= false;
-($ps->conf['main']['security']['enable_cookieconsent']) ? $cookieconsent = $cms->session->options['cookieconsent'] : $cookieconsent = 1;
-if (isset($cms->input['cookieconsent'])) {
-	$cookieconsent = $cms->input['cookieconsent'];
-
-	// Update cookie consent status in the cookie if they are accepted.
-	// Delete coolies if they are rejected.
-	if ($cookieconsent) {
-		$cms->session->opt('cookieconsent', $cms->input['cookieconsent']);
-		$cms->session->save_session_options();
-
-		// save a new form key in the users session cookie
-		// this will also be put into a 'hidden' field in the form
-		if ($ps->conf['main']['security']['csrf_protection']) $cms->session->key($form->key());
-		
-	} else {
-		$cms->session->delete_cookie();
-		$cms->session->delete_cookie('_id');
-		$cms->session->delete_cookie('_opts');
-		$cms->session->delete_cookie('_login');
-	}
-}
-
 // Check to see if the season is in the database before we continue.
 $cmd = "SELECT season FROM $ps->t_team_adv WHERE season=$season LIMIT 1";
 
-$r = array();
-$r = $ps->db->fetch_rows(1, $cmd);
+$nodata = array();
+$nodata = $ps->db->fetch_rows(1, $cmd);
 
-// if $r is empty then the season is not in the database and someone is misbehaving
-if (empty($r)) {
+// if $nodata is empty then the season is not in the database and someone is misbehaving
+if (empty($nodata)) {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'lastupdate'	=> $ps->get_lastupdate(),
+		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -97,7 +67,7 @@ if (empty($r)) {
 	));
 	exit();
 }
-unset ($r);
+unset ($nodata);
 
 // SET DEFAULTS—sanitized
 $asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : 'win_percent, pythag';
@@ -294,9 +264,6 @@ $otable->column_attr('run_support', 'class', 'primary');
 $ps->division_offence_table_mod($otable);
 $cms->filter('division_offence_table_object', $otable);
 
-// Are wildcard statndings available?
-$wildcard = $ps->get_total_wc();
-
 // Number formats.
 $division['team_rdiff'] = sprintf("%.2f", $division['team_rdiff']);
 $division['team_drat'] = sprintf("%.2f", $division['team_drat']);
@@ -321,7 +288,7 @@ $cms->theme->assign(array(
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),
-	'lastupdate'		=> $ps->get_lastupdate(),
+	'lastupdate'		=> $lastupdate,
 	'seasons_h'			=> $ps->get_seasons_h(),
 	'season'			=> $season,
 	'season_c'			=> $season_c,

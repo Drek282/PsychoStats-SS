@@ -48,33 +48,6 @@ $cookieconsent = $cms->session->options['cookieconsent'];
 // Check to see if there is any data in the database before we continue.
 $cmd = "SELECT * FROM $ps->t_team_adv LIMIT 1";
 
-$results = array();
-$results = $ps->db->fetch_rows(1, $cmd);
-
-// if $results is empty then we have no data in the database
-if (empty($results)) {
-	$cms->full_page_err('awards', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
-		'message_title'	=> $cms->trans("No Teams in the Database"),
-		'message'	=> $cms->trans("If there are no teams in the database, there are no users."),
-		'lastupdate'	=> $ps->get_lastupdate(),
-		'division'		=> null,
-		'wildcard'		=> null,
-		'season'		=> null,
-		'season_c'		=> null,
-		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-		'cookieconsent'	=> $cookieconsent,
-	));
-	exit();
-}
-unset ($results);
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
-$lastupdate	= $ps->get_lastupdate();
-
 $form->default_modifier('trim');
 $form->field('email', 'email,email_match');
 $form->field('email2', 'email');
@@ -128,7 +101,6 @@ if ($submit) {
 				'season_c'		=> null,
 				'division'		=> $division,
 				'wildcard'		=> $wildcard,
-				'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 				'cookieconsent'	=> $cookieconsent,
 			));
 
@@ -184,7 +156,6 @@ $cms->theme->assign(array(
 	'season_c'		=> null,
 	'division'		=> $division,
 	'wildcard'		=> $wildcard,
-	'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'cookieconsent'	=> $cookieconsent,
 ));
 

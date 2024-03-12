@@ -27,15 +27,8 @@ $cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
 $ps->theme_setup($cms->theme);
 $cms->theme->page_title('Edit Team Profile—PSSS');
 
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
-
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance) previouspage('index.php');
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;
@@ -104,11 +97,12 @@ if (!psss_user_can_edit_team($team)) {
 	$cms->theme->assign(array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
-		'lastupdate'	=> $ps->get_lastupdate(),
+		'lastupdate'	=> $lastupdate,
 		'season'		=> null,
 		'season_c'		=> null,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 		'cookieconsent'	=> $cookieconsent,
 	));
 	$data = array( 'message' => $cms->trans("Insufficient privileges to edit team!") );
@@ -303,7 +297,7 @@ if ($submit) {
 				$cms->theme->assign(
 					array(
 						'user' => $user,
-						'lastupdate' 	=> $ps->get_lastupdate(),
+						'lastupdate' 	=> $lastupdate,
 						'season'		=> null,
 						'season_c' 		=> null,
 						'division' 		=> $division,
@@ -390,7 +384,7 @@ $cms->theme->assign(array(
 	'form'					=> $form->values(),
 	'form_key'				=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
 	'allow_username_change' => $allow_username_change, 
-	'lastupdate'			=> $ps->get_lastupdate(),
+	'lastupdate'			=> $lastupdate,
 	'season'				=> null,
 	'season_c'				=> null,
 	'division'				=> $division,

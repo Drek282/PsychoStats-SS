@@ -105,6 +105,7 @@ Version 0.0.4b (in progress)
 * [Improved] Display of page names on browser tabs.
 * [Added] Note to "Reset Cookie Consent" button indicating that cookies will be deleted.
 * [Improved] Moved redundant code to common.php.
+* [Fixed] Various issues, most related to code migration to common.php.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

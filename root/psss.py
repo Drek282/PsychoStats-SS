@@ -1564,7 +1564,7 @@ else:
 
 # Check to see if the stats have already been updated.
 # If the stats lastupdate < pagedate and grp check is set start the grp check loop.
-if ((check_loop == 0) and (lastupdate < pagedate) and (seasons_h[0] != season_c)):
+if ((check_loop == 0) and (lastupdate > pagedate) and (seasons_h[0] != season_c)):
 
     print(
             '''

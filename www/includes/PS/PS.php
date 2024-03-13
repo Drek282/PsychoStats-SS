@@ -552,7 +552,7 @@ function get_season_c() {
 	$season_c ??= null;
 
 	// Check to see that data exists for $season_c.
-	$cmd = "SELECT season FROM $this->t_team_adv WHERE season=$season_c LIMIT 1";
+	$cmd = "SELECT season FROM $this->t_team_adv ORDER BY season DESC LIMIT 1";
 	$check = $this->db->fetch_row(1, $cmd);
 	if (is_array($check)) $check = implode($check);
 

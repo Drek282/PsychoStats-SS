@@ -154,6 +154,8 @@ $cms->init();
 ///////////////////////////////////////////////////////////////
 ///////////    Code that applies to every page.    ////////////
 ///////////////////////////////////////////////////////////////
+$cms->init_theme($ps->conf['main']['theme'], $ps->conf['theme']);
+$ps->theme_setup($cms->theme);
 
 // create the form variable
 $form = $cms->new_form();
@@ -183,8 +185,31 @@ if (isset($cms->input['cookieconsent'])) {
 	previouspage($php_scnm);
 }
 
+# Are there divisions or wilcards in this league?
+$division = $ps->get_total_divisions() - 1;
+$wildcard = $ps->get_total_wc();
+$lastupdate	= $ps->get_lastupdate();
+
 // Is PsychoStats in maintenance mode?
 $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
+
+// If PSVRAT is in maintenance mode display a message
+if ($maintenance and !defined("PSYCHOSTATS_ADMIN_PAGE")) {
+	$cms->full_page_err('awards', array(
+		'oscript'		=> $oscript,
+		'maintenance'	=> $maintenance,
+		'message_title'	=> $cms->trans("PSVRat Maintenance"),
+		'message'		=> $cms->trans("Please try again later."),
+		'lastupdate'	=> $lastupdate,
+		'division'		=> null,
+		'wildcard'		=> null,
+		'season'		=> null,
+		'season_c'		=> null,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+		'cookieconsent'	=> $cookieconsent,
+	));
+	exit();
+}
 
 // Check to see if there is any data in the database before we continue.
 $cmd = "SELECT season FROM $ps->t_team_adv LIMIT 1";
@@ -192,7 +217,7 @@ $nodata = array();
 $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $nodata is empty then we have no data in the database
-if (empty($nodata)) {
+if (empty($nodata) and !defined("PSYCHOSTATS_ADMIN_PAGE") and $oscript != 'help.php' and $oscript != 'credits.php' and $oscript != 'privacy.php') {
 	$cms->full_page_err('awards', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
@@ -227,10 +252,5 @@ if (isset($cms->input['language'])) {
 	}
 	previouspage($php_scnm);
 }
-
-# Are there divisions or wilcards in this league?
-$division = $ps->get_total_divisions() - 1;
-$wildcard = $ps->get_total_wc();
-$lastupdate	= $ps->get_lastupdate();
 
 ?>

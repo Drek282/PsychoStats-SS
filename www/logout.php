@@ -26,6 +26,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Logout—PSSS');
 
 $validfields = array('ref');
+$_GET['ref'] = htmlspecialchars($_GET['ref'] ?? null); //XSS Fix. Thanks to JS2007
 $cms->theme->assign_request_vars($validfields, true);
 
 if (!$cms->user->logged_in()) previouspage('index.php');

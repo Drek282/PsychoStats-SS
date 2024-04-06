@@ -846,16 +846,21 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     # Iterate through division keys and create a division field.
     div = str()
-    my_regex = r"^<u>[A-Za-z]+ Standings, Pitching  +.+?</u>\n"
+    my_regex = r"^<u>([A-Za-z0-9 ]+) Standings, Pitching  +.+?</u>\n"
     for i in range(len(my_list)):
 
+        # Get division name and remove whitespace at end of name.
         if re.match(my_regex, my_list[i], re.MULTILINE):
-            div = my_list[i].split()[0]
-            div = div[1:]
-            div = re.sub(r'u>', '', div, 1, re.MULTILINE)
-        
+            div = re.match(my_regex, my_list[i], re.MULTILINE).group(1)
+            div = re.sub(r'( +$)', '', div, 1, re.MULTILINE)
+
+            # Replace spaces in division name with placeholder.
+            div = re.sub(r'( +)', '###', div, 4)
+            # Double quote the division name.
+            div = '"' + div + '"'
+
         # Generate the header line.
-        hl_regex = r"^<u>(:?[A-Za-z]+ |)Standings, Pitching  +.+?</u>\n"
+        hl_regex = r"^<u>(:?[A-Za-z0-9 ]+ |)Standings, Pitching  +.+?</u>\n"
         header_line = re.search(hl_regex, my_list[i], re.MULTILINE).group()
 
         # Delete the header line.
@@ -883,7 +888,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     my_list = list()
 
     # Set the header line for working_stats_def.
-    my_regex =  r"^<u>(:?[A-Za-z]+ |)Standings, Pitching "
+    my_regex =  r"^<u>(:?[A-Za-z0-9 ]+ |)Standings, Pitching "
     working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, 1)
     my_regex =  r"</u>$"
     working_stats_def = re.sub(my_regex, ' Division', working_stats_def, 1, re.MULTILINE)
@@ -930,6 +935,9 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Replace spaces with commas in working_stats_def, working_stats_wc and working_stats_off.
     my_regex =  r"( +)"
     working_stats_def = re.sub(my_regex, ',', working_stats_def_nr, 800)
+    # Replace the placeholder in division names with spaces.
+    working_stats_def = re.sub(r'###', ' ', working_stats_def, 800)
+
     if working_stats_wc:
         working_stats_wc = re.sub(my_regex, ',', working_stats_wc, 800)
     working_stats_off = re.sub(my_regex, ',', working_stats_off, 1600)

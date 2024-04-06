@@ -108,6 +108,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Various issues, most related to code migration to common.php.
 * [Fixed] Dynamic graphs broken due to code migration to common.php.
 * [Fixed] XSS vulnerability, thanks to JS2007.
+* [Improved] Handle division names with spaces and numbers.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

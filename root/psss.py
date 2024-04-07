@@ -42,7 +42,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     else:
         print(
             '''
-            FATAL:  You must configure an check string so that the script can tell if the weekly
+            FATAL:  You must configure a check string so that the script can tell if the weekly
                     game results have been released.  This should have been done for you when you
                     installed PsychoStats for Scoresheet Baseball.
 
@@ -87,7 +87,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         rendered_html = html2text.html2text(raw_lp_dump)
 
         # Check to see if the game results have been published.
-        if re.search(my_regex, rendered_html, re.MULTILINE):
+        if re.search(check_string, rendered_html):
 
             # Log entry.
             error_no += 1

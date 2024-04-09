@@ -56,7 +56,8 @@
 {if !$maintenance}
 {if $conf.main.site_url}
 	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_name|escape}"><#Home#></a></li>
-	<li><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<li class="first"><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
 {else}
 	<li class="first"><a href="index.php{if $season and $season != $season_c}?season={$season}{/if}" title="Overall Teams Standings"><#Overall#></a></li>
 {/if}
@@ -72,15 +73,19 @@
 	<li><a href="awards.php" title="Hall of Fame"><#HoF#></a></li>
 {/if}
 {if $show_admin and $cookieconsent}
-	<li><a href="admin/index.php"><#Admin#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
 {/if}
 {if !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
-	<li><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<li class="first"><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
 {/if}
 {if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
-	<li><a href="logout.php"><#Logout#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<li class="first"><a href="logout.php"><#Logout#></a></li>
 {/if}
 {else}
+	&nbsp;&nbsp;&nbsp;&nbsp;
 	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
 {/if}
 </ul>

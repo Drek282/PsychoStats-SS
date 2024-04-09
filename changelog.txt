@@ -111,6 +111,7 @@ Version 0.0.4b (in progress)
 * [Improved] Handle any characters in division names.
 * [Fixed] Stats not updating when run on a schedule.
 * [Improved] Certain functions handle negative numbers.
+* [Changed] Minor visual tweak.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

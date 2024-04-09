@@ -154,7 +154,7 @@ function negpos500($val) {
 
 function remove_zero_point_2($val) {
 	$val = sprintf("%.2f", $val);
-	return preg_replace('/^0\./', '.', $val);
+	return preg_replace('/^(-|)0\./', '$1.', $val);
 }
 
 function remove_zero_point_3($val) {

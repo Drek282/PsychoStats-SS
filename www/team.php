@@ -331,7 +331,7 @@ function negpos500($val) {
 }
 
 function remove_zero_point($val) {
-	return preg_replace('/^0\./', '.', $val);
+	return preg_replace('/^(-|)0\./', '$1.', $val);
 }
 
 function one_decimal_zero($val) {

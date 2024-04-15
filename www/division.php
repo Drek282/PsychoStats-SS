@@ -69,6 +69,7 @@ unset ($nodata);
 
 // SET DEFAULTS—sanitized
 $asort = (isset($asort) and strlen($asort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $asort) : 'win_percent, pythag';
+$dorder = (!$dorder or !in_array($dorder, array('asc', 'desc'))) ? $dorder = 'asc' : $dorder;
 $dsort = (isset($dsort) and strlen($dsort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $dsort) : 'team_ra, team_era';
 $osort = (isset($osort) and strlen($osort) <= 64) ? preg_replace('/[^A-Za-z0-9_\-\.]/', '', $osort) : 'run_support, woba';
 

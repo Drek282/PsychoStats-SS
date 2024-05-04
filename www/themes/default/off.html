@@ -24,7 +24,7 @@
 			<input id='q-hdr' name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field search">
 			<input name="sort" value="{$sort|escape}" type="hidden">
 			<input name="order" value="{$order|escape}" type="hidden">
-			<a href="off.php{if $season}?season={$season}{/if}" title="<#Clear Search#>" alt="<#Clear Search#>"><img id="ps-search-clear" src="{theme->url}/img/icons/turd.webp"></a>
+			<a href="off.php{if $season}?season={$season}{/if}" title="<#Clear Search#>" alt="<#Clear Search#>"><img id="ps-search-clear" src="{theme->parent_url}/img/icons/turd.webp"></a>
 {*
 			<input type="image" src="{theme->url}/img/icons/bullet_go.gif" style="vertical-align: middle">
 *}

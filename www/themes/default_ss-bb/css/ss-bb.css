@@ -421,6 +421,10 @@ img.img-delete { /* editdivision.php */
 	2column.css
 */
 
+#ps-hof-img {
+	background: url(../img/history.webp) no-repeat;
+}
+
 #ps-amazed-img {
 	background: url(../img/psvrat_logo_comp_284X284.webp) no-repeat;
 }

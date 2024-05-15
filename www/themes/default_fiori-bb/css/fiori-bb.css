@@ -654,6 +654,10 @@ img.img-delete { /* editdivision.php */
 	2column.css
 */
 
+#ps-hof-img {
+	background: url(../img/history.webp) no-repeat;
+}
+
 #ps-container .ps-column-sep {
 	background-color: #f0d9b8;
 	border-top: 1px dashed #8a8b79;

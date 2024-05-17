@@ -97,7 +97,7 @@
 {if !$maintenance and !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
 	<li class="first"><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
 {/if}
-{if psss_user_logged_in() and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
+{if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
 	<li class="first"><a href="logout.php"><#Logout#></a></li>
 {/if}
 </ul>

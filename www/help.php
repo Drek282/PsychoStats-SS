@@ -25,7 +25,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Help—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 // collect url parameters ...
 $validfields = array('q','search','like');

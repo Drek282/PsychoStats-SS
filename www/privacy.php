@@ -25,7 +25,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Privacy—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 $cms->theme->assign(array(
 	'oscript'		=> $oscript,

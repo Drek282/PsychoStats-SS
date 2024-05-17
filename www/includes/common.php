@@ -197,11 +197,11 @@ if (!defined("PSFILE_IMGCOMMON_PHP")) {
 	$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
 	// If PSVRAT is in maintenance mode display a message
-	if ($maintenance and !defined("PSYCHOSTATS_ADMIN_PAGE")) {
+	if ($maintenance and !$cms->user->is_admin() and !defined("PSYCHOSTATS_ADMIN_PAGE")) {
 		$cms->full_page_err('awards', array(
 			'oscript'		=> $oscript,
 			'maintenance'	=> $maintenance,
-			'message_title'	=> $cms->trans("PSVRat Maintenance"),
+			'message_title'	=> $cms->trans("PSSS Maintenance"),
 			'message'		=> $cms->trans("Please try again later."),
 			'lastupdate'	=> $lastupdate,
 			'division'		=> null,

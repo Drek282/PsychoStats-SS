@@ -25,7 +25,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Team Roster—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 // change this if you want the default sort of the player listing to be something else like 'wins'
 $DEFAULT_PITCHER_SORT = 'pi_innings_pitched';

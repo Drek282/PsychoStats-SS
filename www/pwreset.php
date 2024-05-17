@@ -29,7 +29,7 @@ $cms->theme->page_title('PW Reset—PSSS');
 $maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 $validfields = array('submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);

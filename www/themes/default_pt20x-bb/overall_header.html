@@ -27,7 +27,7 @@
 <div id="ps-overall-menu">
 <div id="ps-menu-right">
 <!--#SEASONS_H_DROPDOWN#-->
-{if !$maintenance and $season_c or isset($seasons_h)}
+{if $oscript != 'credits.php' and $oscript != 'help.php' and $oscript != 'privacy.php' and $oscript != 'themes.php' and !$maintenance or psss_user_is_admin() and $season_c or isset($seasons_h)}
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
@@ -44,16 +44,16 @@
 </div>
 </form>
 {/if}
-{if !$maintenance and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php' and $oscript != 'register.php' and $oscript != 'email_confirmation.php'}
+{if !$maintenance and psss_user_is_admin() or $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php' and $oscript != 'register.php' and $oscript != 'email_confirmation.php'}
 <a id="ps-login-link" href="login.php" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.gif" alt="<#Login#>"></a>
 {/if}
-{if !$maintenance}
+{if !$maintenance or psss_user_is_admin()}
 <a id="ps-help-link" href="help.php" title="<#Help#>"><img id="ps-help-img" src="{theme->url}/img/menu-help-icon.gif" alt="<#Help#>"></a>
 <a href="credits.php" title="<#Credits#>"><img class="ps-ssicon" src="{theme->url}/img/icons/ss_bb_icon.gif" alt="Credits"></a>
 {/if}
 </div>
 <ul>
-{if !$maintenance}
+{if !$maintenance or psss_user_is_admin()}
 {if $conf.main.site_url}
 	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_name|escape}"><#Home#></a></li>
 	&nbsp;&nbsp;&nbsp;&nbsp;
@@ -71,26 +71,31 @@
 	<li><a href="off.php{if $season and $season != $season_c}?season={$season}{/if}" title="Teams Offensive Statistics"><#Offensive#></a></li>
 {if $conf.main.awards.enable}
 	<li><a href="awards.php" title="Hall of Fame"><#HoF#></a></li>
-{/if}
-{if $show_admin and $cookieconsent}
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
-{/if}
-{if !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<li class="first"><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
-{/if}
-{if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<li class="first"><a href="logout.php"><#Logout#></a></li>
 {/if}
 {else}
+{if $conf.main.site_url}
+	<li class="first"><a href="{$conf.main.site_url|escape}" title="<#Go to#> {$conf.main.site_name|escape}"><#Home#></a></li>
 	&nbsp;&nbsp;&nbsp;&nbsp;
+{else}
+	<li class="first"><a href="index.php" title="<#Home#>"><#Home#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+{/if}
+{/if}
+{if $show_admin and $cookieconsent}
 	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+{/if}
+{if !$maintenance and !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
+	<li class="first"><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
+{/if}
+{if psss_user_logged_in() and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
+	<li class="first"><a href="logout.php"><#Logout#></a></li>
 {/if}
 </ul>
 </div>
 <!---->
+
 {if !$maintenance and !psss_user_logged_in() and $cookieconsent}
 <!--#LOGIN_POPUP#-->
 <form method="post" action="{url _base='login.php' _ref=1}">
@@ -106,7 +111,7 @@
 	<p>
 	<label><#Password#></label>
 	<input id="password" name="password" type="password" class="field">
-	<button type="submit"><img src="{theme->url}/img/go.gif" alt="go"></button>
+	<button type="submit"><img src="{theme->parent_url}/img/go.png" alt="go"></button>
 	</p>
 	<div id="ps-login-options">
 		<input id="ps-remember-login" name="autologin" type="checkbox" value="1">
@@ -135,5 +140,9 @@
 	<#This window will close in a few seconds.#>
 </div>
 <!---->
+{/if}
+
+{if $maintenance and psss_user_is_admin()}
+<div id="error"><h1>NOTICE:</h1>PSSS is currently in maintenance mode and can only be viewed by users with admin access.</div>
 {/if}
 

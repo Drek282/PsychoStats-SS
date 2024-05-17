@@ -26,7 +26,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Themes—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;

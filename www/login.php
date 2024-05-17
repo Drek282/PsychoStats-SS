@@ -25,8 +25,8 @@ define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Login—PSSS');
 
-// Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+// Page cannot be viewed if the site is in maintenance mode or show login is disabled.
+if ($maintenance and !$cms->user->is_admin() or !$show_login) previouspage('index.php');
 
 // If you are on this page $cookieconsent is assumed to be true.
 $cms->session->options['cookieconsent'] = true;

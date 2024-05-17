@@ -25,7 +25,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Defence—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 // change this if you want the default sort of the team listing to be something else like 'total_runs_against'
 $DEFAULT_SORT = 'team_ra, team_era';

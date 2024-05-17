@@ -114,6 +114,7 @@ Version 0.0.4b (in progress)
 * [Changed] Minor visual tweak.
 * [Fixed] Default defensive sort for division page.
 * [Fixed] Incorrect HoF column image.
+* [Improved] Maintenance mode now displays the stats to admins with a status note.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

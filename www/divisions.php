@@ -26,7 +26,7 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Divisions—PSSS');
 
 // Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 // change this if you want the default sort of the division listing to be something else like 'wins'
 $DEFAULT_SORT = 'win_percent, team_rdiff';

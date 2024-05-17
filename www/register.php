@@ -25,8 +25,8 @@ define("PSYCHOSTATS_PAGE", true);
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Register—PSSS');
 
-// Page cannot be viewed if the site is in maintenance mode.
-if ($maintenance) previouspage('index.php');
+// Page cannot be viewed or user is logged in.
+if ($maintenance or $cms->user->logged_in()) previouspage('index.php');
 
 $validfields = array('submit','cancel');
 $cms->theme->assign_request_vars($validfields, true);

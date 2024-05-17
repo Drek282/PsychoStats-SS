@@ -26,10 +26,11 @@ include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Logout—PSSS');
 
 $validfields = array('ref');
-$_GET['ref'] = htmlspecialchars($_GET['ref'] ?? null); //XSS Fix. Thanks to JS2007
+$_GET['ref'] = htmlspecialchars($_GET['ref'] ?? ''); //XSS Fix. Thanks to JS2007
 $cms->theme->assign_request_vars($validfields, true);
 
-if (!$cms->user->logged_in()) previouspage('index.php');
+# Page can only be viewed if user is logged in and site is not in maintenance mode.
+if (!$cms->user->logged_in() or $maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 $cms->session->online_status(0);
 

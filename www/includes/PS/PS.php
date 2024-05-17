@@ -2197,18 +2197,19 @@ function theme_setup(&$theme) {
 	$is_admin = $cms->user->is_admin();
 	$cms->input['loggedin'] = $cms->input['loggedin'] ?? null;
 	$theme->assign(array(
-		'show_ips'		=> $this->conf['theme']['permissions']['show_ips'] || $is_admin,
+		//'show_ips'			=> $this->conf['theme']['permissions']['show_ips'] || $is_admin,
 		//'show_team_ids'		=> $this->conf['theme']['permissions']['show_team_ids'] || $is_admin,
-		'show_login'		=> $this->conf['theme']['permissions']['show_login'] || $is_admin,
-		'show_register'		=> $this->conf['theme']['permissions']['show_register'] || $is_admin,
-		'show_version'		=> $this->conf['theme']['permissions']['show_version'] || $is_admin,
-		'show_admin'		=> $this->conf['theme']['permissions']['show_admin'],
-		'show_benchmark'	=> $this->conf['theme']['permissions']['show_benchmark'],
-		'show_team_icons'	=> $this->conf['theme']['permissions']['show_team_icons'],
-		'show_team_flags'	=> $this->conf['theme']['permissions']['show_team_flags'],
-		'loggedin'		=> ($cms->input['loggedin'] and $cms->user->logged_in()),
-		'shades'		=> $cms->session->opt('shades'),
-		'team_id_noun'		=> $this->team_id_noun(),
+		'show_login'			=> $this->conf['theme']['permissions']['show_login'] || $is_admin,
+		'show_register'			=> $this->conf['theme']['permissions']['show_register'] || $is_admin,
+		'show_version'			=> $this->conf['theme']['permissions']['show_version'] || $is_admin,
+		'show_admin'			=> $this->conf['theme']['permissions']['show_admin'],
+		'show_privacy_policy'	=> $this->conf['main']['security']['show_privacy_policy'],
+		'show_benchmark'		=> $this->conf['theme']['permissions']['show_benchmark'],
+		'show_team_icons'		=> $this->conf['theme']['permissions']['show_team_icons'],
+		'show_team_flags'		=> $this->conf['theme']['permissions']['show_team_flags'],
+		'loggedin'				=> ($cms->input['loggedin'] and $cms->user->logged_in()),
+		'shades'				=> $cms->session->opt('shades'),
+		'team_id_noun'			=> $this->team_id_noun(),
 		'team_id_noun_plural'	=> $this->team_id_noun(true),
 	));
 	$theme->assign_by_ref('conf', $this->conf);

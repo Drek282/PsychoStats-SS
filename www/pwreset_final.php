@@ -121,7 +121,7 @@ if ($submit and !isset($message)) {
 
 // if $message then we have an error
 if (isset($message)) {
-	$cms->full_page_err('awards', array(
+	$cms->full_page_err('pwreset_final', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Password Reset Failed"),

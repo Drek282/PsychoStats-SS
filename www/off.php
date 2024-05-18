@@ -46,7 +46,7 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('awards', array(
+	$cms->full_page_err('off', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),

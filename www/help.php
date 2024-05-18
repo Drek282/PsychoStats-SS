@@ -36,7 +36,7 @@ $DEFAULT_LIMIT = 5;
 
 // if $q is longer than 100 characters we have a problem
 if (strlen($q) > 100) {
-	$cms->full_page_err('awards', array(
+	$cms->full_page_err('help', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Invalid Search String"),

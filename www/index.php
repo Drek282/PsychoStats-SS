@@ -43,7 +43,7 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $nodata is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('awards', array(
+	$cms->full_page_err('index', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
@@ -73,7 +73,7 @@ $sort = ($ps->db->column_exists(array($ps->t_team, $ps->t_team_adv, $ps->t_team_
 
 // if $q is longer than 50 characters we have a problem
 if (strlen($q) > 50) {
-	$cms->full_page_err('awards', array(
+	$cms->full_page_err('index', array(
 		'oscript'		=> $oscript,
 		'maintenance'	=> $maintenance,
 		'message_title'	=> $cms->trans("Invalid Search String"),

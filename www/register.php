@@ -59,7 +59,7 @@ if ($submit) {
 	if ($ps->conf['main']['security']['csrf_protection']) $valid = ($valid and $form->key_is_valid($cms->session));
 
 	if ($ps->conf['main']['registration'] == 'closed') {
-		$cms->full_page_err('awards', array(
+		$cms->full_page_err('register', array(
 			'oscript'		=> $oscript,
 			'maintenance'	=> $maintenance,
 			'message_title'	=> $cms->trans("Teams Cannot Be Registered"),

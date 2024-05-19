@@ -21,6 +21,7 @@
  *	Version: $Id: index.php $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Standings—PSSS');
 
@@ -43,12 +44,9 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $nodata is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('index', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -73,9 +71,7 @@ $sort = ($ps->db->column_exists(array($ps->t_team, $ps->t_team_adv, $ps->t_team_
 
 // if $q is longer than 50 characters we have a problem
 if (strlen($q) > 50) {
-	$cms->full_page_err('index', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Invalid Search String"),
 		'message'		=> $cms->trans("Searches are limited to 50 characters in length."),
 		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
@@ -189,8 +185,6 @@ if ($season != $season_c) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'q'		=> $q,
 	'search'	=> $search,
 	'results'	=> $results,
@@ -203,7 +197,6 @@ $cms->theme->assign(array(
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'	=> $cms->theme->language,
-	'lastupdate'	=> $lastupdate,
 	'seasons_h'		=> $ps->get_seasons_h(),
 	'season'		=> $season,
 	'season_c'		=> $season_c,
@@ -214,7 +207,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 //$cms->theme->add_js('js/index.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

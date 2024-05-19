@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Divisions—PSSS');
 
@@ -45,12 +46,9 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $nodata is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('divisions', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -117,15 +115,12 @@ $ps->divisions_table_mod($table);
 $cms->filter('divisions_table_object', $table);
 
 $cms->theme->assign(array(
-	'oscript'			=> $oscript,
-	'maintenance'	=> $maintenance,
 	'divisions'			=> $divisions,
 	'divisions_table'	=> $table->render(),
 	'totaldivisions'	=> $totaldivisions,
 	'language_list'		=> $cms->theme->get_language_list(),
 	'theme_list'		=> $cms->theme->get_theme_list(),
 	'language'			=> $cms->theme->language,
-	'lastupdate'		=> $lastupdate,
 	'seasons_h'			=> $ps->get_seasons_h(),
 	'season'			=> $season,
 	'season_c'			=> $season_c,
@@ -136,7 +131,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 function psss_table_division_link2($name, $division) {

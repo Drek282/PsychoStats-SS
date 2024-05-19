@@ -22,11 +22,9 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('PW Reset—PSSS');
-
-// Is PsychoStats in maintenance mode?
-$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
 // Page cannot be viewed if the site is in maintenance mode.
 if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
@@ -90,11 +88,8 @@ if ($submit) {
 			$ps->db->commit();
 
 			$cms->theme->assign(array(
-				'oscript'		=> $oscript,
-				'maintenance'	=> $maintenance,
 				'team'			=> $team,
 				'reg'			=> $userinfo,
-				'lastupdate'	=> $lastupdate,
 				'season'		=> null,
 				'season_c'		=> null,
 				'division'		=> $division,
@@ -145,11 +140,8 @@ if ($submit) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -158,7 +150,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->theme->add_js('js/forms.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');

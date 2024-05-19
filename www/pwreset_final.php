@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('PW Reset—PSSS');
 
@@ -96,11 +97,8 @@ if ($submit and !isset($message)) {
 
 		// assign variables to the theme
 		$cms->theme->assign(array(
-			'oscript'		=> $oscript,
-			'maintenance'	=> $maintenance,
 			'username'		=> $userinfo['username'],
 			'team_id_label' => $team_id_label,
-			'lastupdate'	=> $lastupdate,
 			'season'		=> null,
 			'season_c'		=> null,
 			'division'		=> $division,
@@ -121,12 +119,9 @@ if ($submit and !isset($message)) {
 
 // if $message then we have an error
 if (isset($message)) {
-	$cms->full_page_err('pwreset_final', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Password Reset Failed"),
 		'message'		=> $message,
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -138,13 +133,10 @@ if (isset($message)) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'username'		=> $userinfo['username'],
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'team_id_label' => $team_id_label,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -154,7 +146,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

@@ -21,6 +21,7 @@
  *	Version $Id: awards.php 495 2008-06-18 18:41:37Z lifo $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('HoF—PSSS');
 
@@ -54,12 +55,9 @@ $results = $ps->db->fetch_rows(1, $cmd);
 
 // if $results is empty then we have no awards in the database
 if (empty($results)) {
-	$cms->full_page_err('awards', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("No Awards Found"),
 		'message'		=> $cms->trans("There are currently no awards to display."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
 		'season'		=> null,
@@ -109,14 +107,11 @@ $shades = array(
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'page'			=> basename(__FILE__,'.php'),
 	'awards'		=> $awards,
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -130,7 +125,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/2column.css');	// this page has a left column
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

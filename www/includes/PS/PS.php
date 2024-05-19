@@ -2194,11 +2194,15 @@ function parse_source($lp) {
 // allows the PS object to initialize some theme related variables, etc...
 function theme_setup(&$theme) {
 	global $cms;
+	global $basename, $maintenance, $lastupdate;
 	$is_admin = $cms->user->is_admin();
 	$cms->input['loggedin'] = $cms->input['loggedin'] ?? null;
 	$theme->assign(array(
 		//'show_ips'			=> $this->conf['theme']['permissions']['show_ips'] || $is_admin,
 		//'show_team_ids'		=> $this->conf['theme']['permissions']['show_team_ids'] || $is_admin,
+		'basename'				=> $basename ?? null,
+		'maintenance'			=> $maintenance,
+		'lastupdate'			=> $lastupdate,
 		'show_login'			=> $this->conf['theme']['permissions']['show_login'] || $is_admin,
 		'show_register'			=> $this->conf['theme']['permissions']['show_register'] || $is_admin,
 		'show_version'			=> $this->conf['theme']['permissions']['show_version'] || $is_admin,

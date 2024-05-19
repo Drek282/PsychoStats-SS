@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Edit Team Profile—PSSS');
 
@@ -61,14 +62,12 @@ if ($id) {
 
 	if (!$team) {
 		$data = array(
-			'oscript'		=> $oscript,
-			'maintenance'	=> $maintenance,
 			'division'		=> $division,
 			'wildcard'		=> $wildcard,
 			'cookieconsent'	=> $cookieconsent,
 			'message' => $cms->trans("Invalid team ID Specified")
 		);
-		$cms->full_page_err(basename(__FILE__, '.php'), $data);
+		$cms->full_page_err($basename, $data);
 		exit();
 	}
 	if ($team['userid']) {
@@ -81,22 +80,17 @@ if ($id) {
 	}
 } else {
 	$data = array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
 		'cookieconsent'	=> $cookieconsent,
 		'message' => $cms->trans("Invalid team ID Specified")
 	);
-	$cms->full_page_err(basename(__FILE__, '.php'), $data);
+	$cms->full_page_err($basename, $data);
 }
 
 // check privileges to edit this team
 if (!psss_user_can_edit_team($team)) {
 	$cms->theme->assign(array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
-		'lastupdate'	=> $lastupdate,
 		'season'		=> null,
 		'season_c'		=> null,
 		'division'		=> $division,
@@ -105,7 +99,7 @@ if (!psss_user_can_edit_team($team)) {
 		'cookieconsent'	=> $cookieconsent,
 	));
 	$data = array( 'message' => $cms->trans("Insufficient privileges to edit team!") );
-	$cms->full_page_err(basename(__FILE__, '.php'), $data);
+	$cms->full_page_err($basename, $data);
 	exit;
 }
 
@@ -114,7 +108,7 @@ if (!psss_user_can_edit_team($team)) {
 if ($cms->user->is_admin() and $del and $id and $team['team_id'] == $id) {
 	if (!$cms->user->delete_user($team['userid'])) {
 		$data = array( 'message' => $cms->trans("Error deleting user: " . $ps->db->errstr) );
-		$cms->full_page_err(basename(__FILE__, '.php'), $data);
+		$cms->full_page_err($basename, $data);
 		exit();
 	}
 	$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'name' => '', 'email' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $team['userid']);
@@ -295,8 +289,7 @@ if ($submit) {
 
 				$cms->theme->assign(
 					array(
-						'user' => $user,
-						'lastupdate' 	=> $lastupdate,
+						'user' 			=> $user,
 						'season'		=> null,
 						'season_c' 		=> null,
 						'division' 		=> $division,
@@ -335,7 +328,7 @@ if ($submit) {
 			}
 
 			// display the registration confirmation
-			$basename = basename(__FILE__, '.php') . '_confirmation';
+			$basename = $basename . '_confirmation';
 			$cms->theme->add_css('css/forms.css');
 			$cms->full_page($basename, $basename, $basename . '_header', $basename . '_footer');
 			exit;
@@ -371,8 +364,6 @@ $uid = $team['team_id'];
 $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowed_html_tags']);
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';
 $cms->theme->assign(array(
-	'oscript'				=> $oscript,
-	'maintenance'			=> $maintenance,
 	'page'					=> basename(__FILE__, '.php'), 
 	'errors'				=> $form->errors(),
 	'team'					=> $team,
@@ -382,8 +373,7 @@ $cms->theme->assign(array(
 	'accesslevels'			=> $team_user->accesslevels(),
 	'form'					=> $form->values(),
 	'form_key'				=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-	'allow_username_change' => $allow_username_change, 
-	'lastupdate'			=> $lastupdate,
+	'allow_username_change' => $allow_username_change,
 	'season'				=> null,
 	'season_c'				=> null,
 	'division'				=> $division,
@@ -392,7 +382,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_js('js/editteam.js');

@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Division—PSSS');
 
@@ -50,12 +51,9 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $nodata is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('division', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -281,13 +279,10 @@ $shades = array(
 $team_ra = $division['team_ra'];
 $run_support = $division['run_support'];
 $cms->theme->assign(array(
-	'oscript'			=> $oscript,
-	'maintenance'	=> $maintenance,
 	'division'			=> $division,
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),
-	'lastupdate'		=> $lastupdate,
 	'seasons_h'			=> $ps->get_seasons_h(),
 	'season'			=> $season,
 	'season_c'			=> $season_c,
@@ -297,7 +292,6 @@ $cms->theme->assign(array(
 	'cookieconsent'		=> $cookieconsent,
 ));
 
-$basename = basename(__FILE__, '.php');
 if ($division['divisionname']) {
 	// allow mods to have their own section on the left side bar
 	$ps->division_left_column_mod($division, $cms->theme);

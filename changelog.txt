@@ -116,6 +116,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Incorrect HoF column image.
 * [Improved] Maintenance mode now displays the stats to admins with a status note.
 * [Fixed] Incorrect script names in errors.
+* [Improved] Replaced $oscript with $basename.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

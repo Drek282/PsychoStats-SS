@@ -27,7 +27,7 @@
 <div id="ps-overall-menu">
 <div id="ps-menu-right">
 <!--#SEASONS_H_DROPDOWN#-->
-{if $oscript != 'credits.php' and $oscript != 'help.php' and $oscript != 'privacy.php' and $oscript != 'themes.php' and !$maintenance or psss_user_is_admin() and $season_c or isset($seasons_h)}
+{if $basename != 'awards' and $basename != 'credits' and $basename != 'help' and $basename != 'login' and $basename != 'logout' and $basename != 'privacy' and $basename != 'themes' and !$maintenance or psss_user_is_admin() and $season_c or isset($seasons_h)}
 <form method="post">
 <div id="ps-seasons_h-dropdown">
 	<label>Historical Seasons:</label>
@@ -44,7 +44,7 @@
 </div>
 </form>
 {/if}
-{if !$maintenance and psss_user_is_admin() or $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php' and $oscript != 'register.php' and $oscript != 'email_confirmation.php'}
+{if !$maintenance and psss_user_is_admin() or $show_login and $cookieconsent and $basename != 'logout' and $basename != 'login' and $basename != 'register' and $basename != 'email_confirmation'}
 <a id="ps-login-link" href="login.php" title="<#Quick Login Popup#>"><img id="ps-login-img" src="{theme->url}/img/menu-login-icon.gif" alt="<#Login#>"></a>
 {/if}
 {if !$maintenance or psss_user_is_admin()}
@@ -86,10 +86,10 @@
 	<li class="first"><a href="admin/index.php"><#Admin#></a></li>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 {/if}
-{if !$maintenance and !psss_user_logged_in() and $show_login and $cookieconsent and $oscript != 'logout.php' and $oscript != 'login.php'}
+{if !$maintenance and !psss_user_logged_in() and $show_login and $cookieconsent and $basename != 'logout' and $basename != 'login'}
 	<li class="first"><a href="login.php" title="Login, Register and Reset Password"><#Login#></a></li>
 {/if}
-{if psss_user_logged_in() and $oscript != 'logout.php' and $oscript != 'login.php'}
+{if psss_user_logged_in() and $basename != 'logout' and $basename != 'login'}
 	<li class="first"><a href="logout.php"><#Logout#></a></li>
 {/if}
 </ul>

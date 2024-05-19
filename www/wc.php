@@ -21,6 +21,7 @@
  *	Version: $Id: index.php 506 2008-07-02 14:29:49Z lifo $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Wild Card—PSSS');
 
@@ -139,8 +140,6 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'search'		=> $search,
 	'results'		=> $results,
 	'totalranked'	=> $totalranked,
@@ -150,7 +149,6 @@ $cms->theme->assign(array(
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -160,7 +158,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 //$cms->theme->add_js('js/index.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

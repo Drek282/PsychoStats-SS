@@ -21,6 +21,7 @@
  *	Version: $Id: roster.php $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Team Roster—PSSS');
 
@@ -49,12 +50,9 @@ $nodata = $ps->db->fetch_rows(1, $cmd);
 
 // if $r is empty then the season is not in the database and someone is misbehaving
 if (empty($nodata)) {
-	$cms->full_page_err('roster', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Season Parameter Invalid"),
 		'message'	=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -219,14 +217,11 @@ $shades = array(
 
 $cms->theme->assign_by_ref('roster', $roster);
 $cms->theme->assign(array(
-	'oscript'			=> $oscript,
-	'maintenance'		=> $maintenance,
 	'pitcher_table'		=> $dtable->render(),
 	'position_table'	=> $otable->render(),
 	'pitcherpager'		=> $pitcherpager,
 	'positionpager'		=> $positionpager,
 	'team'				=> $team,
-	'lastupdate'		=> $lastupdate,
 	'season_c'			=> $season_c,
 	'season'			=> $season,
 	'seasons_h'			=> $ps->get_seasons_h(),
@@ -237,12 +232,10 @@ $cms->theme->assign(array(
 	'cookieconsent'		=> $cookieconsent,
 ));
 
-$basename = basename(__FILE__, '.php');
 if (isset($team['team_id'])) {
 	$cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 } else {
 	$cms->full_page_err($basename, array(
-		'oscript'		=> $oscript,
 		'message_title'	=> $cms->trans("No Team Found!"),
 		'message'	=> $cms->trans("This page cannot be accessed directly.") . " " . $cms->trans("Please go to a team page and access team rosters there.")
 	));

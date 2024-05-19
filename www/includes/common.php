@@ -96,7 +96,6 @@ if (is_dir(PS_ROOTDIR . "/install")) {
 $ps		= null;				// global PsychoStats object
 $cms 		= null;				// global PsychoCMS object
 $php_scnm = $_SERVER['SCRIPT_NAME'];		// this is used so much we make sure it's global
-list($oscript) = array_reverse(explode('/', $php_scnm));	// originating script variable
 // Sanitize PHP_SELF and avoid XSS attacks.
 // We use the constant in places we know we'll be outputting $PHP_SELF to the user
 define("SAFE_PHP_SCNM", htmlentities($_SERVER['SCRIPT_NAME'], ENT_QUOTES, "UTF-8"));
@@ -198,12 +197,9 @@ if (!defined("PSFILE_IMGCOMMON_PHP")) {
 
 	// If PSVRAT is in maintenance mode display a message
 	if ($maintenance and !$cms->user->is_admin() and !defined("PSYCHOSTATS_ADMIN_PAGE")) {
-		$cms->full_page_err('awards', array(
-			'oscript'		=> $oscript,
-			'maintenance'	=> $maintenance,
+		$cms->full_page_err($basename, array(
 			'message_title'	=> $cms->trans("PSSS Maintenance"),
 			'message'		=> $cms->trans("Please try again later."),
-			'lastupdate'	=> $lastupdate,
 			'division'		=> null,
 			'wildcard'		=> null,
 			'season'		=> null,
@@ -220,13 +216,10 @@ if (!defined("PSFILE_IMGCOMMON_PHP")) {
 	$nodata = $ps->db->fetch_rows(1, $cmd);
 
 	// if $nodata is empty then we have no data in the database
-	if (empty($nodata) and !defined("PSYCHOSTATS_ADMIN_PAGE") and $oscript != 'help.php' and $oscript != 'credits.php' and $oscript != 'privacy.php') {
-		$cms->full_page_err('awards', array(
-			'oscript'		=> $oscript,
-			'maintenance'	=> $maintenance,
+	if (empty($nodata) and !defined("PSYCHOSTATS_ADMIN_PAGE") and $basename != 'help' and $basename != 'credits' and $basename != 'privacy') {
+		$cms->full_page_err($basename, array(
 			'message_title'	=> $cms->trans("No Stats Found"),
 			'message'		=> $cms->trans("psss.py must be run before any stats will be shown."),
-			'lastupdate'	=> $ps->get_lastupdate(),
 			'division'		=> null,
 			'wildcard'		=> null,
 			'season'		=> null,

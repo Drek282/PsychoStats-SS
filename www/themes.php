@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Themes—PSSS');
 
@@ -59,11 +60,8 @@ $wildcard = $ps->get_total_wc();
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'themes'		=> $themes,
 	'theme'			=> $cms->theme->theme,
-	'lastupdate'	=> $ps->get_lastupdate(),
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -73,7 +71,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 //$cms->theme->add_js('js/themes.js');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Email Confirmation—PSSS');
 
@@ -89,11 +90,8 @@ if ($valid) {
 		$cms->session->online_status(0, $userinfo['userid']);
 
 		$cms->theme->assign(array(
-			'oscript'		=> $oscript,
-			'maintenance'	=> $maintenance,
 			'team'			=> $team,
 			'reg'			=> $userinfo,
-			'lastupdate'	=> $lastupdate,
 			'season'		=> null,
 			'season_c'		=> null,
 			'division'		=> $division,
@@ -136,12 +134,9 @@ if ($valid) {
 
 // if $message then we have an error
 if (isset($message)) {
-	$cms->full_page_err('email_confirmation', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Email Confirmation Failed"),
 		'message'		=> $message,
-		'lastupdate'	=> $lastupdate,
 		'division'		=> null,
 		'wildcard'		=> null,
 		'season'		=> null,
@@ -154,9 +149,6 @@ if (isset($message)) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -166,7 +158,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 

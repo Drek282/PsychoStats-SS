@@ -45,7 +45,7 @@ trim_all($sources);		// remove whitespace
 $root = $cms->theme->template_dir; //$ps->conf['theme']['template_dir'];
 $files = array();
 $missing = array();
-$lastupdate = 0;
+$last_update = 0;
 
 // Make sure each source is a relative path within the theme directory and does
 // not contain '..'
@@ -72,7 +72,7 @@ for ($i=0, $j=count($sources); $i < $j; $i++) {
 	// other files like ../../../etc/passwd
 	if (substr($file, 0, $len) == $root and @file_exists($file)) {
 		$files[] = $file;
-		$lastupdate = max($lastupdate, filemtime($file));
+		$last_update = max($last_update, filemtime($file));
 	} else {
 		$missing[] = $sources[$i];
 	}
@@ -81,7 +81,7 @@ for ($i=0, $j=count($sources); $i < $j; $i++) {
 
 // create a resource name for this set of files. This mimics the way
 // Smarty creates a compiled file.
-$hex = sprintf('%8X', $lastupdate ? $lastupdate : time());
+$hex = sprintf('%8X', $last_update ? $last_update : time());
 $compiled_file = catfile($cms->theme->compile_dir, 
 	$cms->theme->theme() . '-' .
 	$cms->theme->language() . '-' .
@@ -99,7 +99,7 @@ if ($is_compiled and function_exists('apache_request_headers')) {
 	$headers = apache_request_headers();
 	$if_modified_since = preg_replace('/;.*$/', '', $headers['If-Modified-Since']);
 	if ($if_modified_since) {
-		$gmtime = gmdate("D, d M Y H:i:s", $lastupdate) . " GMT";
+		$gmtime = gmdate("D, d M Y H:i:s", $last_update) . " GMT";
 		if ($if_modified_since == $gmtime) {
 			header("HTTP/1.1 304 Not Modified", true);
 			exit();
@@ -110,7 +110,7 @@ if ($is_compiled and function_exists('apache_request_headers')) {
 // the client does not have the file cached... so we output it below ...
 header("Content-Type: text/javascript", true);
 header("Cache-Control: public, must-revalidate");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastupdate) . " GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s", $last_update) . " GMT");
 header("Connection: close");
 
 // delete any previously cached compiled file

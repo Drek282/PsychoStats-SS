@@ -22,6 +22,7 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Team—PSSS');
 
@@ -285,8 +286,6 @@ $shades = array(
 
 $cms->theme->assign_by_ref('team', $team);
 $cms->theme->assign(array(
-	'oscript'			=> $oscript,
-	'maintenance'		=> $maintenance,
 	'advanced_table'	=> $atable->render(),
 	'defence_table'		=> $dtable->render(),
 	'offence_table'		=> $otable->render(),
@@ -294,7 +293,6 @@ $cms->theme->assign(array(
 	'defencepager'		=> $defencepager,
 	'offencepager'		=> $offencepager,
 	'totalranked'		=> $totalranked,
-	'lastupdate'		=> $lastupdate,
 	'season'			=> null,
 	'season_c'			=> null,
 	'division'			=> $division,
@@ -304,7 +302,6 @@ $cms->theme->assign(array(
 	'cookieconsent'		=> $cookieconsent,
 ));
 
-$basename = basename(__FILE__, '.php');
 if ($team['team_id']) {
 	// allow mods to have their own section on the left side bar
 	$ps->team_left_column_mod($team, $cms->theme);

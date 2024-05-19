@@ -21,6 +21,7 @@
  *	Version: $Id: index.php 506 2008-07-02 14:29:49Z lifo $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Privacy—PSSS');
 
@@ -28,9 +29,6 @@ $cms->theme->page_title('Privacy—PSSS');
 if ($maintenance and !$cms->user->is_admin()) previouspage('index.php');
 
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -40,7 +38,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 ?>

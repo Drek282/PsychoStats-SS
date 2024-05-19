@@ -22,8 +22,12 @@
  */
 
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Login—PSSS');
+
+// Show login?
+$show_login = ($ps->conf['theme']['permissions']['show_login'] || $is_admin) ? true : false;
 
 // Page cannot be viewed if the site is in maintenance mode or show login is disabled.
 if ($maintenance and !$cms->user->is_admin() or !$show_login) previouspage('index.php');
@@ -108,12 +112,9 @@ if ($submit) {
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'errors'		=> $form->errors(),
 	'form'			=> $form->values(),
 	'form_key'		=> '', //$ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-	'lastupdate'	=> $ps->get_lastupdate(),
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -123,7 +124,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_css('css/forms.css');
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');

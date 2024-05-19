@@ -21,6 +21,7 @@
  *	Version $Id: help.php $
  */
 define("PSYCHOSTATS_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include(__DIR__ . "/includes/common.php");
 $cms->theme->page_title('Help—PSSS');
 
@@ -36,12 +37,9 @@ $DEFAULT_LIMIT = 5;
 
 // if $q is longer than 100 characters we have a problem
 if (strlen($q) > 100) {
-	$cms->full_page_err('help', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("Invalid Search String"),
 		'message'		=> $cms->trans("Searches are limited to 100 characters in length."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
 		'season'		=> null,
@@ -64,12 +62,9 @@ $results = $ps->db->fetch_rows(1, $cmd);
 
 // if $results is empty then we have no help entries in the database
 if (empty($results)) {
-	$cms->full_page_err('help', array(
-		'oscript'		=> $oscript,
-		'maintenance'	=> $maintenance,
+	$cms->full_page_err($basename, array(
 		'message_title'	=> $cms->trans("No Help Entries Found"),
 		'message'		=> $cms->trans("There are currently no help entries to display."),
-		'lastupdate'	=> $lastupdate,
 		'division'		=> $division,
 		'wildcard'		=> $wildcard,
 		'season'		=> null,
@@ -173,8 +168,6 @@ $shades = array(
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'oscript'		=> $oscript,
-	'maintenance'	=> $maintenance,
 	'search'		=> $search,
 	'results'		=> $results,
 	'search_blurb'	=> $search_blurb,
@@ -185,7 +178,6 @@ $cms->theme->assign(array(
 	'language_list'	=> $cms->theme->get_language_list(),
 	'theme_list'	=> $cms->theme->get_theme_list(),
 	'language'		=> $cms->theme->language,
-	'lastupdate'	=> $lastupdate,
 	'season'		=> null,
 	'season_c'		=> null,
 	'division'		=> $division,
@@ -196,7 +188,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/help.css');
 $cms->theme->add_css('css/2column.css');	// this page has a left column
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');

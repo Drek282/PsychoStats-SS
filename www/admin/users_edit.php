@@ -22,6 +22,7 @@
  */
 define("PSYCHOSTATS_PAGE", true);
 define("PSYCHOSTATS_ADMIN_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include("../includes/common.php");
 include("./common.php");
 $cms->theme->assign('page', 'users');
@@ -41,12 +42,12 @@ $u =& $cms->new_user();
 if (is_numeric($id)) {
 	if (!$u->load($id)) {
 		$data = array( 'message' => $cms->trans("Invalid User ID Specified") );
-		$cms->full_page_err(basename(__FILE__, '.php'), $data);
+		$cms->full_page_err($basename, $data);
 		exit();		
 	}
 } elseif (!empty($id)) {
 	$data = array( 'message' => $cms->trans("Invalid User ID Specified") );
-	$cms->full_page_err(basename(__FILE__, '.php'), $data);
+	$cms->full_page_err($basename, $data);
 	exit();		
 } else {
 	# set defaults for new user
@@ -64,7 +65,7 @@ if ($del and $id and $u->userid() == $id) {
 	}
 	if (!$u->delete_user($id)) {
 		$data = array( 'message' => $cms->trans("Error deleting user: " . $u->dberr()) );
-		$cms->full_page_err(basename(__FILE__, '.php'), $data);
+		$cms->full_page_err($basename, $data);
 		exit();
 	}
 	$ps->db->update($ps->t_team_profile, array( 'userid' => null, 'email' => null, 'youtube' => null, 'website' => null, 'icon' => null, 'cc' => null, 'logo' => null ), 'userid', $id);
@@ -331,7 +332,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 //$cms->theme->add_js('js/jquery.interface.js');
 $cms->theme->add_js('js/forms.js');

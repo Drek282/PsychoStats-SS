@@ -23,9 +23,10 @@
 define("PSYCHOSTATS_PAGE", true);
 define("PSYCHOSTATS_ADMIN_PAGE", true);
 define("PSYCHOSTATS_LOGIN_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include("../includes/common.php");
 include("./common.php");
-$cms->theme->assign('page', basename(__FILE__, '.php'));
+$cms->theme->assign('page', $basename);
 
 // create the form variable
 $form = $cms->new_form();
@@ -113,7 +114,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/forms.css');
 $cms->theme->add_js('js/forms.js');
 $cms->theme->add_js('js/login.js');

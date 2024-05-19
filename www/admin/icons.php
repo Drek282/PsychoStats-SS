@@ -22,6 +22,7 @@
  */
 define("PSYCHOSTATS_PAGE", true);
 define("PSYCHOSTATS_ADMIN_PAGE", true);
+$basename = basename(__FILE__, '.php');
 include("../includes/common.php");
 include("./common.php");
 
@@ -228,7 +229,7 @@ $cms->crumb('Icon Avatars', psss_url_wrapper(array('_base' => 'icons.php' )));
 $message ??= null;
 // assign variables to the theme
 $cms->theme->assign(array(
-	'page'		=> basename(__FILE__, '.php'), 
+	'page'		=> $basename, 
 	'icons'		=> $icons,
 	'message'	=> $message,
 	'icons_url'	=> $ps->conf['theme']['icons_url'],
@@ -237,7 +238,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/2column.css');
 $cms->theme->add_css('css/forms.css');
 $cms->theme->add_css('css/icons.css');

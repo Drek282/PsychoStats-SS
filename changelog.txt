@@ -118,6 +118,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Incorrect script names in errors.
 * [Improved] Replaced $oscript with $basename.
 * [Improved] Replaced $page Smarty variable with $basename.
+* [Improved] Updated ACP with $basename changes.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

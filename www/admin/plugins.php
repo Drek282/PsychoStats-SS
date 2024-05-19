@@ -23,6 +23,7 @@
 define("PSYCHOSTATS_PAGE", true);
 define("PSYCHOSTATS_ADMIN_PAGE", true);
 define("PSYCHOSTATS_DISABLE_PLUGINS", true);	// we don't want plugins to function on this page
+$basename = basename(__FILE__, '.php');
 include("../includes/common.php");
 include("./common.php");
 
@@ -202,7 +203,7 @@ $cms->crumb("Plugins", $php_scnm);
 
 // assign variables to the theme
 $cms->theme->assign(array(
-	'page'			=> basename(__FILE__, '.php'), 
+	'page'			=> $basename, 
 	'installed_plugins'	=> $plugins,
 	'pending_plugins'	=> $pending,
 	'total_installed'	=> count($plugins),
@@ -212,7 +213,6 @@ $cms->theme->assign(array(
 ));
 
 // display the output
-$basename = basename(__FILE__, '.php');
 $cms->theme->add_css('css/2column.css');
 $cms->theme->add_css('css/forms.css');
 //$cms->theme->add_js('js/jquery.interface.js');

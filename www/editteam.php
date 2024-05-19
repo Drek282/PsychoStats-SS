@@ -364,7 +364,6 @@ $uid = $team['team_id'];
 $allowed_html_tags = str_replace(',', ', ', $ps->conf['theme']['format']['allowed_html_tags']);
 if ($allowed_html_tags == '') $allowed_html_tags = '<em>' . $cms->translate("none") . '</em>';
 $cms->theme->assign(array(
-	'page'					=> basename(__FILE__, '.php'), 
 	'errors'				=> $form->errors(),
 	'team'					=> $team,
 	'team_user'				=> $team_user->to_form_input(),

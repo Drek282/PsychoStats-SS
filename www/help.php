@@ -171,7 +171,6 @@ $cms->theme->assign(array(
 	'search'		=> $search,
 	'results'		=> $results,
 	'search_blurb'	=> $search_blurb,
-	'page'			=> basename(__FILE__,'.php'),
 	'help'			=> $help,
 	'top_help'		=> $top_help,
 	'himgs_url'		=> $ps->conf['theme']['himgs_url'],

@@ -277,6 +277,9 @@ function _save_session() {
 	// don't allow a blank key, set it to null instead
 	if (empty($this->sessdata['session_key'])) $this->sessdata['session_key'] = null;
 
+	// do not save anything if bad session_id
+	if ($this->sessdata['session_id'] == 1) return 1;
+	
 	if ($exists) {
 		$this->db->update($this->config['db_session_table'], $this->sessdata, 'session_id', $this->sessdata['session_id']);
 	} else {

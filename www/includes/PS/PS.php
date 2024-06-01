@@ -1087,11 +1087,10 @@ function get_division_members($divisionname) {
 // Returns an array of teams with the number of division titles or league championships they have won.
 function get_tc_count($type, $limit) {
 
-
 	$values = "name.*,adv.season,adv.team_id team_n,adv.divisionname,adv.games_back";
 
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id=name.team_id ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen WHERE team_name <> '' GROUP BY team_id) name ON adv.team_id = name.team_id ";
 	$cmd .= "HAVING games_back='$type' OR games_back='dtlc' ";
 	$cmd .= "ORDER BY adv.season DESC ";
 

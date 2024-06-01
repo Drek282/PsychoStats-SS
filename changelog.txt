@@ -121,6 +121,7 @@ Version 0.0.4b (in progress)
 * [Improved] Updated ACP with $basename changes.
 * [Fixed] Last update time and maintenance status not passed to scripts.
 * [Fixed] session_id error.
+* [Fixed] Incorrect team names in left column of HoF page.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

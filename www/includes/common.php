@@ -195,6 +195,13 @@ if (!defined("PSFILE_IMGCOMMON_PHP")) {
 	// Is PsychoStats in maintenance mode?
 	$maintenance = $ps->conf['main']['maintenance_mode']['enable'];
 
+	// Is there a notice to display?
+	if ($ps->conf['main']['notice']['enable']) {
+		$cms->theme->assign('notice', $ps->conf['main']['notice']['notice'] ?? null);
+	} else {
+		$cms->theme->assign('notice', null);
+	}
+
 	// If PSVRAT is in maintenance mode display a message
 	if ($maintenance and !$cms->user->is_admin() and !defined("PSYCHOSTATS_ADMIN_PAGE")) {
 		$cms->full_page_err($basename, array(

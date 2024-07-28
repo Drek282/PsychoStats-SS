@@ -1,5 +1,9 @@
 This is an unofficial version of PsychoStats by Stormtrooper. Updated to work with PHP 7.1.0+ and MySQL 5.5.0+.  The minimum required version of Python is 3.x.  This version of Psychostats has been modified to display Scoresheet Baseball team statistics.
 
+\* **Oracle's MySQL `8.0+` is *NOT* supported.  Please use [MariaDB](https://mariadb.org/ "MariaDB") instead.**
+
+\* **There may be issues running PsychoStats on [nginx](https://nginx.org/en/ "nginx").  These are currently being investigated, but at this time running PsychoStats on the nginx web server should be considered unsupported.**
+
 All of the versions in this repository should be considered beta software.  Prior to 2010 PsychoStats was tested on thousands of websites with logs from thousands of game servers.  The base PsychoStats code should be robust and stable, the changes that have been made to adapt this to Scoresheet Baseball are significant but the base code should still be robust and stable, but there are no guarantees.
 
 This also open source software.  The code can be modified by anyone who wishes to do so.  This means that the code on any given site hosting these stats may not match the code in the repository.  Every effort has been made to ensure that the code is stable and secure, but there are no guarantees.  To the extent allowed by law anyone using this software must do so at their own risk, whether you are hosting the software, or an end user.

@@ -125,6 +125,7 @@ Version 0.0.4b (in progress)
 * [Added] A notice, configurable in the ACP, which can be displayed at the top of every page.
 * [Improved] opt.php now defined as PSFILE_IMGCOMMON_PHP.
 * [Removed] Redundant theme loading from script.php.
+* [Improved] Historical seasons drop down removed from team pages.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

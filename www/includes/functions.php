@@ -392,7 +392,7 @@ function remote_addr($alt='') {
 	$ip = $alt;
 	if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))  {
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} elseif ($_SERVER['REMOTE_ADDR']) {
+	} elseif (isset($_SERVER['REMOTE_ADDR'])) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 	return $ip;

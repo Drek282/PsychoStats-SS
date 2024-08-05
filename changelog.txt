@@ -126,6 +126,7 @@ Version 0.0.4b (in progress)
 * [Improved] opt.php now defined as PSFILE_IMGCOMMON_PHP.
 * [Removed] Redundant theme loading from script.php.
 * [Improved] Historical seasons drop down removed from team pages.
+* [Fixed] Undeclared array key error.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

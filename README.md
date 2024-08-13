@@ -31,19 +31,19 @@ See INSTALL.md for full installation and setup instructions—not including inst
 
 
 You can view working demos of PsychoStats for Scoresheet Baseball at the following links: 
+*Note that this is a testing environment and as such the availability of the demos will not be 100%, 24/7.*
 
 * [P-AL145](https://displaced.zone/psss_bb_145/ "P-AL145")
 * [P-AL 152](https://displaced.zone/psss_bb_152/ "P-AL152")
 * [AL Auction](https://displaced.zone/psss_bb_auction/ "AL Auction")
+* [NL Del Boca Vista](https://displaced.zone/psss_bb_boca/ "NL Del Boca Vista")
 * [NL Coast to Coast](https://displaced.zone/psss_bb_coast/ "NL Coast to Coast")
 * [NL Crash Davis](https://displaced.zone/psss_bb_crash/ "NL Crash Davis")
 * [NL Brian Fawcett](https://displaced.zone/psss_bb_fawcett/ "NL Brian Fawcett")
 * [NL JENKINS](https://displaced.zone/psss_bb_jenkins/ "NL JENKINS")
 * [NL Justice League](https://displaced.zone/psss_bb_justice/ "NL Justice League")
 * [BL DwMurphy](https://displaced.zone/psss_bb_murphy/ "BL DwMurphy")
-* [AL Phelps](https://displaced.zone/psss_bb_phelps/ "AL Phelps")
 * [BL Mr Mark Ward](https://displaced.zone/psss_bb_ward/ "BL Mr Mark Ward")
-* [AL Bruce Worrall](https://displaced.zone/psss_bb_worrall/ "AL Bruce Worrall")
 
 Note that these demos are currently hosted on an Intel NUC, which is a mini system that uses a laptop processor.  You can use any old desktop PC, or mini system, to host this software, especially if you use Linux.  Linux will run just fine on very old, very low end hardware, and this software specifically will run perfectly well on very old, very low end hardware.  The monitor, keyboard and mouse for the system hosting these stats pages is on a KVM switch, which is only used for emergency purposes.  Most of the time the system hosting these demos is accessed and managed using SSH.
 

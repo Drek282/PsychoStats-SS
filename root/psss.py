@@ -107,6 +107,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
 def generate_psss_error_log ():
 
     # Globals
+    global now_utc_ts
     global error_log
     global error_log_fname
 
@@ -134,6 +135,68 @@ def generate_psss_error_log ():
             # id = 1.
             query = "INSERT INTO psss_errlog VALUES (1, '" + str(row[1]) + "', '" + str(row[2]) + "', " + str(row[3]) + ", '" + str(row[4]) + "')"
             cursor.execute(query)
+    
+    ## Maintenance.
+    # Get maxdays and maxrows.
+    cursor.execute("SELECT value FROM psss_config WHERE section='errlog' AND var='maxdays'")
+    data = cursor.fetchone()
+    if data['value']:
+        maxdays = int(data['value'])
+    else:
+        print(
+            '''
+            FATAL:  The \"maxdays\" option has not been configured or is not present in the database.
+
+                    There is a good chance your PsychoStats installation is seriously broken.
+                    Please consult the README.md file and try again.
+
+                    This script will exit.
+            '''
+            )
+        print()
+        sys.exit()
+    cursor.execute("SELECT value FROM psss_config WHERE section='errlog' AND var='maxrows'")
+    data = cursor.fetchone()
+    if data['value']:
+        maxrows = int(data['value'])
+    else:
+        print(
+            '''
+            FATAL:  The \"maxrows\" option has not been configured or is not present in the database.
+
+                    There is a good chance your PsychoStats installation is seriously broken.
+                    Please consult the README.md file and try again.
+
+                    This script will exit.
+            '''
+            )
+        print()
+        sys.exit()
+
+    # Convert maxdays to epoch timestamp.
+    cutoff_ts = now_utc_ts - 60 * 60 * 24 * maxdays
+    
+    # Delete all rows that fall outside of the maxdays parameter.
+    query = "DELETE FROM psss_errlog WHERE timestamp < " + str(cutoff_ts)
+    cursor.execute(query)
+
+    # Count the rows in the error log table.
+    cursor.execute("SELECT COUNT(*) r_count from psss_errlog")
+    data = cursor.fetchone()
+
+    if data['r_count']:
+        row_count = int(data['r_count'])
+    else:
+        return
+    
+    # If there aren't too many rows, return.
+    if row_count < maxrows:
+        return
+
+    # Delete all rows that fall outside of the maxrows parameter.
+    diff = rowcount - maxrows
+    query = "DELETE FROM psss_errlog ORDER BY timestamp LIMIT " + str(diff)
+    cursor.execute(query)
 
 # Set the GB league championship status.
 def get_league_c (season_url, raw_lp_dump):
@@ -1565,7 +1628,7 @@ pagedate = pagedate + 129600
 # Get check loop variable from database.
 cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
 data = cursor.fetchone()
-if  data['value']:
+if data['value']:
     check_loop = int(data['value'])
 else:
     check_loop = 0

@@ -114,7 +114,7 @@ $table->start_and_sort($start, $sort, $order);
 $table->columns(array(
 	'rank'			=> array( 'label' => $cms->trans("Rank") ),
 	'prevrank'		=> array( 'nolabel' => true, 'callback' => 'rankchange' ),
-	'team_n'			=> array( 'label' => $cms->trans("Team #"), 'callback' => 'psss_table_team_link' ),
+	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team Name"), 'callback' => 'psss_table_team_link' ),
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),

@@ -1518,17 +1518,19 @@ function get_wc_list($args = array()) {
 	
 	$values = "";
 	if (trim($args['fields']) == '') {
-		$values .= "MAX(name.lastseen),wc.*,team.*,name.*,prof.*,adv.team_id team_n,adv.*,def.*,off.* ";
+		$values .= "wc.*,team.*,name.*,prof.*,adv.team_id team_n,adv.*,def.*,off.* ";
 	} else {
 		$values = $args['fields'];
 	}
 
-	$cmd  = "SELECT $values FROM ($this->t_team team, $this->t_team_wc wc, $this->t_team_ids_names name, $this->t_team_profile prof, $this->t_team_adv adv, $this->t_team_def def, $this->t_team_off off) ";
-    // not currently functional
-/*	if ($args['joinccinfo']) {
-		$cmd .= "LEFT JOIN $this->t_geoip_cc c ON c.cc=pp.cc ";
-	}*/
-	$cmd .= "WHERE wc.team_id=adv.team_id AND prof.team_id=team.team_id AND name.team_id=team.team_id AND adv.team_id=team.team_id AND def.team_id=team.team_id AND off.team_id=team.team_id AND adv.season=$season AND def.season=$season AND off.season=$season ";
+	$cmd  = "SELECT $values FROM $this->t_team_wc wc ";
+	$cmd .= "LEFT JOIN $this->t_team_adv adv ON wc.team_id = adv.team_id AND adv.season=$season ";
+	$cmd .= "LEFT JOIN $this->t_team team ON wc.team_id = team.team_id ";
+	$cmd .= "LEFT JOIN $this->t_team_def def ON wc.team_id = def.team_id AND def.season=$season ";
+	$cmd .= "LEFT JOIN $this->t_team_off off ON wc.team_id = off.team_id AND off.season=$season ";
+	$cmd .= "LEFT JOIN $this->t_team_profile prof ON wc.team_id = prof.team_id ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen WHERE team_name <> '' GROUP BY team_id) name ON wc.team_id = name.team_id ";
+
 	if (!$args['allowall']) $cmd .= "AND team.allowrank=1 ";
 	if (trim($args['where']) != '') $cmd .= "AND (" . $args['where'] . ") ";
 

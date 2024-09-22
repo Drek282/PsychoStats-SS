@@ -184,7 +184,8 @@ if (!defined("PSFILE_IMGCOMMON_PHP")) {
 			$cms->session->delete_cookie('_opts');
 			$cms->session->delete_cookie('_login');
 		}
-		previouspage($php_scnm);
+		// If cookies are reset load index page.
+		previouspage('index.php');
 	}
 
 	# Are there divisions or wilcards in this league?

@@ -134,6 +134,7 @@ Version 0.0.4b (in progress)
 * [Added] Error logs now honour maxdays and maxrows configuration.
 * [Changed] Default limits for error logs lowered.
 * [Changed] If cookies are reset load index page.
+* [Improved] Wildcard standings now uses icon to show elimination status.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

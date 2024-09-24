@@ -119,7 +119,7 @@ $table->columns(array(
 	'wins'			=> array( 'label' => $cms->trans("Wins") ),
 	'losses'		=> array( 'label' => $cms->trans("Losses") ),
 	'win_percent'			=> array( 'label' => $cms->trans("Win %"), 'callback' => 'negpos500' ),
-	'games_back_wc'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Wildcard status and how many games out of wild card playoff position") ),
+	'games_back_wc'			=> array( 'label' => $cms->trans("GB"), 'nosort' => true, 'tooltip' => $cms->trans("Wildcard status and how many games out of wild card playoff position"), 'callback' => 'standings' ),
 	'team_rdiff'			=> array( 'label' => $cms->trans("Run Differential"), 'tooltip' => $cms->trans("(Total Runs Scored - Total Runs Against) / 9 Innings"), 'callback' => 'negpos' ),
 	'pythag'			=> array( 'label' => $cms->trans("Pythag"), 'tooltip' => $cms->trans("Pythagorean Expectation"), 'callback' => 'negpos500' ),
 	'pythag_plus'			=> array( 'label' => $cms->trans("Pythag+"), 'tooltip' => $cms->trans("The difference between Win % and Pythag"), 'callback' => 'negpos' )
@@ -180,6 +180,10 @@ function negpos500($val) {
 function remove_zero_point($val) {
 	$val = preg_replace('/^0\./', '.', $val);
 	return $val;
+}
+
+function standings($val) {
+	return gb_status($val);
 }
 
 ?>

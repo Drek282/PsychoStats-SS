@@ -218,9 +218,13 @@ function gb_status($val) {
 	} else {
 		$img_path = $cms->theme->url() . $img_path;
 	}
+	if (str_contains($val, 'elim')) {
+		$gb = explode(':', $val)[1];
+		$val = 'elim';
+	}
 	switch ($val) {
 		case 'elim':
-			$output = sprintf("<img src='%s/rip.webp' alt='Eliminated' title='Eliminated'>", $img_path);
+			$output = sprintf("<img src='%s/rip.webp' alt='Eliminated: %s games back' title='Eliminated: %s games back'>", $img_path, $gb, $gb);
 			break;
 
 		case 'clinch':

@@ -1737,7 +1737,7 @@ function get_playoff_status($season, $gp = 0, $gb = 0) {
 	$gr = $season_l - $gp;
 	if (is_numeric($gb)) {
 		$gb_i = $gb;
-		$playoff_status = (($gr - $gb_i) < 0) ? "elim" : $gb;
+		$playoff_status = (($gr - $gb_i) < 0) ? "elim:" . $gb_i : $gb;
 	} else {
 		$playoff_status = $gb;
 	}

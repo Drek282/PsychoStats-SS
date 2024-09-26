@@ -135,6 +135,7 @@ Version 0.0.4b (in progress)
 * [Changed] Default limits for error logs lowered.
 * [Changed] If cookies are reset load index page.
 * [Improved] Wildcard standings now uses icon to show elimination status.
+* [Improved] alt and title for eliminated status icon now shows number of games back.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

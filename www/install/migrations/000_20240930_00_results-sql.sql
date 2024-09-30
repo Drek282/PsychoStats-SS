@@ -1,0 +1,1 @@
+UPDATE `psss_config` SET value = '(?: *)The week (?:[1-2]?[0-9]) (?:.*)are(?: now|) up.(?: *)' WHERE id=12;

@@ -137,6 +137,8 @@ Version 0.0.4b (in progress)
 * [Improved] Wildcard standings now uses icon to show elimination status.
 * [Improved] alt and title for eliminated status icon now shows number of games back.
 * [Improved] SQL to check for weekly results.
+* [Fixed] Current season is now included in table of historical seasons.
+* [Fixed] Division titles and league championships now correctly assigned for current season at season's end.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

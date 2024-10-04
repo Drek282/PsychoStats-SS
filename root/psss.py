@@ -280,16 +280,16 @@ def generate_psss_team_ids_names (season, league_name, working_stats_com_dfo):
     # Iterate through ids names dataframe.
     for index, row in team_ids_names_dfo.iterrows():
         # Build and execute the SQL.
-        query = "SELECT * FROM psss_team_ids_names WHERE team_id='" + str(row['Team']) + "' AND team_name=\"" + row['Team_Name'] + "\""
+        query = "SELECT * FROM psss_team_ids_names WHERE team_id='" + str(row['Team']) + "' AND BINARY team_name=\"" + row['Team_Name'] + "\""
         cursor.execute(query)
         data = cursor.fetchone()
         # Does team id and team name exist in the db?
         if data:
             # Update firstseen if it is older.
-            query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(row['firstseen']) + "' < i.firstseen, '" + str(row['firstseen']) + "', i.firstseen) WHERE i.team_id='" + str(row['Team']) + "' AND i.team_name=\"" + row['Team_Name'] + "\""
+            query = "UPDATE psss_team_ids_names i SET i.firstseen= IF('" + str(row['firstseen']) + "' < i.firstseen, '" + str(row['firstseen']) + "', i.firstseen) WHERE i.team_id='" + str(row['Team']) + "' AND BINARY i.team_name=\"" + row['Team_Name'] + "\""
             cursor.execute(query)
             # Update lastseen if it is newer.
-            query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(row['lastseen']) + "' > i.lastseen, '" + str(row['lastseen']) + "', i.lastseen) WHERE i.team_id='" + str(row['Team']) + "' AND i.team_name=\"" + row['Team_Name'] + "\""
+            query = "UPDATE psss_team_ids_names i SET i.lastseen= IF('" + str(row['lastseen']) + "' > i.lastseen, '" + str(row['lastseen']) + "', i.lastseen) WHERE i.team_id='" + str(row['Team']) + "' AND BINARY i.team_name=\"" + row['Team_Name'] + "\""
             cursor.execute(query)
         else:
             # Get MAX(id)
@@ -1225,14 +1225,39 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Create the ADV stats table.
     working_stats_adv_dfo = working_stats_com_dfo.drop(['Team_Name','ERA','CG','ShO','RS','Sv','IP','RA','ER','HA','BAA','BBA','KA','WP','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','SH','F','SF','GDP','SB','CS','LOB','OP','DP','E','OSB','OCS','PB'], axis=1)
 
-    # Set division title status for historical seasons.
-    if ((season != season_c) or season_c_skipped):
+    # Get season length for current season.
+    query = "SELECT season_l FROM psss_seasons_h WHERE season_h='" + str(season) + "'"
+    cursor.execute(query)
+    data = cursor.fetchone()
+    if data:
+        season_l = int(data['season_l'])
+    else:
+        season_l = 162
+    
+    # Get GP for current season.
+    games_p = int(working_stats_adv_dfo['GP'].iloc[0])
+
+    # Get games remaining for current season.
+    games_r = season_l-games_p 
+
+    # Set division title status for historical seasons and seasons that have ended.
+    if ((season != season_c) or season_c_skipped or (games_r == 0)):
         set_divt_status(working_stats_adv_dfo)
 
-    # Set league championship status for historical seasons.
+    # Set league championship status for historical seasons and seasons that have ended.
     league_c = 0
-    if ((season != season_c) or season_c_skipped):
+    if (season != season_c) or season_c_skipped or (games_r == 0 and re.match(season_c, season_url)):
         league_c = get_league_c(season_url, raw_lp_dump)
+    elif (games_r == 0 and not re.match(season_c, season_url)):
+        print(
+            '''
+            WARNING:  The playoffs for the current season has not yet been played.
+            '''
+            )
+
+        # Log entry.
+        error_no += 1
+        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",warning,DEFAULT,The playoffs for " + season_c + "  has not yet been played.\n"
 
     ## Column Headers:
     #  1 Season, 2 Team Number, 3 Team Division, 4 GP, 5 W, 6 L, 7 W%, 8 GB, 9 RDiff, 10 Pythag, 11 Pythag+
@@ -1607,6 +1632,22 @@ if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
 # Log entry.
 error_no += 1
 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Initializing data processing for URL:  " + league_url + "  The URL is accessible and is for the correct league.\n"
+
+# Create an entry for the current season in psss_seasons_h if it does not exist.
+query = "SELECT season_h FROM psss_seasons_h WHERE season_h='" + str(season_c) + "'"
+cursor.execute(query)
+data = cursor.fetchone()
+if not data:
+    # Set season_l value.
+    # The only season with a different season length currently is 2020.
+    if (int(season_c) == 2020):
+        season_l = 120
+    else:
+        season_l = 162
+
+    # Add new entry to db.
+    query = "INSERT INTO psss_seasons_h VALUES ('" + str(season_c) + "', '" + str(season_l) + "')"
+    cursor.execute(query)
 
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"

@@ -1269,7 +1269,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Calculate WHIP.
     working_stats_def_dfo['WHIP'] = round((working_stats_def_dfo['HA'] + working_stats_def_dfo['BBA']) / working_stats_com_dfo['IP'], 2)
     # Calculate DRat.
-    working_stats_def_dfo['DRat'] = round(((working_stats_def_dfo['OP'] - working_stats_def_dfo['E'] - working_stats_def_dfo['PB']) / working_stats_def_dfo['IP'] + working_stats_def_dfo['DP'] / (working_stats_def_dfo['HA'] + working_stats_def_dfo['BBA']) * 0.5 + working_stats_def_dfo['OCS'] / (working_stats_def_dfo['OSB'] + working_stats_def_dfo['OCS']) * 0.05) * 5, 2)
+    working_stats_def_dfo['DRat'] = round(((working_stats_def_dfo['OP'] - working_stats_def_dfo['E'] - working_stats_def_dfo['PB']) / (working_stats_def_dfo['IP'] - working_stats_def_dfo['KA'] * 0.33) + working_stats_def_dfo['DP'] / (working_stats_def_dfo['HA'] + working_stats_def_dfo['BBA']) * 0.5 + working_stats_def_dfo['OCS'] / (working_stats_def_dfo['OSB'] + working_stats_def_dfo['OCS']) * 0.05) * 3, 2)
     # Convert decimal IP back to baseball format IP.
     working_stats_def_dfo['IP'] = np.trunc(working_stats_def_dfo['IP']) + round((working_stats_def_dfo['IP'] % 1) / 3, 1)
     # Reorder the columns.

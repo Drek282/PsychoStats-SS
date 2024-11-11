@@ -155,7 +155,7 @@ if ($submit) {
 		if (is_array($from)) {	// upload file
 			$file = $from;
 			// Sanitize $file['tmp_name'].
-			$file['tmp_name'] = preg_replace('/(?:\.\.|%2e%2e)(?:\/|\\)/','',$file['tmp_name']);
+			$file['tmp_name'] = preg_replace('/(?:\.\.|%2e%2e)(?:\/|\\))/','',$file['tmp_name']);
 			if (!is_uploaded_file($file['tmp_name'])) {
 				$err = $cms->trans("Uploaded help image is invalid");
 			}

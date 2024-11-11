@@ -142,6 +142,8 @@ Version 0.0.4b (in progress)
 * [Fixed] Team name SQL matches are now case sensitive.
 * [Improved] Simplified the SQL to check for weekly results.
 * [Improved] Outs due to strikeouts no longer factor into DRAT.
+* [Fixed] Broken image uploads in the Help Entries edit page.
+* [Added] "Blood Dolls" help entry.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -144,6 +144,7 @@ Version 0.0.4b (in progress)
 * [Improved] Outs due to strikeouts no longer factor into DRAT.
 * [Fixed] Broken image uploads in the Help Entries edit page.
 * [Added] "Blood Dolls" help entry.
+* [Fixed] Cookie names not set correctly.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

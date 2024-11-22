@@ -521,9 +521,9 @@ function logged_in() {
 
 // returns the cookie name (w/o any suffix; '_id', etc)
 function sid_prefix() {
-	// If PS is installed in a subfolder the cookie name needs to reflect that.
+	// If PSSS is installed in a subfolder the cookie name needs to reflect that.
 	$cnsfid = reset(explode('/', ltrim(SAFE_PHP_SCNM, '/')));
-	$cnsfid = ($cnsfid != 'admin' or $cnsfid != 'install' or !str_contains($cnsfld, '.php')) ? $cnsfid : null;
+	$cnsfid = ($cnsfid != 'admin' or $cnsfid != 'install' or !str_contains($cnsfid, '.php')) ? $cnsfid : null;
 	$cookiename = ($cnsfid) ? $cnsfid . '_sess' : 'sess';
 	return $cookiename;
 }

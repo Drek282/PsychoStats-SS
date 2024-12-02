@@ -145,6 +145,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Broken image uploads in the Help Entries edit page.
 * [Added] "Blood Dolls" help entry.
 * [Fixed] Cookie names not set correctly.
+* [Fixed] User friendly error if PsychoStats is not properly installed.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

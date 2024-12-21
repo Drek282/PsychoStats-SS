@@ -138,7 +138,7 @@ function rows() {
 	$stripe_attr = array( 'class' => $this->stripe_row == 0 ? 'even' : 'odd' );
 
 	// Counting the rows to insert a divider in the middle of the table.
-	$r_half = round(count($this->data) / 2);
+	$r_half = intval(count($this->data) / 2);
 
 	foreach ($this->data as $data) {
 		$row = new PsychoRow();

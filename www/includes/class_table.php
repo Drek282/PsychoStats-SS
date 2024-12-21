@@ -136,9 +136,15 @@ function rows() {
 	$rows = '';
 	$i = 0;
 	$stripe_attr = array( 'class' => $this->stripe_row == 0 ? 'even' : 'odd' );
+
+	// Counting the rows to insert a divider in the middle of the table.
+	$r_half = round(count($this->data) / 2);
+
 	foreach ($this->data as $data) {
 		$row = new PsychoRow();
+
 		if (++$i % 2 == $this->stripe_row) $row->attr($stripe_attr);
+		if ($i == $r_half) $row->attr(array( 'class' => $row->attr('class') . ' half' ));
 		foreach ($this->columns as $key => $cell) {
             $html = $data[$key] ??= null;
 			if ($key != '+') {

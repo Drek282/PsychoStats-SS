@@ -284,6 +284,10 @@ span.pos {
 #ps-container .ps-table tr.even .primary { background-color: #3d382c; }
 #ps-container .ps-table tr.even .secondary { background-color: #3d382c; }
 
+#ps-container .ps-table tr.half {
+	border-bottom: 2px solid #8a8b79;
+}
+
 /* --- PAGER styles ------------ */
 #ps-container .pager-current,
 #ps-container .pager-goto,

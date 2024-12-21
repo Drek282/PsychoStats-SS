@@ -146,6 +146,7 @@ Version 0.0.4b (in progress)
 * [Added] "Blood Dolls" help entry.
 * [Fixed] Cookie names not set correctly.
 * [Fixed] User friendly error if PsychoStats is not properly installed.
+* [Added] Tables now have a divider at the halfway point.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -150,6 +150,7 @@ Version 0.0.4b (in progress)
 * [Changed] Halfway point will round to the lower value for the purposes of the table divider.
 * [Added] "Winning Trades" help entry.
 * [Improved] Completed seasons now show rank change relative to the previous season.
+* [Added] Help entry for "Rank".
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -1,0 +1,2 @@
+INSERT INTO `psss_config_help` (`id`, `enabled`, `idx`, `title`, `content`, `img`, `weight`) VALUES
+(40, 1, 0, 'Rank', '<p>The rank column ranks teams for the given season first by winning percentage, then by pythag to resolve ties.  During the season the rank change arrow indicates up, down or equal, relative to the last time the stats were updated.  Once the season is completed the rank change arrow indicates rank change relative to the previous season.</p>', '', 0);

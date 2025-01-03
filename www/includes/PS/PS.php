@@ -925,10 +925,7 @@ function get_division($args = array(), $minimal = false) {
 	$season = $args['season'];
 
 	# Get season length.
-	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
-	$season_l = $this->db->fetch_row(1, $cmd);
-	if (is_array($season_l)) $season_l = implode($season_l);
-	$season_l ??= '162';
+	$season_l = $this->get_season_length($season);
 
 	$division = array();
 	$id = $this->db->escape($args['divisionname']);
@@ -1286,10 +1283,7 @@ function get_team_list($args = array()) {
 	$season = $args['season'];
 
 	# Get season length.
-	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
-	$season_l = $this->db->fetch_row(1, $cmd);
-	if (is_array($season_l)) $season_l = implode($season_l);
-	$season_l ??= '162';
+	$season_l = $this->get_season_length($season);
 
 	$values = "";
 	if (trim($args['fields']) == '') {
@@ -1367,6 +1361,11 @@ function get_team_list($args = array()) {
 						break;
 					}
 				}
+			}
+		} else {
+			// Assign season rank to team array.
+			foreach ($list as $tm => $val) {
+				$list[$tm]['rank'] = $this->get_rank($list[$tm]['team_id'], $season);
 			}
 		}
 
@@ -1511,10 +1510,7 @@ function get_wc_list($args = array()) {
 	$season = $args['season_c'];
 
 	# Get season length.
-	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
-	$season_l = $this->db->fetch_row(1, $cmd);
-	if (is_array($season_l)) $season_l = implode($season_l);
-	$season_l ??= '162';
+	$season_l = $this->get_season_length($season);
 	
 	$values = "";
 	if (trim($args['fields']) == '') {
@@ -1711,6 +1707,38 @@ function get_total_help() {
 	return $total;
 }
 
+function get_rank($team_id, $season) {
+	$args = array(
+		'sort'		=> 'win_percent, pythag',
+		'order'		=> 'desc',
+	);
+	// Rank for requested season.
+	$cmd  = "SELECT * FROM $this->t_team_adv WHERE season=$season ";
+	$cmd .= $this->getsortorder($args);
+	$list = $this->db->fetch_rows(1, $cmd);
+
+	(!$list) ? $rank = null : $rank = array_search($team_id, array_column($list, 'team_id')) + 1;
+
+	return $rank;
+}
+
+function get_prevrank($team_id, $season) {
+	// Rank for season previous to requested season.
+	$season_p = $season - 1;
+	$prevrank = $this->get_rank($team_id, $season_p);
+
+	return $prevrank;
+}
+
+function get_season_length($season) {
+	$cmd = "SELECT season_l FROM $this->t_seasons_h WHERE season_h=$season LIMIT 1";
+	$season_l = $this->db->fetch_row(1, $cmd);
+	if (is_array($season_l)) $season_l = implode($season_l);
+	$season_l ??= '162';
+
+	return $season_l;
+}
+
 function get_total_divisions() {
 	$cmd  = "SELECT count(DISTINCT divisionname) FROM psss_team_adv";
 	$this->db->query($cmd);
@@ -1730,9 +1758,8 @@ function get_total_wc() {
 
 function get_playoff_status($season, $gp = 0, $gb = 0) {
 
-	# Set season length, if MLB changes the length of the season
-	# this will need to be changed 
-	$season_l = ($season == 2020) ? 120 : 162;
+	# Get season length.
+	$season_l = $this->get_season_length($season);
 
 	$gr = $season_l - $gp;
 	if (is_numeric($gb)) {

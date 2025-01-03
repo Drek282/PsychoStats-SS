@@ -276,12 +276,12 @@ function rem_zero_decimal($val) {
 	return $val;
 }
 
-function rank_change($args = array()) {
+function rank_change($rank, $team) {
 	global $cms, $ps;
-	if (!is_array($args)) $args['team'] = array( 'team' => $args );
+	$args = array();
+	(!is_array($team)) ? $args['team'] = array( 'team' => $team ) : $args['team'] = $team;
 	$args += array(
-		'team'		=> NULL,
-		'rank'		=> 0,
+		'rank'		=> $rank,
 		'prevrank'	=> 0,
 		'imgfmt'	=> "rank_%s.gif",
 		'difffmt'	=> "%d",
@@ -289,11 +289,21 @@ function rank_change($args = array()) {
 		'textonly'	=> false,
 	);
 
+	// Get games remaining.
+	$season = $args['team']['season'];
+	$season_l = $ps->get_season_length($season);
+	$games_r = $season_l - $args['team']['games_played'];
+
 	$output = "";
 	$rank = $prevrank = 0;
 	if (is_array($args['team'])) {
 		$rank = $args['team']['rank'];
-		$prevrank = $args['team']['prevrank'];
+		if ($games_r == 0) {
+			$prevrank = $ps->get_prevrank($args['team']['team_id'], $season);
+			$prevrank = (empty($prevrank)) ? $rank : $prevrank;
+		} else {
+			$prevrank = $args['team']['prevrank'];
+		}
 	} else {
 		$rank = $args['rank'];
 		$prevrank = $args['prevrank'];

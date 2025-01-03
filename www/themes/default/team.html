@@ -50,7 +50,7 @@
 <div id="s-season-rundown" class="ps-column-content">
 <p class="hl firstrow">
 	<label><#Rank#></label>
-	<em>{rankchange team=$team}</em>
+	<em>{rankchange rank=$team.rank team=$team}</em>
 	<span>{if $team.rank}{$team.rank|commify}{else}-{/if}</span>
 </p>
 <p class="substat">

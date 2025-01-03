@@ -177,12 +177,6 @@ $table->header_attr('rank', 'colspan', '2');
 $ps->index_table_mod($table);
 $cms->filter('teams_table_object', $table);
 
-// If season is not current season, remove rank columns.
-if ($season != $season_c) {
-	$table->remove_columns(array('rank'));
-	$table->remove_columns(array('prevrank'));
-}
-
 // assign variables to the theme
 $cms->theme->assign(array(
 	'q'		=> $q,
@@ -211,7 +205,7 @@ $cms->theme->assign(array(
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 function rankchange($val, $team) {
-	return rank_change($team);
+	return rank_change($val, $team);
 }
 
 function negpos($val) {

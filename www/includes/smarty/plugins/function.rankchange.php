@@ -17,7 +17,9 @@
  */
 function smarty_function_rankchange($args, &$smarty)
 {
-	return rank_change($args);
+	$rank = $args['rank'];
+	$team = $args['team'];
+	return rank_change($rank, $team);
 }
 
 ?>

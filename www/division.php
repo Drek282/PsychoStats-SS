@@ -179,13 +179,6 @@ $ps->division_teams_table_mod($atable);
 $atable->header_attr('rank', 'colspan', '2');
 $cms->filter('division_advanced_table_object', $atable);
 
-// if season is not current season, remove rank columns.
-if ($season != $season_c) {
-	$atable->remove_columns(array('rank'));
-	$atable->remove_columns(array('prevrank'));
-}
-
-
 // build team defence table
 $dtable = $cms->new_table($division['defence']);
 $dtable->if_no_data($cms->trans("No Defensive Stats Found"));
@@ -306,7 +299,7 @@ if ($division['divisionname']) {
 }
 
 function rankchange($val, $team) {
-	return rank_change($team);
+	return rank_change($val, $team);
 }
 
 function negpos($val) {

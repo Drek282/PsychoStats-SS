@@ -116,6 +116,8 @@ if ($submit) {
 		// do not allow a duplicate username if another user has it already
 		if ($_u and $_u['userid']) {
 			$form->error('username', $cms->trans("Username already exists; please try another name"));
+		} else {
+			unset($form->errors['username']);
 		}
 		unset($_u);
 	}
@@ -197,7 +199,7 @@ if ($submit) {
 
 						// Setup the confirmation url.
 						$base_url = $ps->conf['main']['base_url'];
-						$confirmation_url = $base_url . "/pwreset_final.php?username=" . $u['username'] . "&tpw=" . $u['temp_password'];
+						$confirmation_url = $base_url . "/pwreset_final.php?userid=" . $u['userid'] . "&tpw=" . $u['temp_password'];
 
 						$cms->theme->assign(array(
 							'confirmation_url'	=> $confirmation_url,

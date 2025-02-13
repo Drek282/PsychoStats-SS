@@ -151,6 +151,7 @@ Version 0.0.4b (in progress)
 * [Added] "Winning Trades" help entry.
 * [Improved] Completed seasons now show rank change relative to the previous season.
 * [Added] Help entry for "Rank".
+* [Fixed] Typo.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

@@ -153,6 +153,7 @@ Version 0.0.4b (in progress)
 * [Added] Help entry for "Rank".
 * [Fixed] Typo.
 * [Fixed] New user creation from the teams edit menu in the ACP.
+* [Fixed] Most recent team names not displaying on "All Teams" page in the ACP.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

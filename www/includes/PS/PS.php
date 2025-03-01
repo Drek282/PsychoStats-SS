@@ -1398,6 +1398,7 @@ function get_basic_team_list($args = array()) {
 		'results'	=> null,
 		'search'	=> null
 	);
+	$season = $args['season'];
 	$values = "";
 	if (trim($args['fields']) == '') {
 		$values .= "name.*,adv.team_id team_n,adv.*,prof.userid,user.username ";
@@ -1409,7 +1410,7 @@ function get_basic_team_list($args = array()) {
 	$cmd  = "SELECT $values FROM $this->t_team_adv adv ";
 	$cmd .= "LEFT JOIN $this->t_team_profile prof ON adv.team_id = prof.team_id ";
 	$cmd .= "LEFT JOIN $this->t_user user ON prof.userid = user.userid ";
-	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,MAX(lastseen) FROM $this->t_team_ids_names GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=" . $args['season'] . " ";
+	$cmd .= "JOIN (SELECT DISTINCT team_name,team_id,lastseen FROM $this->t_team_ids_names JOIN (SELECT MAX(lastseen) max_ls FROM $this->t_team_ids_names) n ON n.max_ls = lastseen WHERE team_name <> '' GROUP BY team_id) name ON adv.team_id = name.team_id AND adv.season=$season ";
 
 	if (trim($args['where']) != '') $cmd .= $args['where'] . " ";
 

@@ -34,8 +34,8 @@
 	<h4><#Resetting team statistics can not be undone!#></h4>
 	<p>
 	<strong><#Resetting the database will remove all statistics for all teams.#></strong> 
-	<#Resetting the database will not unlink users from their teams or delete their team profiles.  It will also not delete the team player rosters.  Any players that have been traded from a team will have their stats for that team lost if team rosters are erased.  If you wish to erase team rosters regardless, you can choose that option.#> 
-	<#You can also choose to delete team profiles.#> 
+	<#Resetting the database will not unlink users from their teams or delete their team profiles or team names.  It will also not delete the team player rosters.  Any players that have been traded from a team will have their stats for that team lost if team rosters are erased.  If you wish to erase team rosters regardless, you can choose that option.#> 
+	<#You can also choose to delete team profiles or team names.#> 
 	<#Deleting users will also empty their team profiles.#>
 	</p>
 	<p>
@@ -57,6 +57,13 @@
 	<label><#Team Profiles?#></label>
 	<label class="for" for="team_profiles1"><input id="team_profiles1" name="team_profiles" value="0" {if !$form.team_profiles}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
 	<label class="for" for="team_profiles2"><input id="team_profiles2" name="team_profiles" value="1" {if  $form.team_profiles}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
+</div>
+
+<div{if $errors.team_names} class="err"{/if}>
+	<p class="err" id="err-team_names">{$errors.team_names|escape}</p>
+	<label><#Team Names?#></label>
+	<label class="for" for="team_names1"><input id="team_names1" name="team_names" value="0" {if !$form.team_names}checked="" {/if}type="radio" class="radio"> <#Erase#></label>
+	<label class="for" for="team_names2"><input id="team_names2" name="team_names" value="1" {if  $form.team_names}checked="" {/if}type="radio" class="radio"> <#Keep#></label>
 </div>
 
 <div{if $errors.users} class="err"{/if}>

@@ -45,6 +45,7 @@ $form = $cms->new_form();
 $form->default_modifier('trim');
 $form->field('team_rosters');
 $form->field('team_profiles');
+$form->field('team_names');
 $form->field('users');
 
 // process the form if submitted
@@ -81,6 +82,7 @@ if ($submit) {
 	$form->input(array(
 		'team_rosters'	=> true,
 		'team_profiles'	=> true,
+		'team_names'	=> true,
 		'users'			=> true
 	));
 }

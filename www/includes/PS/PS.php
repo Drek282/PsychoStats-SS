@@ -2448,6 +2448,7 @@ function reset_stats($keep = array()) {
 	$keep += array(
 		'team_rosters'	=> false,
 		'team_profiles'	=> false,
+		'team_names'	=> false,
 		'users'			=> false,
 	);
 	$errors = array();
@@ -2483,7 +2484,16 @@ function reset_stats($keep = array()) {
 	} 
 
 	// delete team profiles ...
-	if (!$keep['team_profiles']) array_push($empty_extra, 't_team_profile', 't_team_ids_names');
+	if (!$keep['team_profiles']) array_push($empty_extra, 't_team_profile');
+	foreach ($empty_extra as $t) {
+		$tbl = $this->$t;
+		if (!$this->db->truncate($tbl) and !preg_match("/exist/", $this->db->errstr)) {
+			$errors[] = "$tbl: " . $this->db->errstr;
+		}
+	} 
+
+	// delete team names ...
+	if (!$keep['team_names']) array_push($empty_extra, 't_team_ids_names');
 	foreach ($empty_extra as $t) {
 		$tbl = $this->$t;
 		if (!$this->db->truncate($tbl) and !preg_match("/exist/", $this->db->errstr)) {
@@ -2494,9 +2504,6 @@ function reset_stats($keep = array()) {
 	// delete users (except those that are admins)
 	if (!$keep['users']) {
 		$ok = true;
-		if (!$this->db->truncate($this->t_team_ids_names) and !preg_match("/exist/", $this->db->errstr)) {
-			$errors[] = "$this->t_team_ids_names: " . $this->db->errstr;
-		}
 		$users = $this->db->fetch_list("SELECT userid FROM $this->t_user WHERE accesslevel < 99");
 		$this->db->begin();
 		if ($users) {

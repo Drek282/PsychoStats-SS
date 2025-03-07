@@ -1203,20 +1203,21 @@ function deleteTree($folder, $keepRootFolder) {
 		return @unlink($folder); // Delete file/link.
 	}
 
-// Delete all children.
-	$files = new \RecursiveIteratorIterator(
-		new \RecursiveDirectoryIterator($folder, \RecursiveDirectoryIterator::SKIP_DOTS),
-		\RecursiveIteratorIterator::CHILD_FIRST
+	// Set permissions and delete all children.
+	$files = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator($folder, RecursiveDirectoryIterator::SKIP_DOTS),
+		RecursiveIteratorIterator::CHILD_FIRST
 	);
 
 	foreach ($files as $fileinfo) {
+		chmod($fileinfo->getRealPath(), 0775);
 		$action = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
 		if (!@$action($fileinfo->getRealPath())) {
 			return false; // Abort due to the failure.
 		}
 	}
 
-// Delete the root folder itself?
+	// Delete the root folder itself?
 	return (!$keepRootFolder ? @rmdir($folder) : true);
 }
 

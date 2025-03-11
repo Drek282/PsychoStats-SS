@@ -42,21 +42,18 @@ $season_c ??= $ps->get_season_c();
 
 // Check to see if the season is in the database before we continue.
 $cmd = "SELECT season FROM $ps->t_team_adv WHERE season=$season LIMIT 1";
+$nodata = array();
 $nodata = $ps->db->fetch_rows(1, $cmd);
 
-// if $nodata is empty then the season is not in the database and someone is misbehaving
+// if $nodata is empty then delete the seasons_h table entry if it exists and reload.
 if (empty($nodata)) {
-	$cms->full_page_err($basename, array(
-		'message_title'	=> $cms->trans("Season Parameter Invalid"),
-		'message'		=> $cms->trans("There is no data in the database for the season passed to the script. The season parameter should not be passed directly to the script."),
-		'division'		=> null,
-		'wildcard'		=> null,
-		'season'		=> null,
-		'season_c'		=> null,
-		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
-		'cookieconsent'	=> $cookieconsent,
-	));
-	exit();
+	$cmd = "SELECT season_h FROM $ps->t_seasons_h WHERE season_h=$season LIMIT 1";
+	$nodata = array();
+	$nodata = $ps->db->fetch_rows(1, $cmd);
+	if (!empty($nodata)) $ps->db->delete($ps->t_seasons_h, 'season_h', $season);
+	
+	// Reload current page.
+	previouspage($php_scnm);
 }
 unset ($nodata);
 

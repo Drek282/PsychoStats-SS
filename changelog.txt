@@ -156,6 +156,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Most recent team names not displaying on "All Teams" page in the ACP.
 * [Changed] User profiles and team names can now be reset separately.
 * [Fixed] Force permissions on install folder.
+* [Fixed] seasons_h table entry deleted if there is no data for season.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

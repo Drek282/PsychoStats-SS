@@ -157,6 +157,7 @@ Version 0.0.4b (in progress)
 * [Changed] User profiles and team names can now be reset separately.
 * [Fixed] Force permissions on install folder.
 * [Fixed] seasons_h table entry deleted if there is no data for season.
+* [Added] Note regarding manual deletion of install folder to INSTALL.md.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

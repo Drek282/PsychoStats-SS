@@ -1633,22 +1633,6 @@ if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
 error_no += 1
 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Initializing data processing for URL:  " + league_url + "  The URL is accessible and is for the correct league.\n"
 
-# Create an entry for the current season in psss_seasons_h if it does not exist.
-query = "SELECT season_h FROM psss_seasons_h WHERE season_h='" + str(season_c) + "'"
-cursor.execute(query)
-data = cursor.fetchone()
-if not data:
-    # Set season_l value.
-    # The only season with a different season length currently is 2020.
-    if (int(season_c) == 2020):
-        season_l = 120
-    else:
-        season_l = 162
-
-    # Add new entry to db.
-    query = "INSERT INTO psss_seasons_h VALUES ('" + str(season_c) + "', '" + str(season_l) + "')"
-    cursor.execute(query)
-
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"
 seasons_h_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
@@ -1696,12 +1680,12 @@ if ((check_loop == 0) and (lastupdate > pagedate) and (seasons_h[0] != season_c)
 
 elif ((check_loop != 0) and (seasons_h[0] != season_c)):
 
-    # Setup month range (April to October).
-    mr = range(4, 11)
+    # Setup month range (March to October).
+    mr = range(3, 11)
     # Return the current month as an integer.
     mc = int(now_utc.strftime("%-m"))
 
-    # Only engage check loop if the month is April to October.
+    # Only engage check loop if the month is March to October.
     if mc in mr:
         raw_lp_dump = grp_check(check_loop, league_url, raw_lp_dump)
     else:
@@ -1738,6 +1722,22 @@ if (seasons_h[0] != season_c):
     process_data (league_url, season_c, league_name, raw_lp_dump)
 else:
     season_c_skipped = 1
+
+# Create an entry for the current season in psss_seasons_h if it does not exist.
+query = "SELECT season_h FROM psss_seasons_h WHERE season_h='" + str(season_c) + "'"
+cursor.execute(query)
+data = cursor.fetchone()
+if not data:
+    # Set season_l value.
+    # The only season with a different season length currently is 2020.
+    if (int(season_c) == 2020):
+        season_l = 120
+    else:
+        season_l = 162
+
+    # Add new entry to db.
+    query = "INSERT INTO psss_seasons_h VALUES ('" + str(season_c) + "', '" + str(season_l) + "')"
+    cursor.execute(query)
 
 # Check for single season mode
 cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='single_season'")

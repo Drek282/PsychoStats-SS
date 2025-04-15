@@ -11,7 +11,7 @@
 		<div class="inner">
 		<span>
 			<input id='q-hdr' type="text" name="q" value="{if $results}{$results.phrase|escape}{else}{$q|escape}{/if}" class="field hsearch" maxlength="100">
-			<a href="help.php" title="<#Clear Search#>" alt="<#Clear Search#>"><img id="ps-search-clear" src="{theme->parent_url}/img/icons/turd.webp"></a>
+			<a href="help.php" title="<#Clear Search#>"><img id="ps-search-clear" src="{theme->parent_url}/img/icons/turd.webp" alt="<#Clear Search#>"></a>
 		</span>
 		<h1><#Help Page#>{if $conf.main.site_name} <#for#> {$conf.main.site_name}{/if}</h1>
 		{if $search_blurb}

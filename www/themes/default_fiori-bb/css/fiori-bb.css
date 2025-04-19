@@ -15,6 +15,11 @@ body.psychostats {
 	border: 1px solid #342b24;
 }
 
+/* NoScript Error */
+#no-js {
+	background-color: rgba(20, 25, 63, 0.8);
+}
+
 #ps-container {
 	background: #4c5daf;
 }

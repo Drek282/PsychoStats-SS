@@ -15,6 +15,11 @@ body.psychostats {
 	border: 1px solid #999999 ;
 }
 
+/* NoScript Error */
+#no-js {
+	background-color: rgba(222,199,129,0.8);
+}
+
 #ps-container {
 	background: #efe1b4;
     background-image: url("../img/tripe.webp");

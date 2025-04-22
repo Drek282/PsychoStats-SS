@@ -215,12 +215,10 @@ INSERT INTO `psss_config_help` (`id`, `enabled`, `idx`, `title`, `content`, `img
 
         '<p>In professional sports, and in fantasy sports such as Scoresheet Baseball, where you actually build and play teams, there are four pretty clearly defined stages of team building:</p>
 
-        <ul>
-            <il>1. Disaster Recovery<br></il>
-            <il>2. Rebuilding<br></il>
-            <il>3. Win Now<br></il>
-            <il>4. Domination<br></il>
-        </ul>
+            <h3>1. Disaster Recovery</h3>
+            <h3>2. Rebuilding</h3>
+            <h3>3. Win Now</h3>
+            <h3>4. Domination</h3>
 
         <h2>Disaster Recovery</h2>
 

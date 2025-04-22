@@ -1256,7 +1256,7 @@ function get_help($args = array()) {
 }
 
 function get_top_help() {
-	$cmd  = "SELECT * FROM $this->t_config_help ORDER BY weight DESC, idx ASC LIMIT 3";
+	$cmd  = "SELECT `title` FROM $this->t_config_help ORDER BY weight DESC, idx ASC LIMIT 50";
 
 	$results = array();
 	$results = $this->db->fetch_rows(1, $cmd);

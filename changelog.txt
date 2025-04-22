@@ -161,6 +161,7 @@ Version 0.0.4b (in progress)
 * [Fixed] seasons_h table entry for current season only created if data for current season exists.
 * [Fixed] Misplaced alt tag.
 * [Improved] noscript display—thanks Rosenstein.
+* [Added] Help entries.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

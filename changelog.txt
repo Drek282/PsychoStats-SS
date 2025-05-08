@@ -163,7 +163,6 @@ Version 0.0.4b (in progress)
 * [Improved] noscript display—thanks Rosenstein.
 * [Added] Help entries.
 * [Improved] top help list now lists only titles of top 50 results.
-* [Fixed] Stats will no longer update if they have already been updated.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

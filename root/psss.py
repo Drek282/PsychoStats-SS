@@ -27,10 +27,26 @@ def trunc(col: pd.Series) -> pd.Series:
 def sleep_m (m):
     time.sleep(int(m) * 60)
 
+# Get pagedate
+def get_pagedate (raw_lp_dump):
+    # Get the pagedate from the league page.
+    my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
+    pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+
+    # Convert league page date to epoch time.
+    pattern = '%m-%d-%y'
+    pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
+
+    # Add one and a half days to page date.
+    pagedate = pagedate + 129600
+
+    return pagedate
+
 # Check to see if game results have been published.
 def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Globals
+    global lastupdate
     global error_no
     global error_log
 
@@ -67,11 +83,14 @@ def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Check to see if the game results have been published.
     if re.search(check_string, rendered_html):
-        # Log entry.
-        error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
+        # Check to see if the pagedate is older than the current date.
+        pagedate = get_pagedate(raw_lp_dump)
+        if lastupdate < pagedate:
+            # Log entry.
+            error_no += 1
+            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
-        return raw_lp_dump
+            return raw_lp_dump
 
     # Loop to check the url to see if it has been updated.
     # Doing this twice might solve caching issues.
@@ -88,12 +107,14 @@ def grp_check (check_loop, league_url, raw_lp_dump):
 
         # Check to see if the game results have been published.
         if re.search(check_string, rendered_html):
+            # Check to see if the pagedate is older than the current date.
+            pagedate = get_pagedate(raw_lp_dump)
+            if lastupdate < pagedate:
+                # Log entry.
+                error_no += 1
+                error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
 
-            # Log entry.
-            error_no += 1
-            error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
-
-            return raw_lp_dump
+                return raw_lp_dump
 
     # Log entry.
     error_no += 1
@@ -1640,15 +1661,7 @@ my_regex = r"/(2[0-9][0-9][0-9])/"
 seasons_h = re.findall(my_regex, seasons_h_line)
 
 # Get the date on the league page.
-my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
-pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
-
-# Convert league page date to epoch time.
-pattern = '%m-%d-%y'
-pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
-
-# Add one and a half days to page date.
-pagedate = pagedate + 129600
+pagedate = get_pagedate(raw_lp_dump)
 
 # Get check loop variable from database.
 cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_loop'")
@@ -1850,12 +1863,7 @@ for season_h in list(seasons_h):
     error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Initializing data processing for season:  " + season_h + "\n"
 
     # Get the date on the league page.
-    my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
-    pagedate = re.search(my_regex, raw_hp_dump, re.MULTILINE).group(1)
-
-    # Convert league page date to epoch time.
-    pattern = '%m-%d-%y'
-    pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
+    pagedate = get_pagedate(raw_hp_dump)
 
     # Process the historical season.
     process_data (season_url, season_h, league_name, raw_hp_dump)

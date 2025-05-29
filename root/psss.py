@@ -215,7 +215,7 @@ def generate_psss_error_log ():
         return
 
     # Delete all rows that fall outside of the maxrows parameter.
-    diff = rowcount - maxrows
+    diff = row_count - maxrows
     query = "DELETE FROM psss_errlog ORDER BY timestamp LIMIT " + str(diff)
     cursor.execute(query)
 

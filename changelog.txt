@@ -166,6 +166,7 @@ Version 0.0.4b (in progress)
 * [Added] pagedate check to ensure that stats have actually been updated when check_string is present.
 * [Fixed] Typo in variable name.
 * [Fixed] Looping theme function—credit @Rosenstein.
+* [Fixed] Missing argument error on Wild Card page.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

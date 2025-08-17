@@ -162,7 +162,7 @@ $cms->theme->assign(array(
 $cms->full_page($basename, $basename, $basename.'_header', $basename.'_footer');
 
 function rankchange($val, $team) {
-	return rank_change($team);
+	return rank_change($val, $team);
 }
 
 function team_rank($val, $team) {

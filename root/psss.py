@@ -31,7 +31,7 @@ def sleep_m (m):
 def get_pagedate (raw_lp_dump):
     # Get the pagedate from the league page.
     my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+ ?((?:[1-9]|[1][0-9])-(?:[1-9]|[1-3][0-9])-(?:[0-9][0-9]))</h1>$"
-    pagedate = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+    pagedate = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1)
 
     # Convert league page date to epoch time.
     pattern = '%m-%d-%y'
@@ -228,7 +228,7 @@ def get_league_c (season_url, raw_lp_dump):
 
     # Get the scoresheets url name (doesn't always match league name in current url).
     my_regex = r"^<a href='(.+?_G.htm)?' target=_blank>"
-    surl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+    surl_name = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1)
 
     # Split the league url.
     lu_list = season_url.split("/")
@@ -259,7 +259,7 @@ def get_league_c (season_url, raw_lp_dump):
         raw_sp_dump = f.read().decode()
     
     # Remove empty lines.
-    raw_sp_dump = re.sub(r'^ *?\n', '', raw_sp_dump, 10000, re.MULTILINE)
+    raw_sp_dump = re.sub(r'^ *?\n', '', raw_sp_dump, count=10000, flags=re.MULTILINE)
 
     # Get second to last line of raw_sp_dump
     rsp_lines = raw_sp_dump.splitlines()
@@ -388,7 +388,7 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
     # Get the player stats url name (doesn't always match league name in current url).
     surl_name = ''
     my_regex = r"^<a href='(.+?_S.htm)?' target=_blank>"
-    surl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+    surl_name = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1)
 
     # Split the league url.
     lu_list = season_url.split("/")
@@ -436,7 +436,7 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
 
     # Get the list of teams from the player stats page.
     my_regex = r"(<a href='#(:?.|\n)+)(:?\n\n</div>\n\n<div class='wrapper'>\n\n<pre>\n\n<a name=')"
-    team_list = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(1)
+    team_list = re.search(my_regex, raw_ps_dump, flags=re.MULTILINE).group(1)
     team_list = list(filter(None, team_list.split("\n")))
 
     # Get the number of teams in the league.
@@ -453,7 +453,7 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
 
         # Get owner name.
         my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? |)" + str(team) + "(:?.|\n)+?\n\n<u><span class='heading'>(.+?) +W  L.+$"
-        owner_name = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(3)
+        owner_name = re.search(my_regex, raw_ps_dump, flags=re.MULTILINE).group(3)
         # For teams with multiple owners.
         owner_name = owner_name.replace("&amp;", "&")
 
@@ -524,17 +524,17 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         ## Process position player stats.
         # Remove raw_ps_dump prefix to search string and create the raw_rpo variable.
         my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>.+?</span></u>$"
-        header_line = re.search(my_regex, raw_ps_dump, re.MULTILINE).group()
-        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        header_line = re.search(my_regex, raw_ps_dump, flags=re.MULTILINE).group()
+        my_list = re.split(my_regex, raw_ps_dump, maxsplit=1, flags=re.MULTILINE)
         raw_rpo = my_list[1]
 
         # Set Player_Name label in header line and remove html.
         my_regex =  r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:? *)(:?[1-9]|[1-2][0-9]) .+? +?(G   AB  R   H   )"
-        header_line = re.sub(my_regex, 'Player_Name \g<3>', header_line, 1)
+        header_line = re.sub(my_regex, r'Player_Name \g<3>', header_line, count=1)
     
         # Remove html at end of header line.
         my_regex =  r"</span></u>$"
-        header_line = re.sub(my_regex, '', header_line, 1, re.MULTILINE)
+        header_line = re.sub(my_regex, '', header_line, count=1, flags=re.MULTILINE)
         raw_rpo = header_line + raw_rpo
 
         # Empty the list.
@@ -542,32 +542,32 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
     
         # Remove raw_rpo suffix from search string.
         my_regex =  r"^<u><span class='heading'>.+?</span></u>$"
-        my_list = re.split(my_regex, raw_rpo, 1, re.MULTILINE)
+        my_list = re.split(my_regex, raw_rpo, maxsplit=1, flags=re.MULTILINE)
         raw_rpo = my_list[0]
 
         # Empty the list.
         my_list = list()
 
         # Delete lines that start with "    season".
-        raw_rpo = re.sub(r'^  season.+?\n', '', raw_rpo, 200, re.MULTILINE)
+        raw_rpo = re.sub(r'^  season.+?\n', '', raw_rpo, count=200, flags=re.MULTILINE)
 
         # Delete empty lines.
-        raw_rpo = re.sub(r'^ *?\n', '', raw_rpo, 200, re.MULTILINE)
+        raw_rpo = re.sub(r'^ *?\n', '', raw_rpo, count=200, flags=re.MULTILINE)
 
         # Replace commas with # as a placeholder and fix names with brackets.
-        raw_rpo = re.sub(r'(\(.+?,|,)', '#', raw_rpo, 200, re.MULTILINE)
+        raw_rpo = re.sub(r'(\(.+?,|,)', '#', raw_rpo, count=200, flags=re.MULTILINE)
 
         # Delete single quotes.
-        raw_rpo = re.sub(r"'", '', raw_rpo, 200, re.MULTILINE)
+        raw_rpo = re.sub(r"'", '', raw_rpo, count=200, flags=re.MULTILINE)
 
         # Insert spaces into stats where there is a 1.000+.
-        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
-        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
-        raw_rpo = re.sub(r'([0-9])(1\.000)', '\g<1> \g<2>', raw_rpo, 2000, re.MULTILINE)
-        raw_rpo = re.sub(r'---(1\.000)', '0 \g<1>', raw_rpo, 2000, re.MULTILINE)
+        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', r'\g<1> \g<2>', raw_rpo, count=2000, flags=re.MULTILINE)
+        raw_rpo = re.sub(r'(\.[0-9][0-9][0-9])([1-9]\.[0-9][0-9][0-9])', r'\g<1> \g<2>', raw_rpo, count=2000, flags=re.MULTILINE)
+        raw_rpo = re.sub(r'([0-9])(1\.000)', r'\g<1> \g<2>', raw_rpo, count=2000, flags=re.MULTILINE)
+        raw_rpo = re.sub(r'---(1\.000)', r'0 \g<1>', raw_rpo, count=2000, flags=re.MULTILINE)
         
         # Replace spaces with commas in raw_rpo.
-        raw_rpo = re.sub(r"( +)", ',', raw_rpo, 800)
+        raw_rpo = re.sub(r"( +)", ',', raw_rpo, count=800)
 
         # Create the raw_rpo temp stats file name with path.
         rpo_tmp_fname = os.path.join(season_dir, 'rpo_tmp.csv')
@@ -602,8 +602,8 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         rpo_dfo['V'] = round((rpo_dfo['OPS'].astype(float) * rpo_dfo['AB'] * 0.595 / 1000 * 162 / games_played), 2)
 
         # If player AAA V = 0, if V < 0, V = 0.
-        rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0.00'
-        rpo_dfo.loc[rpo_dfo['V'].astype(float) < 0, 'V'] = '0.00'
+        rpo_dfo.loc[rpo_dfo['Player_Name'].str.contains('AAA'), rpo_dfo['V'].astype(float)] = '0.00'
+        rpo_dfo.loc[rpo_dfo['V'].astype(float) < 0, rpo_dfo['V'].astype(float)] = '0.00'
 
         # Reorder the columns.
         rpo_dfo = rpo_dfo.loc[:, ['Player_Name','G','AB','R','H','D','T','HR','RBI','BB','K','BA','OBA','SlgA','OPS','wOBA','SH','F','SF','GDP','SB','CS','OP','E','PB','V']]
@@ -616,7 +616,7 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         for index, row in rpo_dfo.iterrows():
 
             # Replace # placeholder in Player_Name with ,.
-            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], 4)
+            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], count=4)
 
             # Get the rpo team data from the database.
             query = "SELECT * FROM psss_team_rpo WHERE season='" + str(season) + "' AND team_id='" + str(team) + "' AND player_name='" + row['Player_Name'] + "'"
@@ -640,18 +640,18 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         ## Process pitcher stats.
         # Remove raw_ps_dump prefix to search string and create the raw_rpi variable.
         my_regex = r"^<a name='sst" + str(team) + "' id='sst" + str(team) + "'></a><u><span class='heading'>(:?.|\n)+?\n\n(<u><span class='heading'>.+?</span></u>)$"
-        header_line = re.search(my_regex, raw_ps_dump, re.MULTILINE).group(2)
-        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        header_line = re.search(my_regex, raw_ps_dump, flags=re.MULTILINE).group(2)
+        my_list = re.split(my_regex, raw_ps_dump, maxsplit=1, flags=re.MULTILINE)
         raw_rpi = my_list[3]
 
         # Set Player_Name label in header line and remove html.
         my_regex =  r"^<u><span class='heading'>.+? +?(W  L  pct.  ERA   )"
-        header_line = re.sub(my_regex, 'Player_Name \g<1>', header_line, 1)
+        header_line = re.sub(my_regex, r'Player_Name \g<1>', header_line, count=1)
     
         # Remove html at end of header line.
         my_regex =  r"</span></u>$"
-        header_line = re.sub(my_regex, '', header_line, 1, re.MULTILINE)
-        my_list = re.split(my_regex, raw_ps_dump, 1, re.MULTILINE)
+        header_line = re.sub(my_regex, '', header_line, count=1, flags=re.MULTILINE)
+        my_list = re.split(my_regex, raw_ps_dump, maxsplit=1, flags=re.MULTILINE)
         raw_rpi = header_line + raw_rpi
 
         # Empty the list.
@@ -662,30 +662,30 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
             my_regex =  r"^<a name='.+?</span></u>$"
         else:
             my_regex =  r"^</pre>$"
-        my_list = re.split(my_regex, raw_rpi, 1, re.MULTILINE)
+        my_list = re.split(my_regex, raw_rpi, maxsplit=1, flags=re.MULTILINE)
         raw_rpi = my_list[0]
 
         # Empty the list.
         my_list = list()
 
         # Delete lines that start with "    season".
-        raw_rpi = re.sub(r'^  season.+?\n', '', raw_rpi, 200, re.MULTILINE)
+        raw_rpi = re.sub(r'^  season.+?\n', '', raw_rpi, count=200, flags=re.MULTILINE)
 
         # Delete empty lines.
-        raw_rpi = re.sub(r'^ *?\n', '', raw_rpi, 200, re.MULTILINE)
+        raw_rpi = re.sub(r'^ *?\n', '', raw_rpi, count=200, flags=re.MULTILINE)
 
         # Replace commas with # as a placeholder and fix names with brackets.
-        raw_rpi = re.sub(r'(\(.+?,|,)', '#', raw_rpi, 200, re.MULTILINE)
+        raw_rpi = re.sub(r'(\(.+?,|,)', '#', raw_rpi, count=200, flags=re.MULTILINE)
 
         # Delete single quotes.
-        raw_rpi = re.sub(r"'", '', raw_rpi, 200, re.MULTILINE)
+        raw_rpi = re.sub(r"'", '', raw_rpi, count=200, flags=re.MULTILINE)
 
         # Insert spaces into stats where there is a 1.000+.
-        raw_rpi = re.sub(r'([0-9])(1\.000)', '\g<1> \g<2>', raw_rpi, 2000, re.MULTILINE)
-        raw_rpi = re.sub(r'-(1\.000)', '0 \g<1>', raw_rpi, 2000, re.MULTILINE)
+        raw_rpi = re.sub(r'([0-9])(1\.000)', r'\g<1> \g<2>', raw_rpi, count=2000, flags=re.MULTILINE)
+        raw_rpi = re.sub(r'-(1\.000)', r'0 \g<1>', raw_rpi, count=2000, flags=re.MULTILINE)
         
         # Replace spaces with commas in raw_rpi.
-        raw_rpi = re.sub(r"( +)", ',', raw_rpi, 800)
+        raw_rpi = re.sub(r"( +)", ',', raw_rpi, count=800)
 
         # Create the raw_rpi temp stats file name with path.
         rpi_tmp_fname = os.path.join(season_dir, 'rpi_tmp.csv')
@@ -723,8 +723,8 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         rpi_dfo['IP'] = np.trunc(rpi_dfo['IP']) + round((rpi_dfo['IP'] % 1) / 3, 1)
 
         # If player AAA V = 0, if V < 0, V = 0.
-        rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), 'V'] = '0'
-        rpi_dfo.loc[rpi_dfo['V'].astype(float) < 0, 'V'] = '0.00'
+        rpi_dfo.loc[rpi_dfo['Player_Name'].str.contains('AAA'), rpi_dfo['V'].astype(float)] = '0.00'
+        rpi_dfo.loc[rpi_dfo['V'].astype(float) < 0, rpi_dfo['V'].astype(float)] = '0.00'
 
         # Replace NaN with 0.
         rpi_dfo = rpi_dfo.fillna(0)
@@ -735,7 +735,7 @@ def generate_psss_team_rosters (season, season_url, season_dir, games_played, ra
         for index, row in rpi_dfo.iterrows():
 
             # Replace # placeholder in Player_Name with ,.
-            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], 4)
+            row['Player_Name'] = re.sub(r"#", ', ', row['Player_Name'], count=4)
 
             # Get CG number for "Pitcher, AAA".
             if (row['Player_Name'] == 'Pitcher AAA'):
@@ -798,7 +798,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Check to see if the season has started.
     global season_ns
     my_regex =  r"^<a name='standings' id='standings'>.+?</span></u>$"
-    if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
+    if not re.search(my_regex, raw_lp_dump, flags=re.MULTILINE):
         season_ns = True
 
         print("WARNING:  There is no data for the current season.  The season has probably not started or the first week results have not yet been published.")
@@ -813,11 +813,11 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         season_ns = False
     
     # Generate the first header line.
-    header_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group()
-    header_line = re.sub(r"<a name='standings' id='standings'></a>", '', header_line, 1)
+    header_line = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group()
+    header_line = re.sub(r"<a name='standings' id='standings'></a>", '', header_line, count=1)
     
     # Remove raw_lp_dump prefix to search string.
-    my_list = re.split(my_regex, raw_lp_dump, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump, maxsplit=1, flags=re.MULTILINE)
     raw_lp_dump_mod = header_line + my_list[1]
 
     # Empty the list.
@@ -825,7 +825,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     # Remove raw_lp_dump suffix from search string.
     my_regex =  r"^<a name='scores' id='scores'>.+?$"
-    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump_mod, maxsplit=1, flags=re.MULTILINE)
     raw_lp_dump_mod = my_list[0]
 
     # Empty the list.
@@ -833,11 +833,11 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     # Remove html and whitespace at start of lines.
     my_regex =  r"<span class='.+?'> *"
-    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, 200, re.MULTILINE)
+    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, count=200, flags=re.MULTILINE)
     
     # Remove html at end of lines.
     my_regex =  r"</span>"
-    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, 200, re.MULTILINE)
+    raw_lp_dump_mod = re.sub(my_regex, '', raw_lp_dump_mod, count=200, flags=re.MULTILINE)
 
     # Convert league_name to lower case.
     league_name = league_name.lower()
@@ -879,30 +879,30 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     
     # Create defensive stats variable.
     my_regex =  r"^<u>AB    R    H  .+?</u>$"
-    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump_mod, maxsplit=1, flags=re.MULTILINE)
     working_stats_def_pre = my_list[0]
 
     # Empty the list.
     my_list = list()
     
     # Generate the first header line.
-    header_line = re.search(my_regex, raw_lp_dump_mod, re.MULTILINE).group()
+    header_line = re.search(my_regex, raw_lp_dump_mod, flags=re.MULTILINE).group()
     
     # Create offensive stats variable.
-    my_list = re.split(my_regex, raw_lp_dump_mod, 1, re.MULTILINE)
+    my_list = re.split(my_regex, raw_lp_dump_mod, maxsplit=1, flags=re.MULTILINE)
     working_stats_off = header_line + my_list[1]
 
     # Delete empty lines.
-    working_stats_off = re.sub(r'^ *?\n', '', working_stats_off, 200, re.MULTILINE)
+    working_stats_off = re.sub(r'^ *?\n', '', working_stats_off, count=200, flags=re.MULTILINE)
 
     # Empty the list.
     my_list = list()
 
     # Split off the wildcard standings if they exist.
     my_regex = r"^<u>Wild Card Race  .+?</u>$"
-    if re.search(my_regex, working_stats_def_pre, re.MULTILINE):
-        header_line = re.search(my_regex, working_stats_def_pre, re.MULTILINE).group()
-        my_list = re.split(my_regex, working_stats_def_pre, 1, re.MULTILINE)
+    if re.search(my_regex, working_stats_def_pre, flags=re.MULTILINE):
+        header_line = re.search(my_regex, working_stats_def_pre, flags=re.MULTILINE).group()
+        my_list = re.split(my_regex, working_stats_def_pre, maxsplit=1, flags=re.MULTILINE)
         working_stats_def = my_list[0]
         working_stats_wc = header_line + my_list[1]
     else:
@@ -917,7 +917,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     # Split working_stats_def into division standings.
     #my_regex = r"^<u>.+? Standings, Pitching  +.+?</u>$"
     my_regex = r" *?\n *?\n"
-    my_list = re.split(my_regex, working_stats_def, 9, re.MULTILINE)
+    my_list = re.split(my_regex, working_stats_def, maxsplit=9, flags=re.MULTILINE)
 
 
     # Remove empty keys.
@@ -934,21 +934,21 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     for i in range(len(my_list)):
 
         # Get division name and remove whitespace at end of name.
-        if re.match(my_regex, my_list[i], re.MULTILINE):
-            div = re.match(my_regex, my_list[i], re.MULTILINE).group(1)
-            div = re.sub(r'( +$)', '', div, 1, re.MULTILINE)
+        if re.match(my_regex, my_list[i], flags=re.MULTILINE):
+            div = re.match(my_regex, my_list[i], flags=re.MULTILINE).group(1)
+            div = re.sub(r'( +$)', '', div, count=1, flags=re.MULTILINE)
 
             # Replace spaces in division name with placeholder.
-            div = re.sub(r'( +)', '###', div, 4)
+            div = re.sub(r'( +)', '###', div, count=4)
             # Double quote the division name.
             div = '"' + div + '"'
 
         # Generate the header line.
         hl_regex = r"^<u>(:?.+ |)Standings, Pitching  +.+?</u>\n"
-        header_line = re.search(hl_regex, my_list[i], re.MULTILINE).group()
+        header_line = re.search(hl_regex, my_list[i], flags=re.MULTILINE).group()
 
         # Delete the header line.
-        my_list[i] = re.sub(header_line, '', my_list[i], 1, re.MULTILINE)
+        my_list[i] = re.sub(header_line, '', my_list[i], count=1, flags=re.MULTILINE)
 
         # Append division field to every line.
         if div:
@@ -973,15 +973,15 @@ def process_data (season_url, season, league_name, raw_lp_dump):
 
     # Set the header line for working_stats_def.
     my_regex =  r"^<u>(:?.+ |)Standings, Pitching "
-    working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, 1)
+    working_stats_def = re.sub(my_regex, 'Team Team_Name ', working_stats_def, count=1)
     my_regex =  r"</u>$"
-    working_stats_def = re.sub(my_regex, ' Division', working_stats_def, 1, re.MULTILINE)
+    working_stats_def = re.sub(my_regex, ' Division', working_stats_def, count=1, flags=re.MULTILINE)
 
     # Set the header line for working_stats_off.
     my_regex =  r"^<u>"
-    working_stats_off = re.sub(my_regex, 'Team ', working_stats_off, 1)
+    working_stats_off = re.sub(my_regex, 'Team ', working_stats_off, count=1)
     my_regex =  r"</u>$"
-    working_stats_off = re.sub(my_regex, '', working_stats_off, 1, re.MULTILINE)
+    working_stats_off = re.sub(my_regex, '', working_stats_off, count=1, flags=re.MULTILINE)
     working_stats_off = os.linesep.join([s for s in working_stats_off.splitlines() if s])
 
     # Add a newline to the last field.
@@ -991,50 +991,50 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     if working_stats_wc:
         # Remove whitespace at end of lines in working_stats_wc.
         my_regex =  r"( +$)"
-        working_stats_wc = re.sub(my_regex, '', working_stats_wc, 40, re.MULTILINE)
+        working_stats_wc = re.sub(my_regex, '', working_stats_wc, count=40, flags=re.MULTILINE)
         my_regex =  r"^<u>Wild Card Race "
-        working_stats_wc = re.sub(my_regex, 'Team ', working_stats_wc, 1)
+        working_stats_wc = re.sub(my_regex, 'Team ', working_stats_wc, count=1)
         my_regex =  r"</u>$"
-        working_stats_wc = re.sub(my_regex, '', working_stats_wc, 1, re.MULTILINE)
+        working_stats_wc = re.sub(my_regex, '', working_stats_wc, count=1, flags=re.MULTILINE)
         working_stats_wc = os.linesep.join([s for s in working_stats_wc.splitlines() if s])
     
     ## Remove team names from working_stats_def and working_stats_wc and create team_names_def variable.
     # working_stats_def
     my_regex =  r"^((?:[1-9]|[1-9][0-9])  )(.+)( +(?:1[0-9][0-9]| [1-9][0-9]|  [0-9]) (?:1[0-9][0-9]| [1-9][0-9]|  [0-9]) (?:1\.000| \.[0-9][0-9][0-9]) .+)$"
-    working_stats_def_nr = re.sub(my_regex, r'\g<1>###\g<3>', working_stats_def, 40, re.MULTILINE)
-    team_names_def = re.sub(my_regex, r'\g<1>\g<2>', working_stats_def, 40, re.MULTILINE)
+    working_stats_def_nr = re.sub(my_regex, r'\g<1>###\g<3>', working_stats_def, count=40, flags=re.MULTILINE)
+    team_names_def = re.sub(my_regex, r'\g<1>\g<2>', working_stats_def, count=40, flags=re.MULTILINE)
     # Remove whitespace at end of lines in team_names_def.
     my_regex =  r"( +$)"
-    team_names_def = re.sub(my_regex, '', team_names_def, 40, re.MULTILINE)
+    team_names_def = re.sub(my_regex, '', team_names_def, count=40, flags=re.MULTILINE)
     # Fix the header line in team_names_def.
     my_regex =  r"(^.+$)"
-    team_names_def = re.sub(my_regex, 'Team Team_Name', team_names_def, 1, re.MULTILINE)
+    team_names_def = re.sub(my_regex, 'Team Team_Name', team_names_def, count=1, flags=re.MULTILINE)
     # Replace html special characters in team_names_def.
     team_names_def = html.unescape(team_names_def)
     # working_stats_wc
     if working_stats_wc:
         my_regex =  r"^(([1-9]|[1-9][0-9])  )(.+)(  +( |1)( |[1-9])[0-9] ( |1)( |[1-9])[0-9]  \.[0-9][0-9][0-9] .+)$"
-        working_stats_wc = re.sub(my_regex, r'\g<2> \g<4>', working_stats_wc, 40, re.MULTILINE)
+        working_stats_wc = re.sub(my_regex, r'\g<2> \g<4>', working_stats_wc, count=40, flags=re.MULTILINE)
     
     # Replace spaces with commas in working_stats_def, working_stats_wc and working_stats_off.
     my_regex =  r"( +)"
-    working_stats_def = re.sub(my_regex, ',', working_stats_def_nr, 800)
+    working_stats_def = re.sub(my_regex, ',', working_stats_def_nr, count=800)
     # Replace the placeholder in division names with spaces.
-    working_stats_def = re.sub(r'###', ' ', working_stats_def, 800)
+    working_stats_def = re.sub(r'###', ' ', working_stats_def, count=800)
 
     if working_stats_wc:
-        working_stats_wc = re.sub(my_regex, ',', working_stats_wc, 800)
-    working_stats_off = re.sub(my_regex, ',', working_stats_off, 1600)
+        working_stats_wc = re.sub(my_regex, ',', working_stats_wc, count=800)
+    working_stats_off = re.sub(my_regex, ',', working_stats_off, count=1600)
     
     ## Double quote the names in team_names_def.
-    team_names_def = re.sub(r'(^[1-9]|[1-2][0-9]) +(.+)$', r'\g<1> "\g<2>"', team_names_def, 40, re.MULTILINE )
+    team_names_def = re.sub(r'(^[1-9]|[1-2][0-9]) +(.+)$', r'\g<1> "\g<2>"', team_names_def, count=40, flags=re.MULTILINE )
 
     ## Replace first set of spaces with commas in team_names_def.
     ## Replace the space in the header line with a comma.
     # team_names_def
     my_regex =  r"^([1-9]|[1-9][0-9])( )(.+)$"
-    team_names_def = re.sub(r' ', ',', team_names_def, 1)
-    team_names_def = re.sub(my_regex, r'\g<1>,\g<3>', team_names_def, 40, re.MULTILINE)
+    team_names_def = re.sub(r' ', ',', team_names_def, count=1)
+    team_names_def = re.sub(my_regex, r'\g<1>,\g<3>', team_names_def, count=40, flags=re.MULTILINE)
 
     
     ## Create the CSV files
@@ -1628,7 +1628,7 @@ with urlopen(league_url) as f:
 
 ## Check to see if the page and url are correct.
 my_regex = r"^<body>[\r\n\|\r|\n]+<h1>.+(" + re.escape(league_name) + r").+?</h1>$"
-if not re.search(my_regex, raw_lp_dump, re.MULTILINE):
+if not re.search(my_regex, raw_lp_dump, flags=re.MULTILINE):
 
     print(
         '''
@@ -1656,7 +1656,7 @@ error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,I
 
 # Get the list of available seasons from the league page.
 my_regex = r"^Past seasons: +(.+)?</a><br>$"
-seasons_h_line = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(1)
+seasons_h_line = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1)
 my_regex = r"/(2[0-9][0-9][0-9])/"
 seasons_h = re.findall(my_regex, seasons_h_line)
 
@@ -1824,7 +1824,7 @@ for season_h in list(seasons_h):
 
     # Get the league url name (doesn't always match league name in current url).
     my_regex = r"</a> <a href='/archive/" + str(season_h) + "/(:?FOR_|C)WWW/(.+.htm)?' target=_blank>" + str(season_h) + "</a>"
-    lurl_name = re.search(my_regex, raw_lp_dump, re.MULTILINE).group(2)
+    lurl_name = re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(2)
 
     # Split the league url.
     lu_list = league_url.split("/")

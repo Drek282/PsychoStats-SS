@@ -26,8 +26,13 @@ $basename = basename(__FILE__, '.php');
 include("../includes/common.php");
 include("./common.php");
 
-$validfields = array('ref','start','limit','order','sort','move','toggle','id','ajax');
+$validfields = array('ref','start','limit','order','sort','move','toggle','id','ajax','remInstalldir');
 $cms->theme->assign_request_vars($validfields, true);
+
+if ($remInstalldir) {
+	deleteTree('../install/', $keepRootFolder = false);
+	gotopage("../admin/sources.php");
+}
 
 if (!is_numeric($start) or $start < 0) $start = 0;
 if (!is_numeric($limit) or $limit < 0) $limit = 25;

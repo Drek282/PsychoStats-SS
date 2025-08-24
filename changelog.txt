@@ -168,6 +168,7 @@ Version 0.0.4b (in progress)
 * [Fixed] Looping theme function—credit @Rosenstein.
 * [Fixed] Missing argument error on Wild Card page.
 * [Fixed] Deprecation warnings and syntax errors.
+* [Fixed] Install folder now removed after install on both Linux and Windows—thanks Rosenstein.
 
 Version 0.0.3b (01/16/2023)
 * [Added] Team rosters to team page.

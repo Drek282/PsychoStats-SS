@@ -1,9 +1,7 @@
 --- DREK ---
 
-Version 1.0.0 (04/11/2024)
-* [Milestone] First official non-beta release.
 
-Version 0.0.4b
+Version 0.0.4b (in progress)
 * [Added] Help page and infrastructure.
 * [Added] Owner email to team profile.
 * [Improved] Leagues where the league name has changed can now be fully processed.

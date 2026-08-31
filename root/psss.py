@@ -37,8 +37,8 @@ def get_pagedate (raw_lp_dump):
     pattern = '%m-%d-%y'
     pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 
-    # Add one and a half days to page date.
-    pagedate = pagedate + 129600
+    # Add half a day to page date.
+    pagedate = pagedate + 43200
 
     return pagedate
 

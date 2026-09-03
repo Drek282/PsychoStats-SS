@@ -37,8 +37,8 @@ def get_pagedate (raw_lp_dump):
     pattern = '%m-%d-%y'
     pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 
-    # Add half a day to page date.
-    pagedate = pagedate + 43200
+    # Add a day and a half to page date.
+    pagedate = pagedate + 129600
 
     return pagedate
 
@@ -46,7 +46,7 @@ def get_pagedate (raw_lp_dump):
 def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Globals
-    global lastupdate
+    global now_utc_ts
     global error_no
     global error_log
 
@@ -85,7 +85,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     if re.search(check_string, rendered_html):
         # Check to see if the pagedate is older than the current date.
         pagedate = get_pagedate(raw_lp_dump)
-        if lastupdate < pagedate:
+        if now_utc_ts < pagedate:
             # Log entry.
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
@@ -109,7 +109,7 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         if re.search(check_string, rendered_html):
             # Check to see if the pagedate is older than the current date.
             pagedate = get_pagedate(raw_lp_dump)
-            if lastupdate < pagedate:
+            if now_utc_ts < pagedate:
                 # Log entry.
                 error_no += 1
                 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"

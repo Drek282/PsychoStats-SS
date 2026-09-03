@@ -1,7 +1,7 @@
 --- DREK ---
 
 Version 1.0.1b
-* [Tweaked] Time added to pagedate lowered from 36 to 12 hours.
+* [Fixed] Check to ensure PSSS doesn't update until weekly results are released.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

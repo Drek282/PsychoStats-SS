@@ -2,6 +2,7 @@
 
 Version 1.0.1b
 * [Fixed] Check to ensure PSSS doesn't update until weekly results are released.
+* [Fixed] Error in regex related to wildcard standings processing.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

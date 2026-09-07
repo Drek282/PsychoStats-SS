@@ -37,8 +37,8 @@ def get_pagedate (raw_lp_dump):
     pattern = '%m-%d-%y'
     pagedate = int(time.mktime(time.strptime(pagedate, pattern)))
 
-    # Add a day and a half to page date.
-    pagedate = pagedate + 129600
+    # Add two and a half days to page date.
+    pagedate = pagedate + 216000
 
     return pagedate
 
@@ -49,6 +49,9 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     global now_utc_ts
     global error_no
     global error_log
+
+    # The check time will be current time - 3 days.
+    checktime = now_utc_ts - 259200
 
     # Get the check string from the database.
     cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_string'")
@@ -83,9 +86,9 @@ def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Check to see if the game results have been published.
     if re.search(check_string, rendered_html):
-        # Check to see if the pagedate is older than the current date.
+        # Check to see if the pagedate is newer than checktime.
         pagedate = get_pagedate(raw_lp_dump)
-        if now_utc_ts < pagedate:
+        if checktime < pagedate:
             # Log entry.
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
@@ -107,9 +110,9 @@ def grp_check (check_loop, league_url, raw_lp_dump):
 
         # Check to see if the game results have been published.
         if re.search(check_string, rendered_html):
-            # Check to see if the pagedate is older than the current date.
+            # Check to see if the pagedate is newer than checktime.
             pagedate = get_pagedate(raw_lp_dump)
-            if now_utc_ts < pagedate:
+            if checktime < pagedate:
                 # Log entry.
                 error_no += 1
                 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
@@ -1013,7 +1016,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
     team_names_def = html.unescape(team_names_def)
     # working_stats_wc
     if working_stats_wc:
-        my_regex =  r"^(([1-9]|[1-9][0-9])  )(.+)(  +( |1)( |[1-9])[0-9] ( |1)( |[1-9])[0-9]  \.[0-9][0-9][0-9] .+)$"
+        my_regex =  r"^(([1-9]|[1-9][0-9])  )(.+)( +( |1)( |[1-9])[0-9] ( |1)( |[1-9])[0-9]  \.[0-9][0-9][0-9] .+)$"
         working_stats_wc = re.sub(my_regex, r'\g<2> \g<4>', working_stats_wc, count=40, flags=re.MULTILINE)
     
     # Replace spaces with commas in working_stats_def, working_stats_wc and working_stats_off.

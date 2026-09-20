@@ -1,0 +1,1 @@
+ALTER TABLE `psss_team_wc` ADD COLUMN `wc_teams` smallint unsigned NOT NULL default '0';

@@ -60,9 +60,7 @@ Example:
 
 > 0 13 * * mon norm . /home/norm/.profile /home/norm/.local/share/psychostats/python3 psss.py
 
-In the Main section of the Config page in the Admin CP you will see the following setting `Check Number for Published Game Results`.  The script will check to see if the game results have been published once every ten minutes until that number is reached.  When that number is reached it will exit with an error message if the `Check String` is not matched, see below.  A good number is 36 which means the script will run for 6 hours before it fails and exits.
-
-In the Main section of the Config page in the Admin CP you will see the following setting `Check String for Published Game Results`.  This is the message Scoresheet uses to announce the fact that game results have been published.  Typically this should not need to be changed, but Scoresheet has been known, on occasion, to change the message.  If they do that setting will need to be changed to match that.  The two matches so far have been `game results are up` and `game results are now up`, the current setting should match either of those.
+In the Main section of the Config page in the Admin CP you will see the following setting `Check Number for Published Game Results`.  The script will check to see if the game results have been published once every ten minutes until that number is reached.  When that number is reached it will exit with an error message if the number of games played on the league page is not higher than the number recorded in the database.  A good number is 36 which means the script will run for 6 hours before it fails and exits.
 
 ### Security Notes
 

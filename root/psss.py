@@ -42,53 +42,44 @@ def get_pagedate (raw_lp_dump):
 
     return pagedate
 
-# Check to see if game results have been published.
+
+#############################################################################
+#### Check to see if game results have been published:                   ####
+#### compare the number of games reported in the database to the         ####
+#### number of games reported on the league page.                        ####
+################################################@############################
 def grp_check (check_loop, league_url, raw_lp_dump):
 
     # Globals
-    global now_utc_ts
+    global season_c
     global error_no
     global error_log
 
-    # The check time will be current time - 3 days.
-    checktime = now_utc_ts - 259200
-
-    # Get the check string from the database.
-    cursor.execute("SELECT value FROM psss_config WHERE conftype='main' AND var='check_string'")
-    data = cursor.fetchone()
-    if data['value']:
-        check_string = data['value']
-    else:
-        print(
-            '''
-            FATAL:  You must configure a check string so that the script can tell if the weekly
-                    game results have been released.  This should have been done for you when you
-                    installed PsychoStats for Scoresheet Baseball.
-
-                    There is a good chance your PsychoStats installation is seriously broken.
-                    Please consult the README.md file and try again.
-
-                    This script will exit.
-            '''
-            )
-        print()
-
-        # Log entry.
-        error_no += 1
-        error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",fatal,DEFAULT,Check string to see if weekly game results have been published not configured."
-
-        # Generate the error log and exit.
-        generate_psss_error_log()
-        sys.exit()
-
     # Render the html to remove commented lines.
-    rendered_html = html2text.html2text(raw_lp_dump)
+    #rendered_html = html2text.html2text(raw_lp_dump)
+    # Python output to file:
+    with open("output.txt", "a") as f:
+        print(raw_lp_dump, file=f)
+
+    # Get the number of games played for the current season from the database.
+    cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season_c) + "'")
+    data = cursor.fetchone()
+    if data['games_played']:
+        games_played_db = int(data['games_played'])
+    else:
+        games_played_db = int(0)
+
+    # Get the number of games played for the current season from the web page.
+    my_regex = r"^<span class=\'u[0-9]{1,2}\'>.+ ([0-9]{1,3}) +([0-9]{1,3}) +(?:1\.000| \.[0-9]{3}) .+</span>$"
 
     # Check to see if the game results have been published.
-    if re.search(check_string, rendered_html):
-        # Check to see if the pagedate is newer than checktime.
-        pagedate = get_pagedate(raw_lp_dump)
-        if checktime < pagedate:
+    if re.search(my_regex, raw_lp_dump, flags=re.MULTILINE):
+        # Check to see if the games played in database is lower than on the page.
+        rw = int(re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1))
+        rl = int(re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(2))
+        games_played_page = rw + rl
+
+        if games_played_db < games_played_page:
             # Log entry.
             error_no += 1
             error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
@@ -96,7 +87,6 @@ def grp_check (check_loop, league_url, raw_lp_dump):
             return raw_lp_dump
 
     # Loop to check the url to see if it has been updated.
-    # Doing this twice might solve caching issues.
     for cl in range(int(check_loop)):
     
         sleep_m(10)
@@ -105,14 +95,17 @@ def grp_check (check_loop, league_url, raw_lp_dump):
         with urlopen(league_url) as f:
             raw_lp_dump = f.read().decode()
 
-        # Render the html to remove commented lines.
-        rendered_html = html2text.html2text(raw_lp_dump)
-
         # Check to see if the game results have been published.
-        if re.search(check_string, rendered_html):
-            # Check to see if the pagedate is newer than checktime.
-            pagedate = get_pagedate(raw_lp_dump)
-            if checktime < pagedate:
+        if re.search(my_regex, raw_lp_dump, flags=re.MULTILINE):
+            # Check to see if the games played in database is lower than on the page.
+            rw = int(re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1))
+            rl = int(re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(2))
+            games_played_page = rw + rl
+
+            if games_played_db < games_played_page:
+                print('success!')
+                print()
+                sys.exit()
                 # Log entry.
                 error_no += 1
                 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"
@@ -908,6 +901,10 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         my_list = re.split(my_regex, working_stats_def_pre, maxsplit=1, flags=re.MULTILINE)
         working_stats_def = my_list[0]
         working_stats_wc = header_line + my_list[1]
+
+        # Get the number of wildcard teams.
+        my_regex = r'^([0-9]) wild-card team.+$'
+        wc_teams = int(re.search(my_regex, raw_lp_dump, flags=re.MULTILINE).group(1))
     else:
         working_stats_def = working_stats_def_pre
         working_stats_wc = str()
@@ -1457,7 +1454,7 @@ def process_data (season_url, season, league_name, raw_lp_dump):
         # Iterate through working_stats_wc_dfo.
         for index, row in working_stats_wc_dfo.iterrows():
             # Add new entry to db.
-            query = "INSERT INTO psss_team_wc VALUES ('" + str(season_c) + "', '" + str(row['Team']) + "', '" + str(row['GB']) + "')"
+            query = "INSERT INTO psss_team_wc VALUES ('" + str(season_c) + "', '" + str(row['Team']) + "', '" + str(row['GB']) + "', '" + str(wc_teams) + "')"
             cursor.execute(query)
 
 ############################################################################

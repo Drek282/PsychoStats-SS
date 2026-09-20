@@ -1569,11 +1569,57 @@ function get_wc_list($args = array()) {
 	// Get playoff status.
 	$clinch_count = 0;
 	$in_count = 0;
+	$wc_teams = $list[0]['wc_teams'];
+
+	// If $wc_teams == 0 return.
+	if ($wc_teams == '0') return null;
+
+	$wc_last_tm = $wc_teams - 1;
+	$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
+	$wcp_arr = array();
+
 	foreach ($list as $tm => $val) {
 		$list[$tm]['games_back_wc'] ??= null;
-		if ($list[$tm]['games_back_wc'] == '-') $in_count++;
+		// The top teams set by $wc_teams are in the playoffs.
+		if ($in_count < $wc_teams) {
+			if ($list[$tm]['games_back_wc'] == '-') {
+				$wcp_arr[$in_count] = '-';
+			} else {
+				$wcp_arr[$in_count] = $list[$tm]['games_back_wc'];
+			}
+			$in_count++;
+			continue;
+		}
+
+		// Calculate the games back relative to the last game in the playoffs.
+		$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
+
+		// Set playoff status.
 		$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
 		if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
+	}
+
+	// Set the gb + rating for teams in playoff position.
+	$in_count = 0;
+	$wcp_arr = array_reverse($wcp_arr);
+	foreach ($list as $tm => $val) {
+		if ($in_count == 0) {
+			$baseline = $wcp_arr[$in_count];
+			$list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+			$in_count++;
+			continue;
+		}
+		if ($in_count < $wc_teams) {
+			if ($wcp_arr[$in_count] != '-') {
+				$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
+				$list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+				$in_count++;
+				continue;
+			} else {
+				$list[$tm]['games_back_wc'] = '-';
+			}
+		}
+		break;
 	}
 
 	// How many teams are in the race?

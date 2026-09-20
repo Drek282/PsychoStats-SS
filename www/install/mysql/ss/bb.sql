@@ -74,6 +74,7 @@ CREATE TABLE `psss_team_wc` (
   `season` smallint unsigned default NULL,
   `team_id` smallint unsigned NOT NULL default '0',
   `games_back_wc` varchar(64) default NULL,
+  `wc_teams` smallint unsigned NOT NULL default '0',
   PRIMARY KEY  (`season`,`team_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 

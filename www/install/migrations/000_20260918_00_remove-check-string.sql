@@ -1,0 +1,1 @@
+DELETE FROM `psss_config` WHERE `id` = 12;

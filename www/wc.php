@@ -100,8 +100,20 @@ $teams = $ps->get_wc_list(array(
 	'limit'		=> $limit,
 ));
 
-// Return to previous page is $teams is empty.
-if (empty($teams)) previouspage('index.php');
+// if $teams is empty then we have no awards in the database
+if (empty($teams)) {
+	$cms->full_page_err($basename, array(
+		'message_title'	=> $cms->trans("Wilcard Standings Not Available"),
+		'message'		=> $cms->trans("An error has occured.  This should be fixed after the next Scoresheet results are published."),
+		'division'		=> $division,
+		'wildcard'		=> $wildcard,
+		'season'		=> null,
+		'season_c'		=> null,
+		'form_key'		=> $ps->conf['main']['security']['csrf_protection'] ? $cms->session->key() : '',
+		'cookieconsent'	=> $cookieconsent,
+	));
+	exit();
+}
 
 // reset $sort variable to first sort column
 $sort_arr = explode(", ", $sort);

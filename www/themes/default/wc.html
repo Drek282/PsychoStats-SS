@@ -22,7 +22,7 @@
 		<h1><#Wild Card Standings#>{if $conf.main.site_name} for {$conf.main.site_name}{/if}</h1>
 		<h2>
 		{if $totalranked != "0"}
-			<strong>{$teams.0.games_played}</strong> <#games played#> :: <strong>{$teams.0.games_remaining}</strong> <#games remaining#>
+			<strong>{$teams.0.games_played}</strong> <#games played#> :: <strong>{$teams.0.games_remaining}</strong> <#games remaining#> :: <strong>{$teams.0.wc_teams}</strong> <#wild card team(s) in this league#>
 		{else}
 			<#no Wild Card standings have been published#>
 		{/if}

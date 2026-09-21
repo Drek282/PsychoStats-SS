@@ -1574,70 +1574,63 @@ function get_wc_list($args = array()) {
 	// If $wc_teams == 0 return.
 	if ($wc_teams == '0') return null;
 
-	$wc_last_tm = $wc_teams - 1;
-	$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
-	$wcp_arr = array();
+	// How many teams are in the race?
+	$total_wc = count($list);
 
-	foreach ($list as $tm => $val) {
-		$list[$tm]['games_back_wc'] ??= null;
-		// The top teams set by $wc_teams are in the playoffs.
-		if ($in_count < $wc_teams) {
-			if ($list[$tm]['games_back_wc'] == '-') {
-				$wcp_arr[$in_count] = '-';
-			} else {
-				$wcp_arr[$in_count] = $list[$tm]['games_back_wc'];
-			}
-			$in_count++;
-			continue;
+	// If the number of teams listed equals the number of wildcard teams, all teams have clinched.
+	if ($wc_teams == $total_wc) {
+		foreach ($list as $tm => $val) {
+			$list[$tm]['games_back_wc'] = 'c';
 		}
+	} else {
+		$wc_last_tm = $wc_teams - 1;
+		$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
+		$wc_gb_offset = $list[$wc_teams]['games_back_wc'] - $list[$wc_last_tm]['games_back_wc'];
+		$wcp_arr = array();
 
-		// Calculate the games back relative to the last game in the playoffs.
-		$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
-
-		// Set playoff status.
-		$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
-		if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
-	}
-
-	// Set the gb + rating for teams in playoff position.
-	$in_count = 0;
-	$wcp_arr = array_reverse($wcp_arr);
-	foreach ($list as $tm => $val) {
-		if ($in_count == 0) {
-			$baseline = $wcp_arr[$in_count];
-			($wcp_arr[$in_count] > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
-			$in_count++;
-			continue;
-		}
-		if ($in_count < $wc_teams) {
-			if ($wcp_arr[$in_count] != '-') {
-				$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
-				($wcp_arr[$in_count] > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+		foreach ($list as $tm => $val) {
+			$list[$tm]['games_back_wc'] ??= null;
+			// The top teams set by $wc_teams are in the playoffs.
+			if ($in_count < $wc_teams) {
+				if ($list[$tm]['games_back_wc'] == '-') {
+					$wcp_arr[$in_count] = '-';
+				} else {
+					$wcp_arr[$in_count] = $list[$tm]['games_back_wc'];
+				}
 				$in_count++;
 				continue;
-			} else {
-				$list[$tm]['games_back_wc'] = '-';
 			}
+
+			// Calculate the games back relative to the last game in the playoffs.
+			$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
+
+			// Set playoff status.
+			$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
+			if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
 		}
-		break;
-	}
 
-	// How many teams are in the race?
-	$total_wc = $this->get_total_wc();
-
-	// Get clinched status.
-	$list[0]['wins'] ??= null;
-	$prev_wins = $list[0]['wins'];
-	$prev_tm = 0;
-
-	foreach ($list as $tm => $val) {
-		if (($list[$tm]['games_back_wc'] == '-') && (($total_wc - $clinch_count) == $in_count)) $list[$tm]['games_back_wc'] = 'clinch';
-		if (($list[$tm]['games_back_wc'] == 'clinch') && ($prev_wins == $list[$tm]['wins']) && ($tm != 0)) {
-			$list[$prev_tm]['games_back_wc'] = 'tie';
-			$list[$tm]['games_back_wc'] = 'tie';
+		// Set the gb + rating for teams in playoff position.
+		$in_count = 0;
+		$wcp_arr = array_reverse($wcp_arr);
+		foreach ($list as $tm => $val) {
+			if ($in_count == 0) {
+				$baseline = $wcp_arr[$in_count];
+				(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+				$in_count++;
+				continue;
+			}
+			if ($in_count < $wc_teams) {
+				if ($wcp_arr[$in_count] != '-') {
+					$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
+					(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+					$in_count++;
+					continue;
+				} else {
+					$list[$tm]['games_back_wc'] = '-';
+				}
+			}
+			break;
 		}
-		$prev_wins = $list[$tm]['wins'];
-		$prev_tm = $tm;
 	}
 
 	// Set divisionname if it has not been set.

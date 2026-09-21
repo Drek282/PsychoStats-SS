@@ -5,6 +5,7 @@ Version 1.0.1b
 * [Fixed] Check to ensure PSSS doesn't update until weekly results are released.
 * [Improved] Wildcard standings now correctly show all teams that are in a playoff position.
 * [Improved] Replaced the page redirect with an error message on the Wildcard page.
+* [Improved] Wildcard standings how indicate clinched status.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

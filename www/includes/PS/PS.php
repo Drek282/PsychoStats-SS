@@ -1564,7 +1564,7 @@ function get_wc_list($args = array()) {
 
 	// Generate games_played and games_remaining
 	$list[0]['games_played'] ??= null;
-	$list[0]['games_remaining'] = $season_l - $list[0]['games_played'];
+	$list[0]['games_remaining'] = $games_remaining = $season_l - $list[0]['games_played'];
 
 	// Get playoff status.
 	$clinch_count = 0;
@@ -1605,14 +1605,14 @@ function get_wc_list($args = array()) {
 	foreach ($list as $tm => $val) {
 		if ($in_count == 0) {
 			$baseline = $wcp_arr[$in_count];
-			$list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+			($wcp_arr[$in_count] > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
 			$in_count++;
 			continue;
 		}
 		if ($in_count < $wc_teams) {
 			if ($wcp_arr[$in_count] != '-') {
 				$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
-				$list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+				($wcp_arr[$in_count] > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
 				$in_count++;
 				continue;
 			} else {

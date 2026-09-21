@@ -1584,8 +1584,13 @@ function get_wc_list($args = array()) {
 		}
 	} else {
 		$wc_last_tm = $wc_teams - 1;
-		$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
-		$wc_gb_offset = $list[$wc_teams]['games_back_wc'] - $list[$wc_last_tm]['games_back_wc'];
+		if ($list[$wc_last_tm]['games_back_wc'] == '-') {
+			$wc_gb_pos = 0;
+			($list[$wc_teams]['games_back_wc'] == '-') ? $wc_gb_offset = 0 : $wc_gb_offset = $list[$wc_teams]['games_back_wc'];
+		} else {
+			$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
+			$wc_gb_offset = $list[$wc_teams]['games_back_wc'] - $wc_gb_pos;
+		}
 		$wcp_arr = array();
 
 		foreach ($list as $tm => $val) {
@@ -1602,6 +1607,7 @@ function get_wc_list($args = array()) {
 			}
 
 			// Calculate the games back relative to the last game in the playoffs.
+			if ($list[$tm]['games_back_wc'] == '-') $list[$tm]['games_back_wc'] = 0;
 			$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
 
 			// Set playoff status.
@@ -1615,7 +1621,13 @@ function get_wc_list($args = array()) {
 		foreach ($list as $tm => $val) {
 			if ($in_count == 0) {
 				$baseline = $wcp_arr[$in_count];
-				(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+				if ($wcp_arr[$in_count] == '-') $wcp_arr[$in_count] = 0;
+				if (($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) {
+					$list[$tm]['games_back_wc'] = 'c';
+					$in_count++;
+					continue;
+				}
+				($wcp_arr[$in_count] == '0') ? $list[$tm]['games_back_wc'] = '-' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
 				$in_count++;
 				continue;
 			}
@@ -1623,11 +1635,11 @@ function get_wc_list($args = array()) {
 				if ($wcp_arr[$in_count] != '-') {
 					$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
 					(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
-					$in_count++;
-					continue;
 				} else {
 					$list[$tm]['games_back_wc'] = '-';
 				}
+				$in_count++;
+				continue;
 			}
 			break;
 		}

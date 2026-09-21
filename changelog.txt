@@ -8,6 +8,7 @@ Version 1.0.1b
 * [Improved] Wildcard standings now indicate clinched status.
 * [Improved] Wildcard standings now indicate number of teams that make playoffs.
 * [Fixed] Wildcard standings now more accurately indicate clinched status.
+* [Fixed] Issues with wildcard standings where results are represented by a dash.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

@@ -1044,7 +1044,7 @@ function get_division($args = array(), $minimal = false) {
 		$division['defence'][$tm]['team_drat'] ??= 0;
 		$division['offence'][$tm]['team_srat'] ??= 0;
 		// Playoff status.
-		if (!is_null($clinch_count)) {
+		if ($clinch_count) {
 			$division['advanced'][$tm]['games_back'] = $this->get_playoff_status($season, $division['advanced'][$tm]['games_played'], $division['advanced'][$tm]['games_back']);
 			if ($division['advanced'][$tm]['games_back'] == 'elim') $clinch_count++;
 		}
@@ -1063,7 +1063,7 @@ function get_division($args = array(), $minimal = false) {
 	}
 
 	// Set clinched status.
-	if (!is_null($clinch_count) and ($division['totalmembers'] - $clinch_count) == 1) $division['advanced'][0]['games_back'] = 'clinch';
+	if ($clinch_count and ($division['totalmembers'] - $clinch_count) == 1) $division['advanced'][0]['games_back'] = 'clinch';
 
 	$division['win_percent'] = round($division['win_percent'] / $division['totalmembers'], 3);
 	$division['team_rdiff'] = round($division['team_rdiff'] / $division['totalmembers'], 2);
@@ -1073,6 +1073,13 @@ function get_division($args = array(), $minimal = false) {
 	$division['ops'] = round($division['ops'] / $division['totalmembers'], 3);
 	$division['team_drat'] = round($division['team_drat'] / $division['totalmembers'], 2);
 	$division['team_srat'] = round($division['team_srat'] / $division['totalmembers'], 2);
+
+	// Set clinch status before the season end.
+	if ($division['advanced'][0]['games_back'] != 'clinch') {
+		if (array_shift(explode(':', $division['advanced'][1]['games_back'])) == 'elim') {
+			$division['advanced'][0]['games_back'] = 'clinch';
+		}
+	}
 
 	// unset a bunch of unnecessary crap
 	unset($division['team_id']);
@@ -1822,6 +1829,7 @@ function get_total_wc() {
 	return $total;
 }
 
+// This function only assigns "eliminated" status.
 function get_playoff_status($season, $gp = 0, $gb = 0) {
 
 	# Get season length.

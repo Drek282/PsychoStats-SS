@@ -1074,8 +1074,8 @@ function get_division($args = array(), $minimal = false) {
 	$division['team_drat'] = round($division['team_drat'] / $division['totalmembers'], 2);
 	$division['team_srat'] = round($division['team_srat'] / $division['totalmembers'], 2);
 
-	// Set clinch status before the season end.
-	if ($division['advanced'][0]['games_back'] != 'clinch') {
+	// Set clinch status before the season end but only on default sort.
+	if (array_shift(explode(', ', $args['asort'])) == 'win_percent' && $args['aorder'] == 'desc' && $division['advanced'][0]['games_back'] != 'clinch') {
 		if (array_shift(explode(':', $division['advanced'][1]['games_back'])) == 'elim') {
 			$division['advanced'][0]['games_back'] = 'clinch';
 		}
@@ -1595,74 +1595,78 @@ function get_wc_list($args = array()) {
 	// If $wc_teams == 0 return.
 	if ($wc_teams == '0') return null;
 
-	// How many teams are in the race?
-	$total_wc = count($list);
+	// Only set clinched status if the sort is by win_percent.
+	if (array_shift(explode(', ', $args['sort'])) == 'win_percent' && $args['order'] == 'desc') {
 
-	// If the number of teams listed equals the number of wildcard teams, all teams have clinched.
-	if ($wc_teams == $total_wc) {
-		foreach ($list as $tm => $val) {
-			$list[$tm]['games_back_wc'] = 'c';
-		}
-	} else {
-		$wc_last_tm = $wc_teams - 1;
-		if ($list[$wc_last_tm]['games_back_wc'] == '-') {
-			$wc_gb_pos = 0;
-			($list[$wc_teams]['games_back_wc'] == '-') ? $wc_gb_offset = 0 : $wc_gb_offset = $list[$wc_teams]['games_back_wc'];
-		} else {
-			$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
-			$wc_gb_offset = $list[$wc_teams]['games_back_wc'] - $wc_gb_pos;
-		}
-		$wcp_arr = array();
+		// How many teams are in the race?
+		$total_wc = count($list);
 
-		foreach ($list as $tm => $val) {
-			$list[$tm]['games_back_wc'] ??= null;
-			// The top teams set by $wc_teams are in the playoffs.
-			if ($in_count < $wc_teams) {
-				if ($list[$tm]['games_back_wc'] == '-') {
-					$wcp_arr[$in_count] = '-';
-				} else {
-					$wcp_arr[$in_count] = $list[$tm]['games_back_wc'];
-				}
-				$in_count++;
-				continue;
+		// If the number of teams listed equals the number of wildcard teams, all teams have clinched.
+		if ($wc_teams == $total_wc) {
+			foreach ($list as $tm => $val) {
+				$list[$tm]['games_back_wc'] = 'c';
 			}
+		} else {
+			$wc_last_tm = $wc_teams - 1;
+			if ($list[$wc_last_tm]['games_back_wc'] == '-') {
+				$wc_gb_pos = 0;
+				($list[$wc_teams]['games_back_wc'] == '-') ? $wc_gb_offset = 0 : $wc_gb_offset = $list[$wc_teams]['games_back_wc'];
+			} else {
+				$wc_gb_pos = $list[$wc_last_tm]['games_back_wc'];
+				$wc_gb_offset = $list[$wc_teams]['games_back_wc'] - $wc_gb_pos;
+			}
+			$wcp_arr = array();
 
-			// Calculate the games back relative to the last game in the playoffs.
-			if ($list[$tm]['games_back_wc'] == '-') $list[$tm]['games_back_wc'] = 0;
-			$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
-
-			// Set playoff status.
-			$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
-			if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
-		}
-
-		// Set the gb + rating for teams in playoff position.
-		$in_count = 0;
-		$wcp_arr = array_reverse($wcp_arr);
-		foreach ($list as $tm => $val) {
-			if ($in_count == 0) {
-				$baseline = $wcp_arr[$in_count];
-				if ($wcp_arr[$in_count] == '-') $wcp_arr[$in_count] = 0;
-				if (($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) {
-					$list[$tm]['games_back_wc'] = 'c';
+			foreach ($list as $tm => $val) {
+				$list[$tm]['games_back_wc'] ??= null;
+				// The top teams set by $wc_teams are in the playoffs.
+				if ($in_count < $wc_teams) {
+					if ($list[$tm]['games_back_wc'] == '-') {
+						$wcp_arr[$in_count] = '-';
+					} else {
+						$wcp_arr[$in_count] = $list[$tm]['games_back_wc'];
+					}
 					$in_count++;
 					continue;
 				}
-				($wcp_arr[$in_count] == '0') ? $list[$tm]['games_back_wc'] = '-' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
-				$in_count++;
-				continue;
+
+				// Calculate the games back relative to the last game in the playoffs.
+				if ($list[$tm]['games_back_wc'] == '-') $list[$tm]['games_back_wc'] = 0;
+				$list[$tm]['games_back_wc'] = $list[$tm]['games_back_wc'] - $wc_gb_pos;
+
+				// Set playoff status.
+				$list[$tm]['games_back_wc'] = $this->get_playoff_status($season, $list[$tm]['games_played'], $list[$tm]['games_back_wc']);
+				if ($list[$tm]['games_back_wc'] == 'elim') $clinch_count++;
 			}
-			if ($in_count < $wc_teams) {
-				if ($wcp_arr[$in_count] != '-') {
-					$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
-					(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
-				} else {
-					$list[$tm]['games_back_wc'] = '-';
+
+			// Set the gb + rating for teams in playoff position.
+			$in_count = 0;
+			$wcp_arr = array_reverse($wcp_arr);
+			foreach ($list as $tm => $val) {
+				if ($in_count == 0) {
+					$baseline = $wcp_arr[$in_count];
+					if ($wcp_arr[$in_count] == '-') $wcp_arr[$in_count] = 0;
+					if (($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) {
+						$list[$tm]['games_back_wc'] = 'c';
+						$in_count++;
+						continue;
+					}
+					($wcp_arr[$in_count] == '0') ? $list[$tm]['games_back_wc'] = '-' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+					$in_count++;
+					continue;
 				}
-				$in_count++;
-				continue;
+				if ($in_count < $wc_teams) {
+					if ($wcp_arr[$in_count] != '-') {
+						$wcp_arr[$in_count] = $baseline - $wcp_arr[$in_count];
+						(($wcp_arr[$in_count] + $wc_gb_offset) > $games_remaining) ? $list[$tm]['games_back_wc'] = 'c' : $list[$tm]['games_back_wc'] = '+' . $wcp_arr[$in_count];
+					} else {
+						$list[$tm]['games_back_wc'] = '-';
+					}
+					$in_count++;
+					continue;
+				}
+				break;
 			}
-			break;
 		}
 	}
 

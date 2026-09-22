@@ -83,6 +83,7 @@
 <p class="substat">
 	<label><#Wild Card Race#></label>
 	{if $team.games_back_wc=='-'}<span>Playoff Position</span>
+	{elseif $team.games_back_wc=='c'}<span>Clinched</span>
 	{else}<span>{$team.games_back_wc}</span>
 	{/if}
 </p>

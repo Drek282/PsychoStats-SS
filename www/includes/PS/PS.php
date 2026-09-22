@@ -835,9 +835,23 @@ function get_team($args = array(), $minimal = false) {
 	}
 	$team['league_cs'] = $count;
 
-	// Get playoff status.
+	// Get division championship status.
 	$team['games_back'] = isset($team['games_played']) && isset($team['games_back']) ? $this->get_playoff_status($season_c, $team['games_played'], $team['games_back']) : 'na';
-	$team['games_back_wc'] = isset($team['games_played']) && isset($team['games_back_wc']) ? $this->get_playoff_status($season_c, $team['games_played'], $team['games_back_wc']) : 'na';
+
+	// Get wildcard status.
+	if (isset($team['games_played']) && isset($team['games_back_wc']) ) {
+		$wc = $this->get_wc_list(array('season_c' => $season_c));
+
+		foreach ($wc as $tm => $val) {
+			if ($wc[$tm]['team_id'] == $team['team_id']) {
+				$team['games_back_wc'] = $wc[$tm]['games_back_wc'];
+				break;
+			}
+		}
+	
+	} else {
+		$team['games_back_wc'] = 'na';
+	}
 
 	// Load team names.
 	if (!$args['minimal']) {

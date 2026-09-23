@@ -132,10 +132,6 @@ $division = $ps->get_division(array(
 $division['divisionname'] ??= null;
 $cms->theme->page_title(' for ' . $division['divisionname'], true);
 
-$x = substr($xml ?? '',0,1);
-if ($x == 'd') {		// division
-}
-
 // reset sort variables to first sort column
 $sort_arr = explode(", ", $asort);
 $asort = $sort_arr[0];

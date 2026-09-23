@@ -947,17 +947,11 @@ function get_division($args = array(), $minimal = false) {
 
 	if ($minimal) $args['minimal'] = true;
 
-	$values = "names.*, adv.*,adv.team_id team_n, ";
-
-	$types = $this->get_types('DIVISION');
-	$fields = !empty($args['fields']) ? explode(',',$args['fields']) : array_keys($types);
-	$values .= $this->_values($fields, $types);
+	$values = "names.*,adv.divisionname,adv.team_id,adv.season";
 
 	$cmd  = "SELECT $values ";
 	$cmd .= "FROM $this->t_team_adv adv, $this->t_team_ids_names names, $this->t_team_def def, $this->t_team_off off ";
 	$cmd .= "WHERE adv.divisionname='" . $id . "' AND names.team_id=adv.team_id AND adv.season=$season ";
-	$args['where'] ??= null;
-	if (trim($args['where'] ?? '') != '') $cmd .= "AND (" . $args['where'] . ") ";
 	$cmd .= "GROUP BY adv.divisionname ";
 	$cmd .= $this->getsortorder($args);
 
@@ -1019,7 +1013,6 @@ function get_division($args = array(), $minimal = false) {
 	$division['advanced'][0]['games_remaining'] = $season_l - $division['advanced'][0]['games_played'];
 
 	// Get playoff status and stat totals.
-	$clinch_count = ($division['advanced'][0]['games_remaining'] != 0) ? 0 : null;
 	$division['games_played'] = 0;
 	$division['wins'] = 0;
 	$division['losses'] = 0;

@@ -13,6 +13,7 @@ Version 1.0.1b
 * [Improved] Division pages now correctly apply clinch status before end of season.
 * [Fixed] Clinch status only applied on division and wildcard pages with default sort.
 * [Improved] Playoff status now correctly applied irrespective of sort.
+* [Improved] Playoff status note on Overall standings page.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

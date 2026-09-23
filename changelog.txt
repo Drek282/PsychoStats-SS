@@ -15,6 +15,7 @@ Version 1.0.1b
 * [Improved] Playoff status now correctly applied irrespective of sort.
 * [Improved] Playoff status note on Overall standings page.
 * [Improved] Division page processing times.
+* [Improved] Added note clarifying what rank change arrows on division pages mean.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

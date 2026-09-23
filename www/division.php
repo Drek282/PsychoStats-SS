@@ -149,7 +149,7 @@ $atable->attr('class', 'ps-table ps-team-table');
 $atable->sort_baseurl(array( 'id' => $id, '_anchor' => 'advanced' ));
 $atable->start_and_sort($astart, $asort, $aorder, 'a');
 $atable->columns(array(
-	'rank'			=> array( 'label' => $cms->trans("Rank") ),
+	'rank'			=> array( 'label' => $cms->trans("Rank"), 'tooltip' => $cms->trans("Rank change is a reflection of changes in overall standings\nnot changes specific to division rank.") ),
 	'prevrank'		=> array( 'nolabel' => true, 'callback' => 'rankchange' ),
 	'team_n'			=> array( 'label' => $cms->trans("Team #") ),
 	'team_name'			=> array( 'label' => $cms->trans("Team"), 'callback' => 'psss_table_team_link' ),

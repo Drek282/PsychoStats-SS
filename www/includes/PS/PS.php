@@ -776,14 +776,23 @@ function get_team($args = array(), $minimal = false) {
 	// Fix the team_id
 	$team['team_id'] = isset($team['advanced'][0]['team_id']) ? $team['advanced'][0]['team_id'] : 0;
 
-	// Get historical team average win percentage.
+	// Calculate historical advanced stats.
 	$team['hist_wp'] = 0;
+	$team['hist_rdiff'] = 0;
+	$team['hist_pythag_plus'] = 0;
 	$count = 0;
 	foreach ($team['advanced'] as $s => $val) {
+		// Playoff status.
+		if ($team['advanced'][$s]['season'] == $season_c) $team['advanced'][$s]['games_back'] = $this->get_playoff_status($season_c, $id, $team['divisionname']);
+
 		$team['hist_wp'] = $team['hist_wp'] + $team['advanced'][$s]['win_percent'];
+		$team['hist_rdiff'] = $team['hist_rdiff'] + $team['advanced'][$s]['team_rdiff'];
+		$team['hist_pythag_plus'] = $team['hist_pythag_plus'] + $team['advanced'][$s]['pythag_plus'];
 		$count++;
 	}
 	$team['hist_wp'] = (!$count == 0) ? round($team['hist_wp'] / $count, 3) : 0;
+	$team['hist_rdiff'] = (!$count == 0) ? round($team['hist_rdiff'] / $count, 2) : 0;
+	$team['hist_pythag_plus'] = (!$count == 0) ? round($team['hist_pythag_plus'] / $count, 3) : 0;
 
 	// Get historical team average runs against.
 	$team['hist_ra'] = 0;
@@ -803,24 +812,6 @@ function get_team($args = array(), $minimal = false) {
 	}
 	$team['hist_rs'] = (!$count == 0) ? round($team['hist_rs'] / $count, 1) : 0;
 
-	// Get historical team average run differential.
-	$team['hist_rdiff'] = 0;
-	$count = 0;
-	foreach ($team['advanced'] as $s => $val) {
-		$team['hist_rdiff'] = $team['hist_rdiff'] + $team['advanced'][$s]['team_rdiff'];
-		$count++;
-	}
-	$team['hist_rdiff'] = (!$count == 0) ? round($team['hist_rdiff'] / $count, 2) : 0;
-
-	// Get historical team average pythag+.
-	$team['hist_pythag_plus'] = 0;
-	$count = 0;
-	foreach ($team['advanced'] as $s => $val) {
-		$team['hist_pythag_plus'] = $team['hist_pythag_plus'] + $team['advanced'][$s]['pythag_plus'];
-		$count++;
-	}
-	$team['hist_pythag_plus'] = (!$count == 0) ? round($team['hist_pythag_plus'] / $count, 3) : 0;
-
 	// Count the number of division titles.
 	$count = 0;
 	foreach ($team['advanced'] as $s => $val) {
@@ -835,7 +826,7 @@ function get_team($args = array(), $minimal = false) {
 	}
 	$team['league_cs'] = $count;
 
-	// Get division championship status.
+	// Get division championship status for the sidebar.
 	$team['games_back'] = $this->get_playoff_status($season_c, $id, $team['divisionname']);
 
 	// Get wildcard status.

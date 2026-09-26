@@ -55,12 +55,6 @@ def grp_check (check_loop, league_url, raw_lp_dump):
     global error_no
     global error_log
 
-    # Render the html to remove commented lines.
-    #rendered_html = html2text.html2text(raw_lp_dump)
-    # Python output to file:
-    with open("output.txt", "a") as f:
-        print(raw_lp_dump, file=f)
-
     # Get the number of games played for the current season from the database.
     cursor.execute("SELECT games_played FROM psss_team_adv WHERE season='" + str(season_c) + "'")
     data = cursor.fetchone()

@@ -97,9 +97,6 @@ def grp_check (check_loop, league_url, raw_lp_dump):
             games_played_page = rw + rl
 
             if games_played_db < games_played_page:
-                print('success!')
-                print()
-                sys.exit()
                 # Log entry.
                 error_no += 1
                 error_log = error_log + str(error_no) + "," + str(now_utc_ts) + ",info,DEFAULT,Game results have been published for URL:  " + league_url + "\n"

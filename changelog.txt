@@ -18,6 +18,7 @@ Version 1.0.1b
 * [Improved] Added note clarifying what rank change arrows on division pages mean.
 * [Fixed] Playoff status on Overall table on team pages.
 * [Removed] Debugging.
+* [Fixed] Lowered defaults for number of log entries per page.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

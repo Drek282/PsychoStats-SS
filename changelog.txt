@@ -20,6 +20,7 @@ Version 1.0.1b
 * [Removed] Debugging.
 * [Fixed] Lowered defaults for number of log entries per page.
 * [Fixed] Playoff status function now checks to see if status is already set.
+* [Fixed] Wildcard status now only displays if there is a current wildcard race.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.

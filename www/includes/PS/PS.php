@@ -1729,6 +1729,16 @@ function get_playoff_status($season, $id, $div) {
 	// Games remaining.
 	$gr = $season_l - $list[0]['games_played'];
 
+	// If championship status is already set, return it.
+	foreach ($list as $tm => $val) {
+		if ($list[$tm]['games_back'] == 'dt' || $list[$tm]['games_back'] == 'lc' || $list[$tm]['games_back'] == 'dtlc') {
+			unset($tm);
+			foreach ($list as $tm => $val) {
+				if ($list[$tm]['team_id'] == $id) return $list[$tm]['games_back'];
+			}
+		}
+	}
+
 	// Get eliminated status.
 	foreach ($list as $tm => $val) {
 		$list[$tm]['games_back'] = $this->get_eliminated_status($list[$tm]['games_back'], $gr);

@@ -19,6 +19,7 @@ Version 1.0.1b
 * [Fixed] Playoff status on Overall table on team pages.
 * [Removed] Debugging.
 * [Fixed] Lowered defaults for number of log entries per page.
+* [Fixed] Playoff status function now checks to see if status is already set.
 
 Version 1.0.0 (04/11/2024)
 * [Milestone] First official non-beta release.
